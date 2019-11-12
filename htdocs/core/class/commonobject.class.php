@@ -134,12 +134,6 @@ abstract class CommonObject
 	public $fk_project;
 
 	/**
-	 * @deprecated
-	 * @see project
-	 */
-	public $project;
-
-	/**
 	 * @var Contact a related contact
 	 * @see fetch_contact()
 	 */
