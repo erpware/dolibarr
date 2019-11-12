@@ -89,7 +89,7 @@ class pdf_sepamandate extends ModeleBankAccountDoc
 
     // phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
     /**
-	 *  Fonction generant le projet sur le disque
+	 *  Fonction generant le project sur le disque
 	 *
 	 *	@param	    Project		$object   		    Object project a generer
 	 *	@param	    Translate	$outputlangs	    Lang output object

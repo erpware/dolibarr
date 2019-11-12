@@ -59,7 +59,7 @@ create table llx_facture_fourn
   fk_user_valid			integer,                       -- user validating
 
   fk_facture_source		integer,                       -- facture origine si facture avoir
-  fk_projet				integer,                       -- projet auquel est associee la facture
+  fk_projet				integer,                       -- project auquel est associee la facture
 
   fk_account            integer,                       -- bank account
   fk_cond_reglement		integer,   	                   	-- condition de reglement (30 jours, fin de mois ...)

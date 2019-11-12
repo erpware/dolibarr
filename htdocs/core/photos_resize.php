@@ -49,7 +49,7 @@ if ($modulepart == 'produit' || $modulepart == 'product' || $modulepart == 'serv
 }
 elseif ($modulepart == 'project')
 {
-    $result=restrictedArea($user, 'projet', $id);
+    $result=restrictedArea($user, 'project', $id);
 	if (! $user->rights->projet->lire) accessforbidden();
 	$accessallowed=1;
 }
@@ -113,7 +113,7 @@ if ($modulepart == 'produit' || $modulepart == 'product' || $modulepart == 'serv
 }
 elseif ($modulepart == 'project')
 {
-    require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+    require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
     $object = new Project($db);
     if ($id > 0)
     {
@@ -231,7 +231,7 @@ if (empty($backtourl))
     elseif (in_array($modulepart, array('expensereport'))) $backtourl=DOL_URL_ROOT."/expensereport/document.php?id=".$id.'&file='.urldecode($_POST["file"]);
     elseif (in_array($modulepart, array('holiday')))       $backtourl=DOL_URL_ROOT."/holiday/document.php?id=".$id.'&file='.urldecode($_POST["file"]);
     elseif (in_array($modulepart, array('member')))        $backtourl=DOL_URL_ROOT."/adherents/document.php?id=".$id.'&file='.urldecode($_POST["file"]);
-    elseif (in_array($modulepart, array('project')))       $backtourl=DOL_URL_ROOT."/projet/document.php?id=".$id.'&file='.urldecode($_POST["file"]);
+    elseif (in_array($modulepart, array('project')))       $backtourl=DOL_URL_ROOT."/project/document.php?id=".$id.'&file='.urldecode($_POST["file"]);
     elseif (in_array($modulepart, array('societe')))       $backtourl=DOL_URL_ROOT."/societe/document.php?id=".$id.'&file='.urldecode($_POST["file"]);
     elseif (in_array($modulepart, array('tax')))           $backtourl=DOL_URL_ROOT."/compta/sociales/document.php?id=".$id.'&file='.urldecode($_POST["file"]);
     elseif (in_array($modulepart, array('ticket')))        $backtourl=DOL_URL_ROOT."/ticket/document.php?id=".$id.'&file='.urldecode($_POST["file"]);

@@ -29,8 +29,8 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/loan.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 if (! empty($conf->accounting->enabled)) require_once DOL_DOCUMENT_ROOT.'/core/class/html.formaccounting.class.php';
 if (! empty($conf->accounting->enabled)) require_once DOL_DOCUMENT_ROOT.'/accountancy/class/accountingaccount.class.php';
-require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
 
 // Load translation files required by the page
 $langs->loadLangs(array("compta","bills","loan"));
@@ -307,7 +307,7 @@ if ($action == 'create')
 	print '<tr><td>'.$langs->trans("Insurance").'</td><td><input name="insurance_amount" size="10" value="' . dol_escape_htmltag(GETPOST("insurance_amount")) . '" placeholder="'.$langs->trans('Amount').'"></td></tr>';
 
 	// Project
-	if (! empty($conf->projet->enabled))
+	if (! empty($conf->project->enabled))
 	{
 		$formproject=new FormProjets($db);
 
@@ -446,7 +446,7 @@ if ($id > 0)
 		$morehtmlref.=$form->editfieldkey("Label", 'label', $object->label, $object, $user->rights->loan->write, 'string', '', 0, 1);
 		$morehtmlref.=$form->editfieldval("Label", 'label', $object->label, $object, $user->rights->loan->write, 'string', '', null, null, '', 1);
 		// Project
-		if (! empty($conf->projet->enabled))
+		if (! empty($conf->project->enabled))
 		{
 			$langs->loadLangs(array("projects"));
 			$morehtmlref.='<br>'.$langs->trans('Project') . ' ';
@@ -469,7 +469,7 @@ if ($id > 0)
 				if (! empty($object->fk_project)) {
 					$proj = new Project($db);
 					$proj->fetch($object->fk_project);
-					$morehtmlref.='<a href="'.DOL_URL_ROOT.'/projet/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
+					$morehtmlref.='<a href="'.DOL_URL_ROOT.'/project/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
 					$morehtmlref.=$proj->ref;
 					$morehtmlref.='</a>';
 				} else {

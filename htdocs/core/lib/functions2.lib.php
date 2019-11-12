@@ -1865,8 +1865,8 @@ function dolGetElementUrl($objectid, $objecttype, $withpicto = 0, $option = '')
 		$subelement='fichinter';
 	}
 	elseif ($objecttype == 'task') {
-		$classpath = 'projet/class';
-		$module='projet';
+		$classpath = 'project/class';
+		$module='project';
 		$subelement='task';
 	}
 	elseif ($objecttype == 'stock') {
@@ -2471,10 +2471,10 @@ function getModuleDirForApiClass($module)
         $moduledirforclass = 'product';
     }
     elseif ($module == 'project' || $module == 'projects' || $module == 'tasks') {
-        $moduledirforclass = 'projet';
+        $moduledirforclass = 'project';
     }
     elseif ($module == 'task') {
-        $moduledirforclass = 'projet';
+        $moduledirforclass = 'project';
     }
     elseif ($module == 'stock' || $module == 'stockmovements' || $module == 'warehouses') {
         $moduledirforclass = 'product/stock';

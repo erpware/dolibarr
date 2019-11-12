@@ -25,9 +25,9 @@
  */
 
 require_once DOL_DOCUMENT_ROOT.'/core/modules/project/modules_project.php';
-require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
-require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-require_once DOL_DOCUMENT_ROOT.'/projet/class/task.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
+require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
+require_once DOL_DOCUMENT_ROOT.'/project/class/task.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/pdf.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
@@ -137,7 +137,7 @@ class pdf_beluga extends ModelePDFProjects
 
     // phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
 	/**
-	 *	Fonction generant le projet sur le disque
+	 *	Fonction generant le project sur le disque
 	 *
 	 *	@param	Project		$object   		Object project a generer
 	 *	@param	Translate	$outputlangs	Lang output object

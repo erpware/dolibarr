@@ -397,7 +397,7 @@ class BlockedLog
             'linkedObjects',
             'fk_delivery_address',
 			'context',
-		    'projet'          // There is already ->fk_project
+		    'project'          // There is already ->fk_project
 		);
 		// Add more fields to exclude depending on object type
 		if ($this->element == 'cashcontrol') {

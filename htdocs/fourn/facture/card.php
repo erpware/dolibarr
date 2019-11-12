@@ -45,9 +45,9 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
 if (!empty($conf->product->enabled)) {
 	require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 }
-if (!empty($conf->projet->enabled)) {
-	require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+if (!empty($conf->project->enabled)) {
+	require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
 }
 
 if (!empty($conf->variants->enabled)) {
@@ -860,7 +860,7 @@ if (empty($reshook))
 					}
 					if ($element == 'project')
 					{
-						$element = 'projet';
+						$element = 'project';
 					}
 					$object->origin    = GETPOST('origin');
 					$object->origin_id = GETPOST('originid');
@@ -1618,7 +1618,7 @@ $form = new Form($db);
 $formfile = new FormFile($db);
 $bankaccountstatic = new Account($db);
 $paymentstatic = new PaiementFourn($db);
-if (!empty($conf->projet->enabled)) { $formproject = new FormProjets($db); }
+if (!empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
 
 $now = dol_now();
 
@@ -1653,7 +1653,7 @@ if ($action == 'create')
 		if ($element == 'project')
 		{
 			$projectid = $originid;
-			$element = 'projet';
+			$element = 'project';
 		}
 
 		// For compatibility
@@ -2021,7 +2021,7 @@ if ($action == 'create')
 	}
 
 	// Project
-	if (!empty($conf->projet->enabled))
+	if (!empty($conf->project->enabled))
 	{
 		$formproject = new FormProjets($db);
 
@@ -2381,7 +2381,7 @@ else
     	$morehtmlref .= '<br>'.$langs->trans('ThirdParty').' : '.$object->thirdparty->getNomUrl(1);
     	if (empty($conf->global->MAIN_DISABLE_OTHER_LINK) && $object->thirdparty->id > 0) $morehtmlref .= ' (<a href="'.DOL_URL_ROOT.'/fourn/facture/list.php?socid='.$object->thirdparty->id.'&search_company='.urlencode($object->thirdparty->name).'">'.$langs->trans("OtherBills").'</a>)';
     	// Project
-    	if (!empty($conf->projet->enabled))
+    	if (!empty($conf->project->enabled))
     	{
     	    $langs->load("projects");
     	    $morehtmlref .= '<br>'.$langs->trans('Project').' ';
@@ -2405,7 +2405,7 @@ else
     	        if (!empty($object->fk_project)) {
     	            $proj = new Project($db);
     	            $proj->fetch($object->fk_project);
-    	            $morehtmlref .= '<a href="'.DOL_URL_ROOT.'/projet/card.php?id='.$object->fk_project.'" title="'.$langs->trans('ShowProject').'">';
+    	            $morehtmlref .= '<a href="'.DOL_URL_ROOT.'/project/card.php?id='.$object->fk_project.'" title="'.$langs->trans('ShowProject').'">';
     	            $morehtmlref .= $proj->ref;
     	            $morehtmlref .= '</a>';
     	        } else {
@@ -2709,7 +2709,7 @@ else
 		if ($object->type == FactureFournisseur::TYPE_CREDIT_NOTE) $sign = - 1;
 
 		$nbrows = 9; $nbcols = 3;
-		if (!empty($conf->projet->enabled)) $nbrows++;
+		if (!empty($conf->project->enabled)) $nbrows++;
 		if (!empty($conf->banque->enabled)) { $nbrows++; $nbcols++; }
 		if (!empty($conf->incoterm->enabled)) $nbrows++;
 		if (!empty($conf->multicurrency->enabled)) $nbrows += 5;

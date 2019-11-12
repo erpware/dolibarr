@@ -38,9 +38,9 @@ require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formother.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formmargin.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/functions2.lib.php';
-if (! empty($conf->projet->enabled)) {
-    require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
-    require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+if (! empty($conf->project->enabled)) {
+    require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
+    require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 }
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
 
@@ -314,7 +314,7 @@ llxHeader('', $langs->trans("Donation"), 'EN:Module_Donations|FR:Module_Dons|ES:
 $form=new Form($db);
 $formfile = new FormFile($db);
 $formcompany = new FormCompany($db);
-if (! empty($conf->projet->enabled)) { $formproject = new FormProjets($db); }
+if (! empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
 
 if ($action == 'create')
 {
@@ -442,7 +442,7 @@ if ($action == 'create')
 		print '</td></tr>';
 	}
 
-	if (! empty($conf->projet->enabled))
+	if (! empty($conf->project->enabled))
     {
         print "<tr><td>".$langs->trans("Project")."</td><td>";
         $formproject->select_projects(-1, $projectid, 'fk_project', 0, 0, 1, 1);
@@ -573,7 +573,7 @@ if (! empty($id) && $action == 'edit')
 	print "<tr>".'<td>'.$langs->trans("Status").'</td><td>'.$object->getLibStatut(4).'</td></tr>';
 
     // Project
-    if (! empty($conf->projet->enabled))
+    if (! empty($conf->project->enabled))
     {
     	$formproject=new FormProjets($db);
 
@@ -638,7 +638,7 @@ if (! empty($id) && $action != 'edit')
 
 	$morehtmlref='<div class="refidno">';
 	// Project
-	if (! empty($conf->projet->enabled))
+	if (! empty($conf->project->enabled))
 	{
 	    $langs->load("projects");
 	    $morehtmlref.=$langs->trans('Project') . ' ';
@@ -662,7 +662,7 @@ if (! empty($id) && $action != 'edit')
 	        if (! empty($object->fk_project)) {
 	            $proj = new Project($db);
 	            $proj->fetch($object->fk_project);
-	            $morehtmlref.='<a href="'.DOL_URL_ROOT.'/projet/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
+	            $morehtmlref.='<a href="'.DOL_URL_ROOT.'/project/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
 	            $morehtmlref.=$proj->ref;
 	            $morehtmlref.='</a>';
 	        } else {

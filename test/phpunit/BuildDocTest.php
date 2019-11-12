@@ -35,8 +35,8 @@ require_once dirname(__FILE__).'/../../htdocs/fourn/class/fournisseur.commande.c
 require_once dirname(__FILE__).'/../../htdocs/comm/propal/class/propal.class.php';
 require_once dirname(__FILE__).'/../../htdocs/fichinter/class/fichinter.class.php';
 require_once dirname(__FILE__).'/../../htdocs/expedition/class/expedition.class.php';
-require_once dirname(__FILE__).'/../../htdocs/projet/class/project.class.php';
-require_once dirname(__FILE__).'/../../htdocs/projet/class/task.class.php';
+require_once dirname(__FILE__) . '/../../htdocs/project/class/project.class.php';
+require_once dirname(__FILE__) . '/../../htdocs/project/class/task.class.php';
 require_once dirname(__FILE__).'/../../htdocs/fourn/class/fournisseur.product.class.php';
 require_once dirname(__FILE__).'/../../htdocs/core/lib/pdf.lib.php';
 require_once dirname(__FILE__).'/../../htdocs/core/modules/facture/doc/pdf_crabe.modules.php';
@@ -111,7 +111,7 @@ class BuildDocTest extends PHPUnit\Framework\TestCase
         if (! $conf->facture->enabled) { print __METHOD__." invoice module not enabled\n"; die(); }
         if (! $conf->commande->enabled) { print __METHOD__." order module not enabled\n"; die(); }
         if (! $conf->propal->enabled) { print __METHOD__." propal module not enabled\n"; die(); }
-        if (! $conf->projet->enabled) { print __METHOD__." project module not enabled\n"; die(); }
+        if (! $conf->project->enabled) { print __METHOD__." project module not enabled\n"; die(); }
         if (! $conf->expedition->enabled) { print __METHOD__." shipment module not enabled\n"; die(); }
         if (! $conf->ficheinter->enabled) { print __METHOD__." intervention module not enabled\n"; die(); }
         if (! $conf->expensereport->enabled) { print __METHOD__." expensereport module not enabled\n"; die(); }

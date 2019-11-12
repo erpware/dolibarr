@@ -166,7 +166,7 @@ if (! empty($triggers))
 		if ($module == 'order_supplier' || $module == 'invoice_supplier') $module = 'fournisseur';
 		if ($module == 'shipping') $module = 'expedition_bon';
 		if ($module == 'member') $module = 'adherent';
-		if ($module == 'project') $module = 'projet';
+		if ($module == 'project') $module = 'project';
 		if ($module == 'proposal_supplier') $module = 'supplier_proposal';
 
 		//print 'module='.$module.'<br>';

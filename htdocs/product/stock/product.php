@@ -41,9 +41,9 @@ require_once DOL_DOCUMENT_ROOT.'/product/stock/class/productstockentrepot.class.
 if (!empty($conf->productbatch->enabled)) {
     require_once DOL_DOCUMENT_ROOT.'/product/class/productbatch.class.php';
 }
-if (!empty($conf->projet->enabled)) {
-	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
-	require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+if (!empty($conf->project->enabled)) {
+	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 }
 
 if (!empty($conf->variants->enabled)) {
@@ -508,7 +508,7 @@ if ($action == 'updateline' && GETPOST('save') == $langs->trans('Save'))
 
 $form = new Form($db);
 $formproduct = new FormProduct($db);
-if (!empty($conf->projet->enabled)) $formproject = new FormProjets($db);
+if (!empty($conf->project->enabled)) $formproject = new FormProjets($db);
 
 if ($id > 0 || $ref)
 {

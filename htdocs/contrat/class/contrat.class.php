@@ -2458,7 +2458,7 @@ class Contrat extends CommonObject
     {
 		global $db, $langs, $conf, $hookmanager, $extrafields;
 
-		dol_include_once('/projet/class/project.class.php');
+		dol_include_once('/project/class/project.class.php');
 
 		$error = 0;
 

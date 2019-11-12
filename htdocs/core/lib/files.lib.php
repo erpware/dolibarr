@@ -2646,7 +2646,7 @@ function dol_check_secure_access_document($modulepart, $original_file, $entity, 
 			$accessallowed=1;
 		}
 		$original_file=$conf->projet->dir_output.'/'.$original_file;
-		$sqlprotectagainstexternals = "SELECT fk_soc as fk_soc FROM ".MAIN_DB_PREFIX."projet WHERE ref='".$db->escape($refname)."' AND entity IN (".getEntity('project').")";
+		$sqlprotectagainstexternals = "SELECT fk_soc as fk_soc FROM ".MAIN_DB_PREFIX."project WHERE ref='".$db->escape($refname)."' AND entity IN (".getEntity('project').")";
 	}
 	elseif ($modulepart == 'project_task' && !empty($conf->projet->dir_output))
 	{
@@ -2655,7 +2655,7 @@ function dol_check_secure_access_document($modulepart, $original_file, $entity, 
 			$accessallowed=1;
 		}
 		$original_file=$conf->projet->dir_output.'/'.$original_file;
-		$sqlprotectagainstexternals = "SELECT fk_soc as fk_soc FROM ".MAIN_DB_PREFIX."projet WHERE ref='".$db->escape($refname)."' AND entity IN (".getEntity('project').")";
+		$sqlprotectagainstexternals = "SELECT fk_soc as fk_soc FROM ".MAIN_DB_PREFIX."project WHERE ref='".$db->escape($refname)."' AND entity IN (".getEntity('project').")";
 	}
 
 	// Wrapping pour les commandes fournisseurs

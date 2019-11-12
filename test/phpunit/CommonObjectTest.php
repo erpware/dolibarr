@@ -28,7 +28,7 @@ global $conf,$user,$langs,$db;
 //require_once 'PHPUnit/Autoload.php';
 require_once dirname(__FILE__).'/../../htdocs/master.inc.php';
 require_once dirname(__FILE__).'/../../htdocs/commande/class/commande.class.php';
-require_once dirname(__FILE__).'/../../htdocs/projet/class/project.class.php';
+require_once dirname(__FILE__) . '/../../htdocs/project/class/project.class.php';
 
 if (empty($user->id)) {
     print "Load permissions for admin user nb 1\n";

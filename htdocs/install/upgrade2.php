@@ -2754,7 +2754,7 @@ function migrate_project_user_resp($db, $langs, $conf)
     print '<br>';
     print '<b>'.$langs->trans('MigrationProjectUserResp')."</b><br>\n";
 
-    $result = $db->DDLDescTable(MAIN_DB_PREFIX."projet", "fk_user_resp");
+    $result = $db->DDLDescTable(MAIN_DB_PREFIX."project", "fk_user_resp");
     $obj = $db->fetch_object($result);
     if ($obj)
     {
@@ -2762,7 +2762,7 @@ function migrate_project_user_resp($db, $langs, $conf)
 
         $db->begin();
 
-        $sql = "SELECT rowid, fk_user_resp FROM ".MAIN_DB_PREFIX."projet";
+        $sql = "SELECT rowid, fk_user_resp FROM ".MAIN_DB_PREFIX."project";
         $resql = $db->query($sql);
         if ($resql)
         {
@@ -2806,7 +2806,7 @@ function migrate_project_user_resp($db, $langs, $conf)
 
             if ($error == 0)
             {
-                $sqlDrop = "ALTER TABLE ".MAIN_DB_PREFIX."projet DROP COLUMN fk_user_resp";
+                $sqlDrop = "ALTER TABLE ".MAIN_DB_PREFIX."project DROP COLUMN fk_user_resp";
                 if ($db->query($sqlDrop))
                 {
                     $db->commit();

@@ -162,7 +162,7 @@ class Categorie extends CommonObject
 		'contact'  => 'socpeople',
 		'user'     => 'user',
         'account'  => 'bank_account',
-        'project'  => 'projet',
+        'project'  => 'project',
         'warehouse'=> 'entrepot',
 	);
 

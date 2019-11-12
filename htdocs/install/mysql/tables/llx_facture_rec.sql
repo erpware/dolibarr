@@ -46,7 +46,7 @@ create table llx_facture_rec
   fk_user_author     integer,             -- user creating
   fk_user_modif      integer,             -- user making last change
   
-  fk_projet          integer,             -- projet auquel est associe la facture
+  fk_projet          integer,             -- project auquel est associe la facture
   
   fk_cond_reglement  integer DEFAULT 0,  -- condition de reglement
   fk_mode_reglement  integer DEFAULT 0,  -- mode de reglement (Virement, Prelevement)

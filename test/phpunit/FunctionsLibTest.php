@@ -538,11 +538,11 @@ class FunctionsLibTest extends PHPUnit\Framework\TestCase
         $after=dol_string_nohtmltag($text, 1);
         $this->assertEquals("A string Another string", $after, "test5");
 
-        $text='<a href="/myurl" title="<u>Afficher projet</u>">ABC</a>';
+        $text='<a href="/myurl" title="<u>Afficher project</u>">ABC</a>';
         $after=dol_string_nohtmltag($text, 1);
         $this->assertEquals("ABC", $after, "test6");
 
-        $text='<a href="/myurl" title="&lt;u&gt;Afficher projet&lt;/u&gt;">DEF</a>';
+        $text='<a href="/myurl" title="&lt;u&gt;Afficher project&lt;/u&gt;">DEF</a>';
         $after=dol_string_nohtmltag($text, 1);
         $this->assertEquals("DEF", $after, "test7");
 

@@ -19,13 +19,13 @@
 /**
  *    \file       htdocs/core/modules/ticket/mod_ticket_universal.php
  *    \ingroup    ticket
- *    \brief      Fichier contenant la classe du modele de numerotation de reference de projet Universal
+ *    \brief      Fichier contenant la classe du modele de numerotation de reference de project Universal
  */
 
 require_once DOL_DOCUMENT_ROOT.'/core/modules/ticket/modules_ticket.php';
 
 /**
- *     Classe du modele de numerotation de reference de projet Universal
+ *     Classe du modele de numerotation de reference de project Universal
  */
 class mod_ticket_universal extends ModeleNumRefTicket
 {

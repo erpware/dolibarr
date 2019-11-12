@@ -382,7 +382,7 @@ class Notify
 			$projtitle='';
 			if (! empty($object->fk_project))
 			{
-				require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+				require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 				$proj = new Project($this->db);
 				$proj->fetch($object->fk_project);
 				$projtitle='('.$proj->title.')';

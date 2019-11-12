@@ -30,8 +30,8 @@ require '../main.inc.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/CMailFile.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/html.formmail.class.php';
-require_once DOL_DOCUMENT_ROOT . '/core/class/html.formprojet.class.php';
-require_once DOL_DOCUMENT_ROOT . '/projet/class/project.class.php';
+require_once DOL_DOCUMENT_ROOT . '/core/class/html.formproject.class.php';
+require_once DOL_DOCUMENT_ROOT . '/project/class/project.class.php';
 require_once DOL_DOCUMENT_ROOT . '/ecm/class/ecmfiles.class.php';
 require_once DOL_DOCUMENT_ROOT . '/compta/bank/class/account.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/expensereport.lib.php';
@@ -1768,7 +1768,7 @@ else
 				// Thirdparty
 				$morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . $soc->getNomUrl(1);
 				// Project
-				if (! empty($conf->projet->enabled))
+				if (! empty($conf->project->enabled))
 				{
 				    $langs->load("projects");
 				    $morehtmlref.='<br>'.$langs->trans('Project') . ' ';
@@ -1791,7 +1791,7 @@ else
 				        if (! empty($object->fk_project)) {
 				            $proj = new Project($db);
 				            $proj->fetch($object->fk_project);
-				            $morehtmlref.='<a href="'.DOL_URL_ROOT.'/projet/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
+				            $morehtmlref.='<a href="'.DOL_URL_ROOT.'/project/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
 				            $morehtmlref.=$proj->ref;
 				            $morehtmlref.='</a>';
 				        } else {
@@ -2118,7 +2118,7 @@ else
 					print '<td class="center">'.$langs->trans('LineNb').'</td>';
 					//print '<td class="center">'.$langs->trans('Piece').'</td>';
 					print '<td class="center">'.$langs->trans('Date').'</td>';
-					if (! empty($conf->projet->enabled)) print '<td class="minwidth100imp">'.$langs->trans('Project').'</td>';
+					if (! empty($conf->project->enabled)) print '<td class="minwidth100imp">'.$langs->trans('Project').'</td>';
 					if (!empty($conf->global->MAIN_USE_EXPENSE_IK)) print '<td>'.$langs->trans('CarCategory').'</td>';
 					print '<td class="center">'.$langs->trans('Type').'</td>';
 					print '<td>'.$langs->trans('Description').'</td>';
@@ -2155,7 +2155,7 @@ else
 							// Date
 							print '<td class="center">'.dol_print_date($db->jdate($line->date), 'day').'</td>';
 							// Project
-							if (! empty($conf->projet->enabled))
+							if (! empty($conf->project->enabled))
 							{
 								print '<td>';
 								if ($line->fk_project > 0)
@@ -2303,7 +2303,7 @@ else
 						{
 						    // Add line with link to add new file or attach line to an existing file
 						    $colspan = 10;
-						    if (! empty($conf->projet->enabled)) $colspan++;
+						    if (! empty($conf->project->enabled)) $colspan++;
 						    if (!empty($conf->global->MAIN_USE_EXPENSE_IK)) $colspan++;
 
 						    print '<tr class="tredited">';
@@ -2369,7 +2369,7 @@ else
 							print '</td>';
 
 							// Select project
-							if (! empty($conf->projet->enabled))
+							if (! empty($conf->project->enabled))
 							{
 								print '<td>';
 								$formproject->select_projects(-1, $line->fk_project, 'fk_project', 0, 0, 1, 1, 0, 0, 0, '', 0, 0, 'maxwidth300');
@@ -2442,7 +2442,7 @@ else
 				{
 				    $colspan = 11;
 				    if (! empty($conf->global->MAIN_USE_EXPENSE_IK)) $colspan++;
-				    if (! empty($conf->projet->enabled)) $colspan++;
+				    if (! empty($conf->project->enabled)) $colspan++;
 				    if ($action != 'editline') $colspan++;
 
 				    $nbFiles = $nbLinks = 0;
@@ -2499,7 +2499,7 @@ else
 					print '<tr class="liste_titre">';
 					print '<td></td>';
 					print '<td class="center">'.$langs->trans('Date').'</td>';
-					if (! empty($conf->projet->enabled)) print '<td class="minwidth100imp">'.$form->textwithpicto($langs->trans('Project'), $langs->trans("ClosedProjectsAreHidden")).'</td>';
+					if (! empty($conf->project->enabled)) print '<td class="minwidth100imp">'.$form->textwithpicto($langs->trans('Project'), $langs->trans("ClosedProjectsAreHidden")).'</td>';
 					if (!empty($conf->global->MAIN_USE_EXPENSE_IK)) print '<td>'.$langs->trans('CarCategory').'</td>';
 					print '<td class="center">'.$langs->trans('Type').'</td>';
 					print '<td>'.$langs->trans('Description').'</td>';
@@ -2524,7 +2524,7 @@ else
 					print '</td>';
 
 					// Select project
-					if (! empty($conf->projet->enabled))
+					if (! empty($conf->project->enabled))
 					{
 						print '<td>';
 						$formproject->select_projects(-1, $fk_project, 'fk_project', 0, 0, 1, -1, 0, 0, 0, '', 0, 0, 'maxwidth300');

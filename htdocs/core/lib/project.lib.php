@@ -24,7 +24,7 @@
  *		\brief      Functions used by project module
  *      \ingroup    project
  */
-require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 
 
 /**
@@ -40,13 +40,13 @@ function project_prepare_head($object)
 	$h = 0;
 	$head = array();
 
-	$head[$h][0] = DOL_URL_ROOT.'/projet/card.php?id='.$object->id;
+	$head[$h][0] = DOL_URL_ROOT.'/project/card.php?id='.$object->id;
 	$head[$h][1] = $langs->trans("Project");
 	$head[$h][2] = 'project';
 	$h++;
 
 	$nbContact = count($object->liste_contact(-1, 'internal')) + count($object->liste_contact(-1, 'external'));
-	$head[$h][0] = DOL_URL_ROOT.'/projet/contact.php?id='.$object->id;
+	$head[$h][0] = DOL_URL_ROOT.'/project/contact.php?id='.$object->id;
 	$head[$h][1] = $langs->trans("ProjectContact");
 	if ($nbContact > 0) $head[$h][1].= '<span class="badge marginleftonlyshort">'.$nbContact.'</span>';
 	$head[$h][2] = 'contact';
@@ -54,11 +54,11 @@ function project_prepare_head($object)
 
 	if (empty($conf->global->PROJECT_HIDE_TASKS))
 	{
-		// Then tab for sub level of projet, i mean tasks
-		$head[$h][0] = DOL_URL_ROOT.'/projet/tasks.php?id='.$object->id;
+		// Then tab for sub level of project, i mean tasks
+		$head[$h][0] = DOL_URL_ROOT.'/project/tasks.php?id='.$object->id;
 		$head[$h][1] = $langs->trans("Tasks");
 
-		require_once DOL_DOCUMENT_ROOT.'/projet/class/task.class.php';
+		require_once DOL_DOCUMENT_ROOT.'/project/class/task.class.php';
 		$taskstatic=new Task($db);
 		$nbTasks=count($taskstatic->getTasksArray(0, 0, $object->id, 0, 0));
 		if ($nbTasks > 0) $head[$h][1].= '<span class="badge marginleftonlyshort">'.($nbTasks).'</span>';
@@ -80,7 +80,7 @@ function project_prepare_head($object)
 		}
 		else dol_print_error($db);
 
-		$head[$h][0] = DOL_URL_ROOT.'/projet/tasks/time.php?withproject=1&projectid='.$object->id;
+		$head[$h][0] = DOL_URL_ROOT.'/project/tasks/time.php?withproject=1&projectid='.$object->id;
 		$head[$h][1] = $langs->trans("TimeSpent");
 		if ($nbTimeSpent > 0) $head[$h][1].= '<span class="badge marginleftonlyshort">...</span>';
 		$head[$h][2] = 'timespent';
@@ -91,7 +91,7 @@ function project_prepare_head($object)
 		|| ! empty($conf->facture->enabled) || ! empty($conf->contrat->enabled)
 		|| ! empty($conf->ficheinter->enabled) || ! empty($conf->agenda->enabled) || ! empty($conf->deplacement->enabled))
 	{
-		$head[$h][0] = DOL_URL_ROOT.'/projet/element.php?id='.$object->id;
+		$head[$h][0] = DOL_URL_ROOT.'/project/element.php?id='.$object->id;
 		$head[$h][1] = $langs->trans("ProjectOverview");
 		$head[$h][2] = 'element';
 		$h++;
@@ -109,7 +109,7 @@ function project_prepare_head($object)
 		$nbNote = 0;
 		if(!empty($object->note_private)) $nbNote++;
 		if(!empty($object->note_public)) $nbNote++;
-		$head[$h][0] = DOL_URL_ROOT.'/projet/note.php?id='.$object->id;
+		$head[$h][0] = DOL_URL_ROOT.'/project/note.php?id='.$object->id;
 		$head[$h][1] = $langs->trans('Notes');
 		if ($nbNote > 0) $head[$h][1].= ' <span class="badge">'.$nbNote.'</span>';
 		$head[$h][2] = 'notes';
@@ -121,7 +121,7 @@ function project_prepare_head($object)
 	$upload_dir = $conf->projet->dir_output . "/" . dol_sanitizeFileName($object->ref);
 	$nbFiles = count(dol_dir_list($upload_dir, 'files', 0, '', '(\.meta|_preview.*\.png)$'));
 	$nbLinks=Link::count($db, $object->element, $object->id);
-	$head[$h][0] = DOL_URL_ROOT.'/projet/document.php?id='.$object->id;
+	$head[$h][0] = DOL_URL_ROOT.'/project/document.php?id='.$object->id;
 	$head[$h][1] = $langs->trans('Documents');
 	if (($nbFiles+$nbLinks) > 0) $head[$h][1].= '<span class="badge marginleftonlyshort">'.($nbFiles+$nbLinks).'</span>';
 	$head[$h][2] = 'document';
@@ -131,14 +131,14 @@ function project_prepare_head($object)
 	if (!empty($conf->global->PROJECT_ALLOW_COMMENT_ON_PROJECT))
 	{
 		$nbComments = $object->getNbComments();
-		$head[$h][0] = DOL_URL_ROOT.'/projet/comment.php?id='.$object->id;
+		$head[$h][0] = DOL_URL_ROOT.'/project/comment.php?id='.$object->id;
 		$head[$h][1] = $langs->trans("CommentLink");
 		if ($nbComments > 0) $head[$h][1].= '<span class="badge marginleftonlyshort">'.$nbComments.'</span>';
 		$head[$h][2] = 'project_comment';
 		$h++;
 	}
 
-	$head[$h][0] = DOL_URL_ROOT.'/projet/info.php?id='.$object->id;
+	$head[$h][0] = DOL_URL_ROOT.'/project/info.php?id='.$object->id;
 	$head[$h][1].= $langs->trans("Events");
 	if (! empty($conf->agenda->enabled) && (!empty($user->rights->agenda->myactions->read) || !empty($user->rights->agenda->allactions->read) ))
 	{
@@ -166,13 +166,13 @@ function task_prepare_head($object)
 	$h = 0;
 	$head = array();
 
-	$head[$h][0] = DOL_URL_ROOT.'/projet/tasks/task.php?id='.$object->id.(GETPOST('withproject')?'&withproject=1':'');
+	$head[$h][0] = DOL_URL_ROOT.'/project/tasks/task.php?id='.$object->id.(GETPOST('withproject')?'&withproject=1':'');
 	$head[$h][1] = $langs->trans("Card");
 	$head[$h][2] = 'task_task';
 	$h++;
 
 	$nbContact = count($object->liste_contact(-1, 'internal')) + count($object->liste_contact(-1, 'external'));
-	$head[$h][0] = DOL_URL_ROOT.'/projet/tasks/contact.php?id='.$object->id.(GETPOST('withproject')?'&withproject=1':'');
+	$head[$h][0] = DOL_URL_ROOT.'/project/tasks/contact.php?id='.$object->id.(GETPOST('withproject')?'&withproject=1':'');
 	$head[$h][1] = $langs->trans("TaskRessourceLinks");
 	if ($nbContact > 0) $head[$h][1].= '<span class="badge marginleftonlyshort">'.$nbContact.'</span>';
 	$head[$h][2] = 'task_contact';
@@ -193,7 +193,7 @@ function task_prepare_head($object)
 	}
 	else dol_print_error($db);
 
-	$head[$h][0] = DOL_URL_ROOT.'/projet/tasks/time.php?id='.$object->id.(GETPOST('withproject')?'&withproject=1':'');
+	$head[$h][0] = DOL_URL_ROOT.'/project/tasks/time.php?id='.$object->id.(GETPOST('withproject')?'&withproject=1':'');
 	$head[$h][1] = $langs->trans("TimeSpent");
 	if ($nbTimeSpent > 0) $head[$h][1].= '<span class="badge marginleftonlyshort">...</span>';
 	$head[$h][2] = 'task_time';
@@ -210,14 +210,14 @@ function task_prepare_head($object)
 		$nbNote = 0;
 		if(!empty($object->note_private)) $nbNote++;
 		if(!empty($object->note_public)) $nbNote++;
-		$head[$h][0] = DOL_URL_ROOT.'/projet/tasks/note.php?id='.$object->id.(GETPOST('withproject')?'&withproject=1':'');
+		$head[$h][0] = DOL_URL_ROOT.'/project/tasks/note.php?id='.$object->id.(GETPOST('withproject')?'&withproject=1':'');
 		$head[$h][1] = $langs->trans('Notes');
 		if ($nbNote > 0) $head[$h][1].= '<span class="badge marginleftonlyshort">'.$nbNote.'</span>';
 		$head[$h][2] = 'task_notes';
 		$h++;
 	}
 
-	$head[$h][0] = DOL_URL_ROOT.'/projet/tasks/document.php?id='.$object->id.(GETPOST('withproject')?'&withproject=1':'');
+	$head[$h][0] = DOL_URL_ROOT.'/project/tasks/document.php?id='.$object->id.(GETPOST('withproject')?'&withproject=1':'');
 	$filesdir = $conf->projet->dir_output . "/" . dol_sanitizeFileName($object->project->ref) . '/' .dol_sanitizeFileName($object->ref);
 	include_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 	include_once DOL_DOCUMENT_ROOT.'/core/class/link.class.php';
@@ -232,7 +232,7 @@ function task_prepare_head($object)
 	if (!empty($conf->global->PROJECT_ALLOW_COMMENT_ON_TASK))
 	{
 		$nbComments = $object->getNbComments();
-		$head[$h][0] = DOL_URL_ROOT.'/projet/tasks/comment.php?id='.$object->id.(GETPOST('withproject')?'&withproject=1':'');
+		$head[$h][0] = DOL_URL_ROOT.'/project/tasks/comment.php?id='.$object->id.(GETPOST('withproject')?'&withproject=1':'');
 		$head[$h][1] = $langs->trans("CommentLink");
 		if ($nbComments > 0) $head[$h][1].= '<span class="badge marginleftonlyshort">'.$nbComments.'</span>';
 		$head[$h][2] = 'task_comment';
@@ -254,7 +254,6 @@ function task_prepare_head($object)
 function project_timesheet_prepare_head($mode, $fuser = null)
 {
 	global $langs, $conf, $user;
-	$h = 0;
 	$head = array();
 
 	$h = 0;
@@ -265,7 +264,7 @@ function project_timesheet_prepare_head($mode, $fuser = null)
 
 	if (empty($conf->global->PROJECT_DISABLE_TIMESHEET_PERWEEK))
 	{
-		$head[$h][0] = DOL_URL_ROOT."/projet/activity/perweek.php".($param?'?'.$param:'');
+		$head[$h][0] = DOL_URL_ROOT."/project/activity/perweek.php".($param?'?'.$param:'');
 		$head[$h][1] = $langs->trans("InputPerWeek");
 		$head[$h][2] = 'inputperweek';
 		$h++;
@@ -273,7 +272,7 @@ function project_timesheet_prepare_head($mode, $fuser = null)
 
 	if (empty($conf->global->PROJECT_DISABLE_TIMESHEET_PERTIME))
 	{
-		$head[$h][0] = DOL_URL_ROOT."/projet/activity/perday.php".($param?'?'.$param:'');
+		$head[$h][0] = DOL_URL_ROOT."/project/activity/perday.php".($param?'?'.$param:'');
 		$head[$h][1] = $langs->trans("InputPerDay");
 		$head[$h][2] = 'inputperday';
 		$h++;
@@ -281,7 +280,7 @@ function project_timesheet_prepare_head($mode, $fuser = null)
 
 	/*if ($conf->global->MAIN_FEATURES_LEVEL >= 2)
 	{
-		$head[$h][0] = DOL_URL_ROOT."/projet/activity/perline.php".($param?'?'.$param:'');
+		$head[$h][0] = DOL_URL_ROOT."/project/activity/perline.php".($param?'?'.$param:'');
 		$head[$h][1] = $langs->trans("InputDetail");
 		$head[$h][2] = 'inputperline';
 		$h++;
@@ -303,24 +302,23 @@ function project_timesheet_prepare_head($mode, $fuser = null)
 function project_admin_prepare_head()
 {
 	global $langs, $conf, $user;
-	$h = 0;
 	$head = array();
 
 	$h = 0;
 
-	$head[$h][0] = DOL_URL_ROOT."/projet/admin/project.php";
+	$head[$h][0] = DOL_URL_ROOT."/project/admin/project.php";
 	$head[$h][1] = $langs->trans("Projects");
 	$head[$h][2] = 'project';
 	$h++;
 
 	complete_head_from_modules($conf, $langs, null, $head, $h, 'project_admin');
 
-	$head[$h][0] = DOL_URL_ROOT."/projet/admin/project_extrafields.php";
+	$head[$h][0] = DOL_URL_ROOT."/project/admin/project_extrafields.php";
 	$head[$h][1] = $langs->trans("ExtraFieldsProject");
 	$head[$h][2] = 'attributes';
 	$h++;
 
-	$head[$h][0] = DOL_URL_ROOT.'/projet/admin/project_task_extrafields.php';
+	$head[$h][0] = DOL_URL_ROOT.'/project/admin/project_task_extrafields.php';
 	$head[$h][1] = $langs->trans("ExtraFieldsProjectTask");
 	$head[$h][2] = 'attributes_task';
 	$h++;
@@ -493,7 +491,7 @@ function projectLinesa(&$inc, $parent, &$lines, &$level, $var, $showproject, &$t
 				// Title of task
 				print "<td>";
 				if ($showlineingray) print '<i>';
-				//else print '<a href="'.DOL_URL_ROOT.'/projet/tasks/task.php?id='.$lines[$i]->id.'&withproject=1">';
+				//else print '<a href="'.DOL_URL_ROOT.'/project/tasks/task.php?id='.$lines[$i]->id.'&withproject=1">';
 				for ($k = 0 ; $k < $level ; $k++)
 				{
 					print '<div class="marginleftonly">';
@@ -539,7 +537,7 @@ function projectLinesa(&$inc, $parent, &$lines, &$level, $var, $showproject, &$t
 				// Time spent
 				print '<td class="right">';
 				if ($showlineingray) print '<i>';
-				else print '<a href="'.DOL_URL_ROOT.'/projet/tasks/time.php?id='.$lines[$i]->id.($showproject?'':'&withproject=1').'">';
+				else print '<a href="'.DOL_URL_ROOT.'/project/tasks/time.php?id='.$lines[$i]->id.($showproject?'':'&withproject=1').'">';
 				if ($lines[$i]->duration) print convertSecondToTime($lines[$i]->duration, $timespentoutputformat);
 				else print '--:--';
 				if ($showlineingray) print '</i>';
@@ -662,7 +660,7 @@ function projectLinesa(&$inc, $parent, &$lines, &$level, $var, $showproject, &$t
 		print convertSecondToTime($total_projectlinesa_planned, 'allhourmin');
 		print '</td>';
 		print '<td class="nowrap liste_total right">';
-		if ($projectidfortotallink > 0) print '<a href="'.DOL_URL_ROOT.'/projet/tasks/time.php?projectid='.$projectidfortotallink.($showproject?'':'&withproject=1').'">';
+		if ($projectidfortotallink > 0) print '<a href="'.DOL_URL_ROOT.'/project/tasks/time.php?projectid='.$projectidfortotallink.($showproject?'':'&withproject=1').'">';
 		print convertSecondToTime($total_projectlinesa_spent, 'allhourmin');
 		if ($projectidfortotallink > 0) print '</a>';
 		print '</td>';
@@ -878,7 +876,8 @@ function projectLinesPerAction(&$inc, $parent, $fuser, $lines, &$level, &$projec
 			print dol_print_date($lines[$i]->timespent_datehour, 'day');
 			print '</td>';
 
-			$disabledproject=1;$disabledtask=1;
+			$disabledproject=1;
+			$disabledtask=1;
 			//print "x".$lines[$i]->fk_project;
 			//var_dump($lines[$i]);
 			//var_dump($projectsrole[$lines[$i]->fk_project]);
@@ -1087,7 +1086,7 @@ function projectLinesPerDay(&$inc, $parent, $fuser, $lines, &$level, &$projectsr
                     if (! empty($arrayfields['p.budget_amount']['checked'])) print_liste_field_titre($arrayfields['p.budget_amount']['label'], $_SERVER["PHP_SELF"], 'p.budget_amount', "", $param, '', $sortfield, $sortorder, 'right ');
                     if (! empty($arrayfields['p.usage_bill_time']['checked']))     print_liste_field_titre($arrayfields['p.usage_bill_time']['label'], $_SERVER["PHP_SELF"], 'p.usage_bill_time', "", $param, '', $sortfield, $sortorder, 'right ');
 
-                    $extrafieldsobjectkey='projet';
+                    $extrafieldsobjectkey='project';
                     $extrafieldsobjectprefix='efp.';
                     include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_search_title.tpl.php';
 
@@ -1127,7 +1126,7 @@ function projectLinesPerDay(&$inc, $parent, $fuser, $lines, &$level, &$projectsr
                         print "</td>\n";
                     }
 
-                    $extrafieldsobjectkey='projet';
+                    $extrafieldsobjectkey='project';
                     $extrafieldsobjectprefix='efp.';
                     include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_print_fields.tpl.php';
 
@@ -1207,7 +1206,7 @@ function projectLinesPerDay(&$inc, $parent, $fuser, $lines, &$level, &$projectsr
 				// $lines[$i]->duration is a denormalised field = summ of time spent by everybody for task. What we need is time consummed by user
 				if ($lines[$i]->duration)
 				{
-					print '<a href="'.DOL_URL_ROOT.'/projet/tasks/time.php?id='.$lines[$i]->id.'">';
+					print '<a href="'.DOL_URL_ROOT.'/project/tasks/time.php?id='.$lines[$i]->id.'">';
 					print convertSecondToTime($lines[$i]->duration, 'allhourmin');
 					print '</a>';
 				}
@@ -1466,7 +1465,7 @@ function projectLinesPerWeek(&$inc, $firstdaytoshow, $fuser, $parent, $lines, &$
                     if (! empty($arrayfields['p.budget_amount']['checked'])) print_liste_field_titre($arrayfields['p.budget_amount']['label'], $_SERVER["PHP_SELF"], 'p.budget_amount', "", $param, '', $sortfield, $sortorder, 'right ');
                     if (! empty($arrayfields['p.usage_bill_time']['checked']))     print_liste_field_titre($arrayfields['p.usage_bill_time']['label'], $_SERVER["PHP_SELF"], 'p.usage_bill_time', "", $param, '', $sortfield, $sortorder, 'right ');
 
-                    $extrafieldsobjectkey='projet';
+                    $extrafieldsobjectkey='project';
                     $extrafieldsobjectprefix='efp.';
                     include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_search_title.tpl.php';
 
@@ -1506,7 +1505,7 @@ function projectLinesPerWeek(&$inc, $firstdaytoshow, $fuser, $parent, $lines, &$
                         print "</td>\n";
                     }
 
-                    $extrafieldsobjectkey='projet';
+                    $extrafieldsobjectkey='project';
                     $extrafieldsobjectprefix='efp.';
                     include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_print_fields.tpl.php';
 
@@ -1587,7 +1586,7 @@ function projectLinesPerWeek(&$inc, $firstdaytoshow, $fuser, $parent, $lines, &$
 				// $lines[$i]->duration is a denormalised field = summ of time spent by everybody for task. What we need is time consummed by user
 				if ($lines[$i]->duration)
 				{
-					print '<a href="'.DOL_URL_ROOT.'/projet/tasks/time.php?id='.$lines[$i]->id.'">';
+					print '<a href="'.DOL_URL_ROOT.'/project/tasks/time.php?id='.$lines[$i]->id.'">';
 					print convertSecondToTime($lines[$i]->duration, 'allhourmin');
 					print '</a>';
 				}
@@ -1620,7 +1619,8 @@ function projectLinesPerWeek(&$inc, $firstdaytoshow, $fuser, $parent, $lines, &$
 				//var_dump($projectstatic->weekWorkLoadPerTask);
 
 				// Fields to show current time
-				$tableCell=''; $modeinput='hours';
+				$tableCell='';
+				$modeinput='hours';
 				for ($idw = 0; $idw < 7; $idw++)
 				{
 					$tmpday=dol_time_plus_duree($firstdaytoshow, $idw, 'd');
@@ -1758,7 +1758,7 @@ function print_projecttasks_array($db, $form, $socid, $projectsListId, $mytasks 
 {
 	global $langs,$conf,$user,$bc;
 
-	require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 
 	$projectstatic=new Project($db);
 	$thirdpartystatic=new Societe($db);
@@ -1775,7 +1775,7 @@ function print_projecttasks_array($db, $form, $socid, $projectsListId, $mytasks 
 	print '<div class="div-table-responsive-no-min">';
 	print '<table class="noborder centpercent">';
 
-	$sql= " FROM ".MAIN_DB_PREFIX."projet as p";
+	$sql= " FROM ".MAIN_DB_PREFIX."project as p";
 	if ($mytasks)
 	{
 		$sql.= ", ".MAIN_DB_PREFIX."projet_task as t";
@@ -1839,7 +1839,7 @@ function print_projecttasks_array($db, $form, $socid, $projectsListId, $mytasks 
 	$sql2 = "SELECT p.rowid as projectid, p.ref, p.title, p.fk_soc, s.nom as socname, p.fk_user_creat, p.public, p.fk_statut as status, p.fk_opp_status as opp_status, p.opp_amount,";
 	$sql2.= " p.dateo, p.datee,";
 	$sql2.= " COUNT(t.rowid) as nb, SUM(t.planned_workload) as planned_workload, SUM(t.planned_workload * t.progress / 100) as declared_progess_workload";
-	$sql2.= " FROM ".MAIN_DB_PREFIX."projet as p";
+	$sql2.= " FROM ".MAIN_DB_PREFIX."project as p";
 	$sql2.= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s ON s.rowid = p.fk_soc";
 	$sql2.= " LEFT JOIN ".MAIN_DB_PREFIX."projet_task as t ON p.rowid = t.fk_projet";
 	$sql2.= " WHERE p.rowid IN (".join(',', $arrayidofprojects).")";

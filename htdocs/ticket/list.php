@@ -31,8 +31,8 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formticket.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/user/class/user.class.php';
-include_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-include_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+include_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
+include_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
 include_once DOL_DOCUMENT_ROOT.'/core/lib/project.lib.php';
 
 // Load translation files required by the page
@@ -378,7 +378,7 @@ if ($projectid > 0 || $project_ref) {
 
         // Project card
 
-        $linkback = '<a href="'.DOL_URL_ROOT.'/projet/list.php?restore_lastsearch_values=1">'.$langs->trans("BackToList").'</a>';
+        $linkback = '<a href="'.DOL_URL_ROOT.'/project/list.php?restore_lastsearch_values=1">'.$langs->trans("BackToList").'</a>';
 
         $morehtmlref = '<div class="refidno">';
         // Title

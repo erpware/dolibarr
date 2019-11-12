@@ -34,11 +34,11 @@ require '../../main.inc.php';
 require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture-rec.class.php';
 require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formother.class.php';
-if (!empty($conf->projet->enabled)) {
-	include_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-	//include_once DOL_DOCUMENT_ROOT . '/core/class/html.formprojet.class.php';
+if (!empty($conf->project->enabled)) {
+	include_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
+	//include_once DOL_DOCUMENT_ROOT . '/core/class/html.formproject.class.php';
 }
-require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/invoice.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
@@ -965,7 +965,7 @@ llxHeader('', $langs->trans("RepeatableInvoices"), 'ch-facture.html#s-fac-factur
 
 $form = new Form($db);
 $formother = new FormOther($db);
-if (!empty($conf->projet->enabled)) { $formproject = new FormProjets($db); }
+if (!empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
 $companystatic = new Societe($db);
 $invoicerectmp = new FactureRec($db);
 
@@ -996,7 +996,7 @@ if ($action == 'create')
 		dol_fiche_head(null, '', '', 0);
 
 		$rowspan = 4;
-		if (!empty($conf->projet->enabled)) $rowspan++;
+		if (!empty($conf->project->enabled)) $rowspan++;
 		if ($object->fk_account > 0) $rowspan++;
 
 		print '<table class="border centpercent">';
@@ -1075,13 +1075,13 @@ if ($action == 'create')
 		print "</td></tr>";
 
 		// Project
-		if (!empty($conf->projet->enabled) && is_object($object->thirdparty) && $object->thirdparty->id > 0)
+		if (!empty($conf->project->enabled) && is_object($object->thirdparty) && $object->thirdparty->id > 0)
 		{
 			$projectid = GETPOST('projectid') ?GETPOST('projectid') : $object->fk_project;
 			$langs->load('projects');
 			print '<tr><td>'.$langs->trans('Project').'</td><td>';
 			$numprojet = $formproject->select_projects($object->thirdparty->id, $projectid, 'projectid', 0, 0, 1, 0, 0, 0, 0, '', 0, 0, '');
-			print ' &nbsp; <a href="'.DOL_URL_ROOT.'/projet/card.php?socid='.$object->thirdparty->id.'&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&socid='.$object->thirdparty->id.(!empty($id) ? '&id='.$id : '')).'">'.$langs->trans("AddProject").'</a>';
+			print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid='.$object->thirdparty->id.'&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&socid='.$object->thirdparty->id.(!empty($id) ? '&id='.$id : '')).'">'.$langs->trans("AddProject").'</a>';
 			print '</td></tr>';
 		}
 
@@ -1245,7 +1245,7 @@ else
 		// Thirdparty
 		$morehtmlref .= $langs->trans('ThirdParty').' : '.$object->thirdparty->getNomUrl(1);
 		// Project
-		if (!empty($conf->projet->enabled))
+		if (!empty($conf->project->enabled))
 		{
 			$langs->load("projects");
 			$morehtmlref .= '<br>'.$langs->trans('Project').' ';
@@ -1269,7 +1269,7 @@ else
 				if (!empty($object->fk_project)) {
 					$proj = new Project($db);
 					$proj->fetch($object->fk_project);
-					$morehtmlref .= '<a href="'.DOL_URL_ROOT.'/projet/card.php?id='.$object->fk_project.'" title="'.$langs->trans('ShowProject').'">';
+					$morehtmlref .= '<a href="'.DOL_URL_ROOT.'/project/card.php?id='.$object->fk_project.'" title="'.$langs->trans('ShowProject').'">';
 					$morehtmlref .= $proj->ref;
 					$morehtmlref .= '</a>';
 				} else {

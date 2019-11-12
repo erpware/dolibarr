@@ -35,10 +35,10 @@ require_once DOL_DOCUMENT_ROOT.'/fichinter/class/fichinter.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/modules/fichinter/modules_fichinter.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/fichinter.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
-if (! empty($conf->projet->enabled))
+if (! empty($conf->project->enabled))
 {
-	require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
 }
 if ($conf->contrat->enabled)
 {
@@ -812,7 +812,7 @@ if (empty($reshook))
 $form = new Form($db);
 $formfile = new FormFile($db);
 if ($conf->contrat->enabled) $formcontract = new FormContract($db);
-if (! empty($conf->projet->enabled)) { $formproject = new FormProjets($db); }
+if (! empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
 
 llxHeader('', $langs->trans("Intervention"));
 
@@ -926,7 +926,7 @@ if ($action == 'create')
 		print '</td></tr>';
 
 		// Project
-		if (! empty($conf->projet->enabled))
+		if (! empty($conf->project->enabled))
 		{
 			$formproject=new FormProjets($db);
 
@@ -942,7 +942,7 @@ if ($action == 'create')
             $numprojet=$formproject->select_projects($soc->id, $projectid, 'projectid');
             if ($numprojet==0)
             {
-                print ' &nbsp; <a href="'.DOL_URL_ROOT.'/projet/card.php?socid='.$soc->id.'&action=create"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle"></span></a>';
+                print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid='.$soc->id.'&action=create"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle"></span></a>';
             }
             print '</td></tr>';
         }
@@ -1190,7 +1190,7 @@ elseif ($id > 0 || ! empty($ref))
 	// Thirdparty
 	$morehtmlref.=$langs->trans('ThirdParty') . ' : ' . $object->thirdparty->getNomUrl(1);
 	// Project
-	if (! empty($conf->projet->enabled))
+	if (! empty($conf->project->enabled))
 	{
 	    $langs->load("projects");
 	    $morehtmlref.='<br>'.$langs->trans('Project') . ' ';
@@ -1214,7 +1214,7 @@ elseif ($id > 0 || ! empty($ref))
 	        if (! empty($object->fk_project)) {
 	            $proj = new Project($db);
 	            $proj->fetch($object->fk_project);
-	            $morehtmlref.='<a href="'.DOL_URL_ROOT.'/projet/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
+	            $morehtmlref.='<a href="'.DOL_URL_ROOT.'/project/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
 	            $morehtmlref.=$proj->ref;
 	            $morehtmlref.='</a>';
 	        } else {
@@ -1294,7 +1294,7 @@ elseif ($id > 0 || ! empty($ref))
             {
                 $contratstatic = new Contrat($db);
                 $contratstatic->fetch($object->fk_contrat);
-                //print '<a href="'.DOL_URL_ROOT.'/projet/card.php?id='.$selected.'">'.$projet->title.'</a>';
+                //print '<a href="'.DOL_URL_ROOT.'/project/card.php?id='.$selected.'">'.$project->title.'</a>';
                 print $contratstatic->getNomUrl(0, '', 1);
             }
             else

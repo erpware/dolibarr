@@ -1581,7 +1581,7 @@ class FormFile
 		}
 		elseif ($modulepart == 'project')
 		{
-			include_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+			include_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 			$object_instance = new Project($this->db);
 		}
 		elseif ($modulepart == 'fichinter')

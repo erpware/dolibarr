@@ -52,9 +52,9 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
 if (!empty($conf->commande->enabled))
 	require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
-if (!empty($conf->projet->enabled)) {
-	require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+if (!empty($conf->project->enabled)) {
+	require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
 }
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
 
@@ -2572,7 +2572,7 @@ $formmargin = new FormMargin($db);
 $soc = new Societe($db);
 $paymentstatic = new Paiement($db);
 $bankaccountstatic = new Account($db);
-if (!empty($conf->projet->enabled)) { $formproject = new FormProjets($db); }
+if (!empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
 
 $now = dol_now();
 
@@ -3255,12 +3255,12 @@ if ($action == 'create')
 	print '</td></tr>';
 
 	// Project
-	if (!empty($conf->projet->enabled))
+	if (!empty($conf->project->enabled))
 	{
 		$langs->load('projects');
 		print '<tr><td>'.$langs->trans('Project').'</td><td colspan="2">';
 		$numprojet = $formproject->select_projects(($socid > 0 ? $socid : -1), $projectid, 'projectid', 0, 0, 1, 1);
-		print ' &nbsp; <a href="'.DOL_URL_ROOT.'/projet/card.php?socid='.$soc->id.'&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&socid='.$soc->id.($fac_rec ? '&fac_rec='.$fac_rec : '')).'"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle"></span></a>';
+		print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid='.$soc->id.'&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&socid='.$soc->id.($fac_rec ? '&fac_rec='.$fac_rec : '')).'"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle"></span></a>';
 		print '</td></tr>';
 	}
 
@@ -3817,7 +3817,7 @@ elseif ($id > 0 || !empty($ref))
 	$morehtmlref .= '<br>'.$langs->trans('ThirdParty').' : '.$object->thirdparty->getNomUrl(1, 'customer');
 	if (empty($conf->global->MAIN_DISABLE_OTHER_LINK) && $object->thirdparty->id > 0) $morehtmlref .= ' (<a href="'.DOL_URL_ROOT.'/compta/facture/list.php?socid='.$object->thirdparty->id.'&search_societe='.urlencode($object->thirdparty->name).'">'.$langs->trans("OtherBills").'</a>)';
 	// Project
-	if (!empty($conf->projet->enabled))
+	if (!empty($conf->project->enabled))
 	{
 		$langs->load("projects");
 		$morehtmlref .= '<br>'.$langs->trans('Project').' ';
@@ -3841,7 +3841,7 @@ elseif ($id > 0 || !empty($ref))
 			if (!empty($object->fk_project)) {
 				$proj = new Project($db);
 				$proj->fetch($object->fk_project);
-				$morehtmlref .= '<a href="'.DOL_URL_ROOT.'/projet/card.php?id='.$object->fk_project.'" title="'.$langs->trans('ShowProject').'">';
+				$morehtmlref .= '<a href="'.DOL_URL_ROOT.'/project/card.php?id='.$object->fk_project.'" title="'.$langs->trans('ShowProject').'">';
 				$morehtmlref .= $proj->ref;
 				$morehtmlref .= '</a>';
 			} else {
@@ -4352,7 +4352,7 @@ elseif ($id > 0 || !empty($ref))
 	if ($object->type == Facture::TYPE_CREDIT_NOTE) $sign = - 1;
 	$nbrows = 8;
 	$nbcols = 3;
-	if (!empty($conf->projet->enabled))
+	if (!empty($conf->project->enabled))
 		$nbrows++;
 	if (!empty($conf->banque->enabled)) {
 		$nbrows++;

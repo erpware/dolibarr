@@ -22,10 +22,10 @@
  */
 
 /**
- *  \defgroup   projet     Module project
+ *  \defgroup   project     Module project
  *	\brief      Module to create projects/tasks/gantt diagram. Projects can them be affected to tasks.
  *  \file       htdocs/core/modules/modProjet.class.php
- *	\ingroup    projet
+ *	\ingroup    project
  *	\brief      Fichier de description et activation du module Projet
  */
 include_once DOL_DOCUMENT_ROOT .'/core/modules/DolibarrModules.class.php';
@@ -57,11 +57,11 @@ class modProjet extends DolibarrModules
 		$this->version = 'dolibarr';
 
 		$this->const_name = 'MAIN_MODULE_'.strtoupper($this->name);
-		$this->config_page_url = array("project.php@projet");
+		$this->config_page_url = array("project.php@project");
 		$this->picto='project';
 
 		// Data directories to create when module is enabled
-		$this->dirs = array("/projet/temp");
+		$this->dirs = array("/project/temp");
 
 		// Dependencies
 		$this->hidden = false;			// A condition to hide module
@@ -147,7 +147,7 @@ class modProjet extends DolibarrModules
 
 		// Permissions
 		$this->rights = array();
-		$this->rights_class = 'projet';
+		$this->rights_class = 'project';
 		$r=0;
 
 		$r++;
@@ -214,12 +214,12 @@ class modProjet extends DolibarrModules
 
 		$this->export_code[$r]=$this->rights_class.'_'.$r;
 		$this->export_label[$r]='ProjectsAndTasksLines';	// Translation key (used only if key ExportDataset_xxx_z not found)
-		$this->export_permission[$r]=array(array("projet","export"));
+		$this->export_permission[$r]=array(array("project","export"));
 		$this->export_dependencies_array[$r]=array('projecttask'=>'pt.rowid', 'task_time'=>'ptt.rowid');
 
 		$this->export_TypeFields_array[$r]=array('s.rowid'=>"List:societe:nom::thirdparty",'s.nom'=>'Text','s.address'=>'Text','s.zip'=>'Text','s.town'=>'Text','s.fk_pays'=>'List:c_country:label',
 		's.phone'=>'Text','s.email'=>'Text','s.siren'=>'Text','s.siret'=>'Text','s.ape'=>'Text','s.idprof4'=>'Text','s.code_compta'=>'Text','s.code_compta_fournisseur'=>'Text',
-		'p.rowid'=>"List:projet:ref::project",'p.ref'=>"Text",'p.title'=>"Text",'p.datec'=>"Date",'p.dateo'=>"Date",'p.datee'=>"Date",'p.fk_statut'=>'Status','cls.code'=>"Text",'p.opp_percent'=>'Numeric','p.opp_amount'=>'Numeric','p.description'=>"Text",'p.entity'=>'Numeric',
+		'p.rowid'=>"List:project:ref::project",'p.ref'=>"Text",'p.title'=>"Text",'p.datec'=>"Date",'p.dateo'=>"Date",'p.datee'=>"Date",'p.fk_statut'=>'Status','cls.code'=>"Text",'p.opp_percent'=>'Numeric','p.opp_amount'=>'Numeric','p.description'=>"Text",'p.entity'=>'Numeric',
 		'pt.rowid'=>'Numeric','pt.ref'=>'Text','pt.label'=>'Text','pt.dateo'=>"Date",'pt.datee'=>"Date",'pt.duration_effective'=>"Duree",'pt.planned_workload'=>"Numeric",'pt.progress'=>"Numeric",'pt.description'=>"Text",
 		'ptt.rowid'=>'Numeric','ptt.task_date'=>'Date','ptt.task_duration'=>"Duree",'ptt.fk_user'=>"List:user:CONCAT(lastname,' ',firstname)",'ptt.note'=>"Text");
 		$this->export_entities_array[$r]=array('s.rowid'=>"company",'s.nom'=>'company','s.address'=>'company','s.zip'=>'company','s.town'=>'company','s.fk_pays'=>'company',
@@ -244,7 +244,7 @@ class modProjet extends DolibarrModules
 		// Add fields for project
 		$this->export_fields_array[$r]=array_merge($this->export_fields_array[$r], array());
 		// Add extra fields for project
-		$keyforselect='projet'; $keyforelement='project'; $keyforaliasextra='extra';
+		$keyforselect='project'; $keyforelement='project'; $keyforaliasextra='extra';
 		include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
 		// Add fields for tasks
 		$this->export_fields_array[$r]=array_merge($this->export_fields_array[$r], array('pt.rowid'=>'TaskId', 'pt.ref'=>'RefTask', 'pt.label'=>'LabelTask', 'pt.dateo'=>"TaskDateStart", 'pt.datee'=>"TaskDateEnd", 'pt.duration_effective'=>"DurationEffective", 'pt.planned_workload'=>"PlannedWorkload", 'pt.progress'=>"Progress", 'pt.description'=>"TaskDescription"));
@@ -257,7 +257,7 @@ class modProjet extends DolibarrModules
         $this->export_entities_array[$r]=array_merge($this->export_entities_array[$r], array('ptt.rowid'=>'task_time','ptt.task_date'=>'task_time','ptt.task_duration'=>"task_time",'ptt.fk_user'=>"task_time",'ptt.note'=>"task_time"));
 
         $this->export_sql_start[$r]='SELECT DISTINCT ';
-		$this->export_sql_end[$r]  =' FROM '.MAIN_DB_PREFIX.'projet as p';
+		$this->export_sql_end[$r]  =' FROM '.MAIN_DB_PREFIX.'project as p';
         $this->export_sql_end[$r] .=' LEFT JOIN '.MAIN_DB_PREFIX.'projet_extrafields as extra ON p.rowid = extra.fk_object';
         $this->export_sql_end[$r] .=' LEFT JOIN '.MAIN_DB_PREFIX.'c_lead_status as cls ON p.fk_opp_status = cls.rowid';
         $this->export_sql_end[$r] .=' LEFT JOIN '.MAIN_DB_PREFIX."projet_task as pt ON p.rowid = pt.fk_projet";
@@ -292,7 +292,7 @@ class modProjet extends DolibarrModules
     		// End add extra fields
     		$this->import_fieldshidden_array[$r]=array('t.fk_user_creat'=>'user->id','extra.fk_object'=>'lastrowid-'.MAIN_DB_PREFIX.'projet_task');    // aliastable.field => ('user->id' or 'lastrowid-'.tableparent)
     		$this->import_convertvalue_array[$r]=array(
-    		    't.fk_projet'=>array('rule'=>'fetchidfromref','classfile'=>'/projet/class/project.class.php','class'=>'Project','method'=>'fetch','element'=>'Project'),
+    		    't.fk_projet'=>array('rule'=>'fetchidfromref','classfile'=>'/project/class/project.class.php','class'=>'Project','method'=>'fetch','element'=>'Project'),
     		    't.ref'=>array('rule'=>'getrefifauto')
     		);
     		//$this->import_convertvalue_array[$r]=array('s.fk_soc'=>array('rule'=>'lastrowid',table='t');

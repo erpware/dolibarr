@@ -40,9 +40,9 @@ require_once DOL_DOCUMENT_ROOT.'/comm/action/class/actioncomm.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formactions.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
-require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-require_once DOL_DOCUMENT_ROOT.'/projet/class/task.class.php';
-require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
+require_once DOL_DOCUMENT_ROOT.'/project/class/task.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
 
 // Load translation files required by the page
@@ -1041,7 +1041,7 @@ if ($action == 'create')
 	}
 
 	// Project
-	if (! empty($conf->projet->enabled))
+	if (! empty($conf->project->enabled))
 	{
 		// Projet associe
 		$langs->load("projects");
@@ -1052,7 +1052,7 @@ if ($action == 'create')
 
 		$numproject=$formproject->select_projects((! empty($societe->id)?$societe->id:-1), $projectid, 'projectid', 0, 0, 1, 1);
 
-		print ' &nbsp; <a href="'.DOL_URL_ROOT.'/projet/card.php?socid='.$societe->id.'&action=create"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle paddingleft"></span></a>';
+		print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid='.$societe->id.'&action=create"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle paddingleft"></span></a>';
 		$urloption='?action=create';
 		$url = dol_buildpath('comm/action/card.php', 2).$urloption;
 
@@ -1444,7 +1444,7 @@ if ($id > 0)
 		}
 
 		// Project
-		if (! empty($conf->projet->enabled))
+		if (! empty($conf->project->enabled))
 		{
 			$langs->load("projects");
 
@@ -1452,7 +1452,7 @@ if ($id > 0)
 			$numprojet=$formproject->select_projects(($object->socid  > 0 ? $object->socid : -1), $object->fk_project, 'projectid', 0, 0, 1, 0, 0, 0, 0, '', 0);
 			if ($numprojet==0)
 			{
-				print ' &nbsp; <a href="'.DOL_URL_ROOT.'/projet/card.php?socid='.$object->socid.'&action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit').'"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle paddingleft"></span></a>';
+				print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid='.$object->socid.'&action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit').'"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle paddingleft"></span></a>';
 			}
 			print '</td></tr>';
 		}
@@ -1468,7 +1468,7 @@ if ($id > 0)
             print '<tr>';
 			print '<td>'.$langs->trans("LinkedObject").'</td>';
 
-			if ($object->elementtype == 'task' && ! empty($conf->projet->enabled))
+			if ($object->elementtype == 'task' && ! empty($conf->project->enabled))
 			{
 			    print '<td id="project-task-input-container" >';
 
@@ -1574,7 +1574,7 @@ if ($id > 0)
 		// Thirdparty
 		//$morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . $object->thirdparty->getNomUrl(1);
 		// Project
-		if (! empty($conf->projet->enabled))
+		if (! empty($conf->project->enabled))
 		{
 		    $langs->load("projects");
 		    //$morehtmlref.='<br>'.$langs->trans('Project') . ' ';
@@ -1600,7 +1600,7 @@ if ($id > 0)
 		        if (! empty($object->fk_project)) {
 		            $proj = new Project($db);
 		            $proj->fetch($object->fk_project);
-		            $morehtmlref.='<a href="'.DOL_URL_ROOT.'/projet/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
+		            $morehtmlref.='<a href="'.DOL_URL_ROOT.'/project/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
 		            $morehtmlref.=$proj->ref;
 		            $morehtmlref.='</a>';
 		            if ($proj->title) $morehtmlref.=' - '.$proj->title;

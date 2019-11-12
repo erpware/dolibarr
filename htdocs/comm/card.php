@@ -53,7 +53,7 @@ if (! empty($conf->contrat->enabled))  $langs->load("contracts");
 if (! empty($conf->commande->enabled)) $langs->load("orders");
 if (! empty($conf->expedition->enabled)) $langs->load("sendings");
 if (! empty($conf->facture->enabled)) $langs->load("bills");
-if (! empty($conf->projet->enabled))  $langs->load("projects");
+if (! empty($conf->project->enabled))  $langs->load("projects");
 if (! empty($conf->ficheinter->enabled)) $langs->load("interventions");
 if (! empty($conf->notification->enabled)) $langs->load("mails");
 

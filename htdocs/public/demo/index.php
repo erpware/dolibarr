@@ -85,12 +85,12 @@ if (empty($reshook))
 		'url'=>$url
 		),
 		array('default'=>'-1', 'key'=>'profdemofun','label'=>'DemoFundation',
-		'disablemodules'=>'banque,barcode,cashdesk,commande,commercial,compta,comptabilite,contrat,expedition,externalsite,ficheinter,ftp,incoterm,mailmanspip,margin,prelevement,product,productbatch,projet,propal,propale,service,societe,stock,tax',
+		'disablemodules'=>'banque,barcode,cashdesk,commande,commercial,compta,comptabilite,contrat,expedition,externalsite,ficheinter,ftp,incoterm,mailmanspip,margin,prelevement,product,productbatch,project,propal,propale,service,societe,stock,tax',
 		'icon'=>DOL_URL_ROOT.'/public/demo/dolibarr_screenshot6.png',
 		'url'=>$url
 		),
 		array('default'=>'0', 'key'=>'profdemofun2','label'=>'DemoFundation2',
-		'disablemodules'=>'barcode,cashdesk,commande,commercial,compta,comptabilite,contrat,expedition,externalsite,ficheinter,ftp,incoterm,mailmanspip,margin,prelevement,product,productbatch,projet,propal,propale,service,societe,stock,tax',
+		'disablemodules'=>'barcode,cashdesk,commande,commercial,compta,comptabilite,contrat,expedition,externalsite,ficheinter,ftp,incoterm,mailmanspip,margin,prelevement,product,productbatch,project,propal,propale,service,societe,stock,tax',
 		//'icon'=>DOL_URL_ROOT.'/public/demo/dolibarr_screenshot6.png',
 		'icon'=>DOL_URL_ROOT.'/public/demo/demo-profile-foundation.jpg',
 		'url'=>$url

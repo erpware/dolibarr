@@ -37,8 +37,8 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formother.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/report.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/modules/supplier_invoice/modules_facturefournisseur.php';
-if (!empty($conf->projet->enabled)) {
-	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+if (!empty($conf->project->enabled)) {
+	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
 }
 
 // Load translation files required by the page
@@ -110,8 +110,8 @@ $hookmanager->initHooks(array('orderstoinvoicesupplier'));
 
 if (($action == 'create' || $action == 'add') && !$error) {
 	require_once DOL_DOCUMENT_ROOT.'/core/lib/fourn.lib.php';
-	if (!empty($conf->projet->enabled))
-		require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+	if (!empty($conf->project->enabled))
+		require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 
 	// Load translation files required by the page
     $langs->loadLangs(array("bills", "main", "products"));
@@ -355,7 +355,7 @@ if ($action == 'create' && !$error) {
 	$html->select_types_paiements(isset($_POST['mode_reglement_id']) ? $_POST['mode_reglement_id'] : $mode_reglement_id, 'mode_reglement_id');
 	print '</td></tr>';
 	// Project
-	if (!empty($conf->projet->enabled)) {
+	if (!empty($conf->project->enabled)) {
 		$formproject = new FormProjets($db);
 
 		$langs->load('projects');

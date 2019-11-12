@@ -30,9 +30,9 @@ require_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/company.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
 require_once DOL_DOCUMENT_ROOT . '/contact/class/contact.class.php';
-if (!empty($conf->projet->enabled)) {
-    include_once DOL_DOCUMENT_ROOT . '/projet/class/project.class.php';
-    include_once DOL_DOCUMENT_ROOT . '/core/class/html.formprojet.class.php';
+if (!empty($conf->project->enabled)) {
+    include_once DOL_DOCUMENT_ROOT . '/project/class/project.class.php';
+    include_once DOL_DOCUMENT_ROOT . '/core/class/html.formproject.class.php';
     include_once DOL_DOCUMENT_ROOT . '/core/lib/project.lib.php';
 }
 if (!empty($conf->contrat->enabled)) {
@@ -490,7 +490,7 @@ if ($action == 'confirm_reopen' && $user->rights->ticket->manage && !GETPOST('ca
             }
         }
     }
-} // Categorisation dans projet
+} // Categorisation dans project
 elseif ($action == 'classin' && $user->rights->ticket->write) {
     if ($object->fetch(GETPOST('id', 'int'), '', GETPOST('track_id', 'alpha')) >= 0) {
         $object->setProject(GETPOST('projectid', 'int'));
@@ -609,7 +609,7 @@ if (GETPOSTISSET('actionbis') && $action == 'presend') $action = 'presend_addmes
 $userstat = new User($db);
 $form = new Form($db);
 $formticket = new FormTicket($db);
-if (! empty($conf->projet->enabled)) $formproject = new FormProjets($db);
+if (! empty($conf->project->enabled)) $formproject = new FormProjets($db);
 
 $help_url = 'FR:DocumentationModuleTicket';
 $page_title = $actionobject->getTitle($action);
@@ -691,7 +691,7 @@ if (empty($action) || $action == 'view' || $action == 'addlink' || $action == 'd
                  */
                 print '<table class="border centpercent">';
 
-                $linkback = '<a href="' . DOL_URL_ROOT . '/projet/list.php">' . $langs->trans("BackToList") . '</a>';
+                $linkback = '<a href="' . DOL_URL_ROOT . '/project/list.php">' . $langs->trans("BackToList") . '</a>';
 
                 // Ref
                 print '<tr><td width="30%">' . $langs->trans('Ref') . '</td><td colspan="3">';
@@ -786,7 +786,7 @@ if (empty($action) || $action == 'view' || $action == 'addlink' || $action == 'd
         }
 
         // Project
-        if (! empty($conf->projet->enabled))
+        if (! empty($conf->project->enabled))
         {
         	$langs->load("projects");
         	$morehtmlref.='<br>'.$langs->trans('Project');

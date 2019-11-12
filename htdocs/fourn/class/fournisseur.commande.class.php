@@ -2288,7 +2288,7 @@ class CommandeFournisseur extends CommonOrder
 
     // phpcs:disable PEAR.NamingConventions.ValidFunctionName.ScopeNotCamelCaps
 	/**
-     *	Set the id projet
+     *	Set the id project
      *
      *	@param      User			$user        		Objet utilisateur qui modifie
      *	@param      int				$id_projet    	 	Date de livraison

@@ -165,7 +165,7 @@ if ($conf->fournisseur->enabled)       $elementList['invoice_supplier_send']=$la
 if ($conf->societe->enabled)           $elementList['thirdparty']=$langs->trans('MailToThirdparty');
 if ($conf->adherent->enabled)          $elementList['member']=$langs->trans('MailToMember');
 if ($conf->contrat->enabled)           $elementList['contract']=$langs->trans('MailToSendContract');
-if ($conf->projet->enabled)            $elementList['project']=$langs->trans('MailToProject');
+if ($conf->project->enabled)            $elementList['project']=$langs->trans('MailToProject');
 $elementList['user']=$langs->trans('MailToUser');
 
 $parameters=array('elementList'=>$elementList);

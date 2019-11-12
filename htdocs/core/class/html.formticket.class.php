@@ -24,7 +24,7 @@
  */
 require_once DOL_DOCUMENT_ROOT . "/core/class/html.form.class.php";
 require_once DOL_DOCUMENT_ROOT . "/core/class/html.formmail.class.php";
-require_once DOL_DOCUMENT_ROOT . "/core/class/html.formprojet.class.php";
+require_once DOL_DOCUMENT_ROOT . "/core/class/html.formproject.class.php";
 
 if (!class_exists('FormCompany')) {
     include DOL_DOCUMENT_ROOT . '/core/class/html.formcompany.class.php';
@@ -349,9 +349,9 @@ class FormTicket
             }
         }
 
-        if (! empty($conf->projet->enabled) && ! $this->ispublic)
+        if (! empty($conf->project->enabled) && ! $this->ispublic)
         {
-            $formproject=new FormProjets($this->db);
+            $formproject=new FormProjects($this->db);
             print '<tr><td><label for="project"><span class="">' . $langs->trans("Project") . '</span></label></td><td>';
             print $formproject->select_projects(-1, GETPOST('projectid', 'int'), 'projectid', 0, 0, 1, 1);
             print '</td></tr>';

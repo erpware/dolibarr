@@ -28,8 +28,8 @@ require '../main.inc.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/fichinter/class/fichinter.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/fichinter.lib.php';
-if (! empty($conf->projet->enabled)) {
-	require_once DOL_DOCUMENT_ROOT . '/projet/class/project.class.php';
+if (! empty($conf->project->enabled)) {
+	require_once DOL_DOCUMENT_ROOT . '/project/class/project.class.php';
 }
 
 // Load translation files required by the page
@@ -77,7 +77,7 @@ $morehtmlref='<div class="refidno">';
 // Thirdparty
 $morehtmlref.=$langs->trans('ThirdParty') . ' : ' . $object->thirdparty->getNomUrl(1);
 // Project
-if (! empty($conf->projet->enabled))
+if (! empty($conf->project->enabled))
 {
 	$langs->load("projects");
 	$morehtmlref.='<br>'.$langs->trans('Project') . ' ';
@@ -101,7 +101,7 @@ if (! empty($conf->projet->enabled))
 		if (! empty($object->fk_project)) {
 			$proj = new Project($db);
 			$proj->fetch($object->fk_project);
-			$morehtmlref.='<a href="'.DOL_URL_ROOT.'/projet/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
+			$morehtmlref.='<a href="'.DOL_URL_ROOT.'/project/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
 			$morehtmlref.=$proj->ref;
 			$morehtmlref.='</a>';
 		} else {

@@ -201,7 +201,7 @@ class modFicheinter extends DolibarrModules
         $this->export_sql_start[$r]='SELECT DISTINCT ';
         $this->export_sql_end[$r]  =' FROM '.MAIN_DB_PREFIX.'fichinter as f';
         $this->export_sql_end[$r] .=' LEFT JOIN '.MAIN_DB_PREFIX.'fichinter_extrafields as extra ON f.rowid = extra.fk_object';
-        $this->export_sql_end[$r] .=' LEFT JOIN '.MAIN_DB_PREFIX.'projet as pj ON f.fk_projet = pj.rowid';
+        $this->export_sql_end[$r] .=' LEFT JOIN '.MAIN_DB_PREFIX.'project as pj ON f.fk_projet = pj.rowid';
         $this->export_sql_end[$r] .=' LEFT JOIN '.MAIN_DB_PREFIX.'fichinterdet as fd ON f.rowid = fd.fk_fichinter';
         $this->export_sql_end[$r] .=' LEFT JOIN '.MAIN_DB_PREFIX.'fichinterdet_extrafields as extradet ON fd.rowid = extradet.fk_object,';
         $this->export_sql_end[$r] .=' '.MAIN_DB_PREFIX.'societe as s';

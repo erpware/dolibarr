@@ -33,8 +33,8 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/sendings.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT .'/expedition/class/expedition.class.php';
-if (! empty($conf->projet->enabled)) {
-	require_once DOL_DOCUMENT_ROOT . '/projet/class/project.class.php';
+if (! empty($conf->project->enabled)) {
+	require_once DOL_DOCUMENT_ROOT . '/project/class/project.class.php';
 }
 
 // Load translation files required by the page
@@ -115,7 +115,7 @@ if ($id > 0 || ! empty($ref)){
 		$morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . $object->thirdparty->getNomUrl(1);
 
 		// Project
-		if (! empty($conf->projet->enabled)) {
+		if (! empty($conf->project->enabled)) {
 			$langs->load("projects");
 			$morehtmlref .= '<br>' . $langs->trans('Project') . ' ';
 			if (0) {    // Do not change on shipment
@@ -140,7 +140,7 @@ if ($id > 0 || ! empty($ref)){
 				if (! empty($objectsrc->fk_project)) {
 					$proj = new Project($db);
 					$proj->fetch($objectsrc->fk_project);
-					$morehtmlref .= '<a href="' . DOL_URL_ROOT . '/projet/card.php?id=' . $objectsrc->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
+					$morehtmlref .= '<a href="' . DOL_URL_ROOT . '/project/card.php?id=' . $objectsrc->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
 					$morehtmlref .= $proj->ref;
 					$morehtmlref .= '</a>';
 				} else {

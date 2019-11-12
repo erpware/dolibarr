@@ -120,12 +120,12 @@ if (GETPOST('search_member') != '')
 }
 if (GETPOST('search_project') != '')
 {
-	header("Location: ".DOL_URL_ROOT.'/projet/list.php?mode=search&search_all='.urlencode(GETPOST('search_project')));
+	header("Location: ".DOL_URL_ROOT.'/project/list.php?mode=search&search_all='.urlencode(GETPOST('search_project')));
 	exit;
 }
 if (GETPOST('search_task') != '')
 {
-    header("Location: ".DOL_URL_ROOT.'/projet/tasks/list.php?mode=search&search_all='.urlencode(GETPOST('search_task')));
+    header("Location: ".DOL_URL_ROOT.'/project/tasks/list.php?mode=search&search_all='.urlencode(GETPOST('search_task')));
     exit;
 }
 

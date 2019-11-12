@@ -45,9 +45,9 @@ if (!empty($conf->supplier_proposal->enabled))
 	require_once DOL_DOCUMENT_ROOT.'/supplier_proposal/class/supplier_proposal.class.php';
 if (!empty($conf->product->enabled))
 	require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
-if (!empty($conf->projet->enabled)) {
-	require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+if (!empty($conf->project->enabled)) {
+	require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
 }
 require_once NUSOAP_PATH.'/nusoap.php'; // Include SOAP
 
@@ -1442,7 +1442,7 @@ $form = new	Form($db);
 $formfile = new FormFile($db);
 $formorder = new FormOrder($db);
 $productstatic = new Product($db);
-if (!empty($conf->projet->enabled)) { $formproject = new FormProjets($db); }
+if (!empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
 
 $help_url = 'EN:Module_Suppliers_Orders|FR:CommandeFournisseur|ES:Módulo_Pedidos_a_proveedores';
 llxHeader('', $langs->trans("Order"), $help_url);
@@ -1642,14 +1642,14 @@ if ($action == 'create')
 	}
 
 	// Project
-	if (!empty($conf->projet->enabled))
+	if (!empty($conf->project->enabled))
 	{
 		$formproject = new FormProjets($db);
 
 		$langs->load('projects');
 		print '<tr><td>'.$langs->trans('Project').'</td><td colspan="2">';
 		$formproject->select_projects((empty($conf->global->PROJECT_CAN_ALWAYS_LINK_TO_ALL_SUPPLIERS) ? $societe->id : -1), $projectid, 'projectid', 0, 0, 1, 1);
-		print ' &nbsp; <a href="'.DOL_URL_ROOT.'/projet/card.php?socid='.$soc->id.'&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&socid='.$societe->id).'"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle"></span></a>';
+		print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid='.$soc->id.'&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&socid='.$societe->id).'"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle"></span></a>';
 
 		print '</td></tr>';
 	}
@@ -1935,7 +1935,7 @@ elseif (!empty($object->id))
     }
 
 	// Project
-    if (!empty($conf->projet->enabled)) {
+    if (!empty($conf->project->enabled)) {
         $langs->load("projects");
         $morehtmlref .= '<br>'.$langs->trans('Project').' ';
         if ($user->rights->fournisseur->commande->creer) {
@@ -1958,7 +1958,7 @@ elseif (!empty($object->id))
             if (!empty($object->fk_project)) {
                 $proj = new Project($db);
                 $proj->fetch($object->fk_project);
-                $morehtmlref .= '<a href="'.DOL_URL_ROOT.'/projet/card.php?id='.$object->fk_project.'" title="'.$langs->trans('ShowProject').'">';
+                $morehtmlref .= '<a href="'.DOL_URL_ROOT.'/project/card.php?id='.$object->fk_project.'" title="'.$langs->trans('ShowProject').'">';
                 $morehtmlref .= $proj->ref;
                 $morehtmlref .= '</a>';
             }

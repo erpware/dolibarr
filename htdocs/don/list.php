@@ -27,7 +27,7 @@
 
 require '../main.inc.php';
 require_once DOL_DOCUMENT_ROOT.'/don/class/don.class.php';
-if (! empty($conf->projet->enabled)) require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+if (! empty($conf->project->enabled)) require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 
 // Load translation files required by the page
 $langs->loadLangs(array("companies","donations"));
@@ -79,7 +79,7 @@ $fieldstosearchall = array(
  */
 
 $form=new Form($db);
-if (! empty($conf->projet->enabled)) $projectstatic=new Project($db);
+if (! empty($conf->project->enabled)) $projectstatic=new Project($db);
 
 llxHeader('', $langs->trans("Donations"), 'EN:Module_Donations|FR:Module_Dons|ES:M&oacute;dulo_Donaciones');
 
@@ -89,7 +89,7 @@ $donationstatic=new Don($db);
 $sql = "SELECT d.rowid, d.datedon, d.fk_soc as socid, d.firstname, d.lastname, d.societe,";
 $sql.= " d.amount, d.fk_statut as status,";
 $sql.= " p.rowid as pid, p.ref, p.title, p.public";
-$sql.= " FROM ".MAIN_DB_PREFIX."don as d LEFT JOIN ".MAIN_DB_PREFIX."projet AS p";
+$sql.= " FROM ".MAIN_DB_PREFIX."don as d LEFT JOIN ".MAIN_DB_PREFIX."project AS p";
 $sql.= " ON p.rowid = d.fk_projet WHERE d.entity IN (".getEntity('donation').")";
 if ($search_status != '' && $search_status != '-1')
 {
@@ -189,7 +189,7 @@ if ($resql)
     print '<td class="liste_titre left">';
     print '&nbsp;';
     print '</td>';
-    if (! empty($conf->projet->enabled))
+    if (! empty($conf->project->enabled))
     {
         print '<td class="liste_titre right">';
         print '&nbsp;';
@@ -212,7 +212,7 @@ if ($resql)
     }
 	print_liste_field_titre("Name", $_SERVER["PHP_SELF"], "d.lastname", "", $param, "", $sortfield, $sortorder);
 	print_liste_field_titre("Date", $_SERVER["PHP_SELF"], "d.datedon", "", $param, '', $sortfield, $sortorder, 'center ');
-	if (! empty($conf->projet->enabled))
+	if (! empty($conf->project->enabled))
 	{
 	    $langs->load("projects");
 	    print_liste_field_titre("Project", $_SERVER["PHP_SELF"], "d.fk_projet", "", $param, "", $sortfield, $sortorder);
@@ -245,7 +245,7 @@ if ($resql)
         }
 		print "<td>".$donationstatic->getFullName($langs)."</td>";
 		print '<td class="center">'.dol_print_date($db->jdate($objp->datedon), 'day').'</td>';
-		if (! empty($conf->projet->enabled))
+		if (! empty($conf->project->enabled))
 		{
 			print "<td>";
 			if ($objp->pid)

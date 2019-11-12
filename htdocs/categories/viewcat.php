@@ -139,7 +139,7 @@ if ($id > 0 && $removeelem > 0)
     }
     elseif ($type == Categorie::TYPE_PROJECT && $user->rights->projet->creer)
     {
-        require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+        require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
         $tmpobject = new Project($db);
         $result = $tmpobject->fetch($removeelem);
         $elementtype = 'project';
@@ -769,7 +769,7 @@ if ($type == Categorie::TYPE_ACCOUNT)
 // List of Project
 if ($type == Categorie::TYPE_PROJECT)
 {
-	require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 
 	$projects = $object->getObjectsInCateg("project", 0, $limit, $offset);
 	if ($projects < 0)

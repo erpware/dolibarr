@@ -70,15 +70,15 @@ class FileUpload
 			$dir_output=$conf->$element->dir_output;
 		}
 		elseif ($element == 'project') {
-			$element = $pathname = 'projet';
+			$element = $pathname = 'project';
 			$dir_output=$conf->$element->dir_output;
 		}
 		elseif ($element == 'project_task') {
-			$pathname = 'projet'; $filename='task';
-			$dir_output=$conf->projet->dir_output;
+			$pathname = 'project'; $filename='task';
+			$dir_output=$conf->project->dir_output;
 			$parentForeignKey = 'fk_project';
 			$parentClass = 'Project';
-			$parentElement = 'projet';
+			$parentElement = 'project';
 			$parentObject = 'project';
 		}
 		elseif ($element == 'fichinter') {

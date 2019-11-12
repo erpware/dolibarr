@@ -64,7 +64,7 @@ class Societe extends CommonObject
 	/**
 	 * @var array	List of child tables. To test if we can delete object.
 	 */
-	protected $childtables=array("supplier_proposal"=>'SupplierProposal',"propal"=>'Proposal',"commande"=>'Order',"facture"=>'Invoice',"facture_rec"=>'RecurringInvoiceTemplate',"contrat"=>'Contract',"fichinter"=>'Fichinter',"facture_fourn"=>'SupplierInvoice',"commande_fournisseur"=>'SupplierOrder',"projet"=>'Project',"expedition"=>'Shipment',"prelevement_lignes"=>'DirectDebitRecord');
+	protected $childtables=array("supplier_proposal"=>'SupplierProposal',"propal"=>'Proposal',"commande"=>'Order',"facture"=>'Invoice',"facture_rec"=>'RecurringInvoiceTemplate',"contrat"=>'Contract',"fichinter"=>'Fichinter',"facture_fourn"=>'SupplierInvoice',"commande_fournisseur"=>'SupplierOrder',"project"=>'Project',"expedition"=>'Shipment',"prelevement_lignes"=>'DirectDebitRecord');
 	/**
 	 * @var array	List of child tables. To know object to delete on cascade.
 	 */
@@ -3210,7 +3210,7 @@ class Societe extends CommonObject
     public function has_projects()
 	{
         // phpcs:enable
-		$sql = 'SELECT COUNT(*) as numproj FROM '.MAIN_DB_PREFIX.'projet WHERE fk_soc = ' . $this->id;
+		$sql = 'SELECT COUNT(*) as numproj FROM '.MAIN_DB_PREFIX.'project WHERE fk_soc = ' . $this->id;
 		$resql = $this->db->query($sql);
 		if ($resql)
 		{

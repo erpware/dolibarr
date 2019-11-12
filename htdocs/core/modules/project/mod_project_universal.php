@@ -19,14 +19,14 @@
 /**
  *	\file       htdocs/core/modules/project/mod_project_universal.php
  *	\ingroup    project
- *	\brief      Fichier contenant la classe du modele de numerotation de reference de projet Universal
+ *	\brief      Fichier contenant la classe du modele de numerotation de reference de project Universal
  */
 
 require_once DOL_DOCUMENT_ROOT .'/core/modules/project/modules_project.php';
 
 
 /**
- * 	Classe du modele de numerotation de reference de projet Universal
+ * 	Classe du modele de numerotation de reference de project Universal
  */
 class mod_project_universal extends ModeleNumRefProjects
 {
@@ -139,7 +139,7 @@ class mod_project_universal extends ModeleNumRefProjects
 		}
 
 		$date=empty($project->date_c)?dol_now():$project->date_c;
-		$numFinal=get_next_value($db, $mask, 'projet', 'ref', '', (is_object($objsoc) ? $objsoc->code_client : ''), $date);
+		$numFinal=get_next_value($db, $mask, 'project', 'ref', '', (is_object($objsoc) ? $objsoc->code_client : ''), $date);
 
 		return  $numFinal;
 	}

@@ -112,13 +112,13 @@ function societe_prepare_head(Societe $object)
         $h++;
     }
 
-    if (! empty($conf->projet->enabled) && (!empty($user->rights->projet->lire) ))
+    if (! empty($conf->project->enabled) && (!empty($user->rights->projet->lire) ))
     {
     	$head[$h][0] = DOL_URL_ROOT.'/societe/project.php?socid='.$object->id;
     	$head[$h][1] = $langs->trans("Projects");
     	$nbNote = 0;
     	$sql = "SELECT COUNT(n.rowid) as nb";
-    	$sql.= " FROM ".MAIN_DB_PREFIX."projet as n";
+    	$sql.= " FROM ".MAIN_DB_PREFIX."project as n";
     	$sql.= " WHERE fk_soc = ".$object->id;
     	$sql.= " AND entity IN (".getEntity('project').")";
     	$resql=$db->query($sql);
@@ -734,14 +734,14 @@ function show_projects($conf, $langs, $db, $object, $backtopage = '', $nocreatel
 
     $i = -1 ;
 
-    if (! empty($conf->projet->enabled) && $user->rights->projet->lire)
+    if (! empty($conf->project->enabled) && $user->rights->projet->lire)
     {
         $langs->load("projects");
 
         $newcardbutton='';
-        if (! empty($conf->projet->enabled) && $user->rights->projet->creer && empty($nocreatelink))
+        if (! empty($conf->project->enabled) && $user->rights->projet->creer && empty($nocreatelink))
         {
-            $newcardbutton.= dolGetButtonTitle($langs->trans('AddProject'), '', 'fa fa-plus-circle', DOL_URL_ROOT.'/projet/card.php?socid='.$object->id.'&amp;action=create&amp;backtopage='.urlencode($backtopage));
+            $newcardbutton.= dolGetButtonTitle($langs->trans('AddProject'), '', 'fa fa-plus-circle', DOL_URL_ROOT.'/project/card.php?socid='.$object->id.'&amp;action=create&amp;backtopage='.urlencode($backtopage));
         }
 
         print "\n";
@@ -751,7 +751,7 @@ function show_projects($conf, $langs, $db, $object, $backtopage = '', $nocreatel
 
         $sql  = "SELECT p.rowid as id, p.entity, p.title, p.ref, p.public, p.dateo as do, p.datee as de, p.fk_statut as status, p.fk_opp_status, p.opp_amount, p.opp_percent, p.tms as date_update, p.budget_amount";
         $sql .= ", cls.code as opp_status_code";
-        $sql .= " FROM ".MAIN_DB_PREFIX."projet as p";
+        $sql .= " FROM ".MAIN_DB_PREFIX."project as p";
         $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."c_lead_status as cls on p.fk_opp_status = cls.rowid";
         $sql .= " WHERE p.fk_soc = ".$object->id;
         $sql .= " AND p.entity IN (".getEntity('project').")";
@@ -775,7 +775,7 @@ function show_projects($conf, $langs, $db, $object, $backtopage = '', $nocreatel
 
             if ($num > 0)
             {
-                require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+                require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 
                 $projecttmp = new Project($db);
 
@@ -794,7 +794,7 @@ function show_projects($conf, $langs, $db, $object, $backtopage = '', $nocreatel
                         print '<tr class="oddeven">';
 
                         // Ref
-                        print '<td><a href="'.DOL_URL_ROOT.'/projet/card.php?id='.$projecttmp->id.'">'.img_object($langs->trans("ShowProject"), ($obj->public?'projectpub':'project'))." ".$obj->ref.'</a></td>';
+                        print '<td><a href="'.DOL_URL_ROOT.'/project/card.php?id='.$projecttmp->id.'">'.img_object($langs->trans("ShowProject"), ($obj->public?'projectpub':'project'))." ".$obj->ref.'</a></td>';
                         // Label
                         print '<td>'.$obj->title.'</td>';
                         // Date start

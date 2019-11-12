@@ -34,7 +34,7 @@ class box_task extends ModeleBoxes
     public $boxcode="projettask";
     public $boximg="object_projecttask";
     public $boxlabel;
-    public $depends = array("projet");
+    public $depends = array("project");
 
     /**
      * @var DoliDB Database handler.
@@ -78,8 +78,8 @@ class box_task extends ModeleBoxes
 		global $conf, $user, $langs;
 
 		$this->max=$max;
-		include_once DOL_DOCUMENT_ROOT."/projet/class/task.class.php";
-		include_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+		include_once DOL_DOCUMENT_ROOT."/project/class/task.class.php";
+		include_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
         require_once DOL_DOCUMENT_ROOT."/core/lib/project.lib.php";
         $projectstatic = new Project($this->db);
 		$taskstatic=new Task($this->db);
@@ -147,7 +147,7 @@ class box_task extends ModeleBoxes
 			$sql.= ", p.rowid project_id, p.ref project_ref, p.title project_title";
 
 			$sql.= " FROM ".MAIN_DB_PREFIX."projet_task as pt";
-			$sql.= " JOIN ".MAIN_DB_PREFIX."projet as p ON (pt.fk_projet = p.rowid)";
+			$sql.= " JOIN ".MAIN_DB_PREFIX."project as p ON (pt.fk_projet = p.rowid)";
 
             if($filterValue === 'im_task_contact') {
                 $sql .= " JOIN " . MAIN_DB_PREFIX . "element_contact as ec ON (ec.element_id = pt.rowid AND ec.fk_socpeople = '" . $user->id . "' )";

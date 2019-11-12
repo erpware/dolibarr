@@ -645,7 +645,7 @@ class Don extends CommonObject
         $sql .= " cp.libelle as payment_label, cp.code as payment_code,";
         $sql .= " c.code as country_code, c.label as country";
         $sql .= " FROM ".MAIN_DB_PREFIX."don as d";
-        $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."projet as p ON p.rowid = d.fk_projet";
+        $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."project as p ON p.rowid = d.fk_projet";
         $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."c_paiement as cp ON cp.id = d.fk_payment";
         $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."c_country as c ON d.fk_country = c.rowid";
         $sql .= " WHERE d.entity IN (".getEntity('donation').")";

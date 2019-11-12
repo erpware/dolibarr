@@ -57,7 +57,7 @@ if (GETPOST('fk_projet') != '')
 	$return_arr = array();
 
 	$sql = "SELECT p.rowid, p.ref, p.title, s.nom";
-	$sql.= " FROM ".MAIN_DB_PREFIX."projet as p";
+	$sql.= " FROM ".MAIN_DB_PREFIX."project as p";
 	$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s ON p.fk_soc = s.rowid";
 	if (! empty($_GET["fk_projet"])) $sql.= " WHERE p.ref LIKE '%".$db->escape($_GET["fk_projet"])."%' OR p.title LIKE '%".$db->escape($_GET["fk_projet"])."%' OR s.nom LIKE '%".$db->escape($_GET["fk_projet"])."%'"; // Add other filters
 	$sql.= " ORDER BY p.ref ASC";

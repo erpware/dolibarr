@@ -235,7 +235,7 @@ if (empty($reshook))
 						'ProductFournisseur' => '/fourn/class/fournisseur.product.class.php',
 						'Livraison' => '/livraison/class/livraison.class.php',
 						'Product' => '/product/class/product.class.php',
-						'Project' => '/projet/class/project.class.php',
+						'Project' => '/project/class/project.class.php',
 						'User' => '/user/class/user.class.php',
 					);
 

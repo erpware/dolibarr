@@ -20,20 +20,20 @@
 
 /**
  *  \file       htdocs/core/boxes/box_activite.php
- *  \ingroup    projet
+ *  \ingroup    project
  *  \brief      Module to show Projet activity of the current Year
  */
 include_once DOL_DOCUMENT_ROOT."/core/boxes/modules_boxes.php";
 
 /**
- * Class to manage the box to show last projet
+ * Class to manage the box to show last project
  */
 class box_project extends ModeleBoxes
 {
     public $boxcode="project";
     public $boximg="object_projectpub";
     public $boxlabel;
-    //var $depends = array("projet");
+    //var $depends = array("project");
 
     /**
      * @var DoliDB Database handler.
@@ -85,7 +85,7 @@ class box_project extends ModeleBoxes
 
         // list the summary of the orders
         if ($user->rights->projet->lire) {
-            include_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+            include_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
             $projectstatic = new Project($this->db);
 
             $socid=0;
@@ -96,7 +96,7 @@ class box_project extends ModeleBoxes
             if (! $user->rights->projet->all->lire) $projectsListId = $projectstatic->getProjectsAuthorizedForUser($user, 0, 1, $socid);
 
             $sql = "SELECT p.rowid, p.ref, p.title, p.fk_statut, p.public";
-            $sql.= " FROM ".MAIN_DB_PREFIX."projet as p";
+            $sql.= " FROM ".MAIN_DB_PREFIX."project as p";
             $sql.= " WHERE p.fk_statut = 1"; // Only open projects
             if (! $user->rights->projet->all->lire) $sql.= " AND p.rowid IN (".$projectsListId.")"; // public and assigned to, or restricted to company for external users
 
@@ -128,7 +128,7 @@ class box_project extends ModeleBoxes
                     );
 
                     $sql ="SELECT count(*) as nb, sum(progress) as totprogress";
-                    $sql.=" FROM ".MAIN_DB_PREFIX."projet as p LEFT JOIN ".MAIN_DB_PREFIX."projet_task as pt on pt.fk_projet = p.rowid";
+                    $sql.=" FROM ".MAIN_DB_PREFIX."project as p LEFT JOIN ".MAIN_DB_PREFIX."projet_task as pt on pt.fk_projet = p.rowid";
                        $sql.= " WHERE p.entity IN (".getEntity('project').')';
                     $sql.=" AND p.rowid = ".$objp->rowid;
                     $resultTask = $this->db->query($sql);

@@ -123,7 +123,7 @@ abstract class CommonObject
 
 	/**
 	 * @var Project The related project
-	 * @see fetch_projet()
+	 * @see fetch_project()
 	 */
 	public $project;
 
@@ -137,7 +137,7 @@ abstract class CommonObject
 	 * @deprecated
 	 * @see project
 	 */
-	public $projet;
+	public $project;
 
 	/**
 	 * @var Contact a related contact
@@ -1281,7 +1281,7 @@ abstract class CommonObject
 			if ($num > 0) {
 				while ($obj = $this->db->fetch_object($resql)) {
 					if (strpos($obj->element, 'project')!==false) {
-						$element='projet';
+						$element='project';
 					} elseif($obj->element=='contrat') {
 						$element='contract';
 					} elseif(strpos($obj->element, 'supplier')!==false && $obj->element!='supplier_proposal') {
@@ -1515,18 +1515,17 @@ abstract class CommonObject
 	 *
 	 *		@return		int			<0 if KO, >=0 if OK
 	 */
-	public function fetch_projet()
+	public function fetch_project()
 	{
         // phpcs:enable
-		include_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+		include_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 
-		if (empty($this->fk_project) && ! empty($this->fk_projet)) $this->fk_project = $this->fk_projet;	// For backward compatibility
+		if (empty($this->fk_project) && ! empty($this->fk_project)) $this->fk_project = $this->fk_project;	// For backward compatibility
 		if (empty($this->fk_project)) return 0;
 
 		$project = new Project($this->db);
 		$result = $project->fetch($this->fk_project);
 
-		$this->projet = $project;	// deprecated
 		$this->project = $project;
 		return $result;
 	}
@@ -1914,8 +1913,8 @@ abstract class CommonObject
 		}
 		else											// Special case for old architecture objects
 		{
-			if ($projectid) $sql.= ' SET fk_projet = '.$projectid;
-			else $sql.= ' SET fk_projet = NULL';
+			if ($projectid) $sql.= ' SET fk_project = '.$projectid;
+			else $sql.= ' SET fk_project = NULL';
 			$sql.= ' WHERE rowid = '.$this->id;
 		}
 

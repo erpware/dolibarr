@@ -573,7 +573,7 @@ class Conf
 		if (! isset($this->global->STRIPE_USE_INTENT_WITH_AUTOMATIC_CONFIRMATION) && empty($this->global->STRIPE_USE_NEW_CHECKOUT)) $this->global->STRIPE_USE_INTENT_WITH_AUTOMATIC_CONFIRMATION=1;
 
 		// Define list of limited modules (value must be key found for "name" property of module, so for example 'supplierproposal' for Module "Supplier Proposal"
-		if (! isset($this->global->MAIN_MODULES_FOR_EXTERNAL)) $this->global->MAIN_MODULES_FOR_EXTERNAL='user,societe,propal,commande,facture,categorie,supplierproposal,fournisseur,contact,projet,contrat,ficheinter,expedition,agenda,resource,adherent,blockedlog';	// '' means 'all'. Note that contact is added here as it should be a module later.
+		if (! isset($this->global->MAIN_MODULES_FOR_EXTERNAL)) $this->global->MAIN_MODULES_FOR_EXTERNAL='user,societe,propal,commande,facture,categorie,supplierproposal,fournisseur,contact,project,contrat,ficheinter,expedition,agenda,resource,adherent,blockedlog';	// '' means 'all'. Note that contact is added here as it should be a module later.
 		if (! empty($this->modules_parts['moduleforexternal']))		// Module part to include an external module into the MAIN_MODULES_FOR_EXTERNAL list
 		{
 			foreach($this->modules_parts['moduleforexternal'] as $key=>$value) $this->global->MAIN_MODULES_FOR_EXTERNAL.=",".$key;
@@ -601,11 +601,11 @@ class Conf
 		if (isset($this->agenda)) {
             $this->agenda->warning_delay=(isset($this->global->MAIN_DELAY_ACTIONS_TODO)?$this->global->MAIN_DELAY_ACTIONS_TODO:7)*24*60*60;
         }
-		if (isset($this->projet))
+		if (isset($this->project))
 		{
-		    $this->projet->warning_delay=(isset($this->global->MAIN_DELAY_PROJECT_TO_CLOSE)?$this->global->MAIN_DELAY_PROJECT_TO_CLOSE:7)*24*60*60;
-		    $this->projet->task                 = new StdClass();
-		    $this->projet->task->warning_delay=(isset($this->global->MAIN_DELAY_TASKS_TODO)?$this->global->MAIN_DELAY_TASKS_TODO:7)*24*60*60;
+		    $this->project->warning_delay=(isset($this->global->MAIN_DELAY_PROJECT_TO_CLOSE)?$this->global->MAIN_DELAY_PROJECT_TO_CLOSE:7)*24*60*60;
+		    $this->project->task                 = new StdClass();
+		    $this->project->task->warning_delay=(isset($this->global->MAIN_DELAY_TASKS_TODO)?$this->global->MAIN_DELAY_TASKS_TODO:7)*24*60*60;
 		}
 
         if (isset($this->commande)) {
@@ -685,7 +685,7 @@ class Conf
 		if (isset($this->commande))  $this->order=$this->commande;
 		if (isset($this->contrat))   $this->contract=$this->contrat;
 		if (isset($this->categorie)) $this->category=$this->categorie;
-		if (isset($this->project))   $this->project=$this->projet;
+		if (isset($this->project))   $this->project=$this->project;
 
         // Object $mc
         if (! defined('NOREQUIREMC') && ! empty($this->multicompany->enabled))

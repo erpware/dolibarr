@@ -463,7 +463,7 @@ abstract class CommonDocGenerator
 		{
 			if (! is_object($object->project))
 			{
-				$object->fetch_projet();
+				$object->fetch_project();
 			}
 
 			$resarray[$array_key.'_project_ref'] = $object->project->ref;

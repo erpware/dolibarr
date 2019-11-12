@@ -1005,7 +1005,7 @@ class ExpenseReport extends CommonObject
         $sql.= ' p.ref as ref_projet, p.title as title_projet';
         $sql.= ' FROM '.MAIN_DB_PREFIX.$this->table_element_line.' as de';
         $sql.= ' LEFT JOIN '.MAIN_DB_PREFIX.'c_type_fees as ctf ON de.fk_c_type_fees = ctf.id';
-        $sql.= ' LEFT JOIN '.MAIN_DB_PREFIX.'projet as p ON de.fk_projet = p.rowid';
+        $sql.= ' LEFT JOIN '.MAIN_DB_PREFIX.'project as p ON de.fk_projet = p.rowid';
         $sql.= ' WHERE de.'.$this->fk_element.' = '.$this->id;
         if (! empty($conf->global->EXPENSEREPORT_LINES_SORTED_BY_ROWID))
         {
@@ -2064,9 +2064,9 @@ class ExpenseReport extends CommonObject
                 $this->db->free($resql);
             }
 
-            // Select des informations du projet
+            // Select des informations du project
             $sql = "SELECT p.ref as ref_projet, p.title as title_projet";
-            $sql.= " FROM ".MAIN_DB_PREFIX."projet as p";
+            $sql.= " FROM ".MAIN_DB_PREFIX."project as p";
             $sql.= " WHERE p.rowid = ".$projet_id;
             $resql = $this->db->query($sql);
             if ($resql) {
@@ -2573,7 +2573,7 @@ class ExpenseReportLine
         $sql.= ' pjt.rowid as projet_id, pjt.title as projet_title, pjt.ref as projet_ref';
         $sql.= ' FROM '.MAIN_DB_PREFIX.'expensereport_det as fde';
         $sql.= ' LEFT JOIN '.MAIN_DB_PREFIX.'c_type_fees as ctf ON fde.fk_c_type_fees=ctf.id';	// Sometimes type of expense report has been removed, so we use a left join here.
-        $sql.= ' LEFT JOIN '.MAIN_DB_PREFIX.'projet as pjt ON fde.fk_projet=pjt.rowid';
+        $sql.= ' LEFT JOIN '.MAIN_DB_PREFIX.'project as pjt ON fde.fk_projet=pjt.rowid';
         $sql.= ' WHERE fde.rowid = '.$rowid;
 
         $result = $this->db->query($sql);

@@ -37,9 +37,9 @@ require_once DOL_DOCUMENT_ROOT.'/product/class/html.formproduct.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/stock.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/product.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
-if (! empty($conf->projet->enabled)) {
-    require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
-    require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+if (! empty($conf->project->enabled)) {
+    require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
+    require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 }
 
 // Load translation files required by the page
@@ -422,7 +422,7 @@ $userstatic=new User($db);
 $form=new Form($db);
 $formother=new FormOther($db);
 $formproduct=new FormProduct($db);
-if (!empty($conf->projet->enabled)) $formproject=new FormProjets($db);
+if (!empty($conf->project->enabled)) $formproject=new FormProjets($db);
 
 $sql = "SELECT p.rowid, p.ref as product_ref, p.label as produit, p.tobatch, p.fk_product_type as type, p.entity,";
 $sql.= " e.ref as warehouse_ref, e.rowid as entrepot_id, e.lieu, e.fk_parent, e.statut,";

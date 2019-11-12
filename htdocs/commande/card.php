@@ -47,9 +47,9 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
 if (!empty($conf->propal->enabled)) {
 	require_once DOL_DOCUMENT_ROOT.'/comm/propal/class/propal.class.php';
 }
-if (!empty($conf->projet->enabled)) {
-	require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+if (!empty($conf->project->enabled)) {
+	require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
 }
 
 require_once DOL_DOCUMENT_ROOT.'/core/class/doleditor.class.php';
@@ -1480,7 +1480,7 @@ $form = new Form($db);
 $formfile = new FormFile($db);
 $formorder = new FormOrder($db);
 $formmargin = new FormMargin($db);
-if (!empty($conf->projet->enabled)) { $formproject = new FormProjets($db); }
+if (!empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
 
 // Mode creation
 if ($action == 'create' && $usercancreate)
@@ -1728,13 +1728,13 @@ if ($action == 'create' && $usercancreate)
 	// TODO How record was recorded OrderMode (llx_c_input_method)
 
 	// Project
-	if (!empty($conf->projet->enabled))
+	if (!empty($conf->project->enabled))
 	{
 		$langs->load("projects");
 		print '<tr>';
 		print '<td>'.$langs->trans("Project").'</td><td>';
 		$numprojet = $formproject->select_projects(($soc->id > 0 ? $soc->id : -1), $projectid, 'projectid', 0, 0, 1, 0, 0, 0, 0, '', 0, 0);
-		print ' &nbsp; <a href="'.DOL_URL_ROOT.'/projet/card.php?socid='.$soc->id.'&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&socid='.$soc->id).'"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle"></span></a>';
+		print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid='.$soc->id.'&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&socid='.$soc->id).'"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle"></span></a>';
 		print '</td>';
 		print '</tr>';
 	}
@@ -2086,7 +2086,7 @@ if ($action == 'create' && $usercancreate)
 		$morehtmlref .= '<br>'.$langs->trans('ThirdParty').' : '.$soc->getNomUrl(1);
 		if (empty($conf->global->MAIN_DISABLE_OTHER_LINK) && $object->thirdparty->id > 0) $morehtmlref .= ' (<a href="'.DOL_URL_ROOT.'/commande/list.php?socid='.$object->thirdparty->id.'&search_societe='.urlencode($object->thirdparty->name).'">'.$langs->trans("OtherOrders").'</a>)';
 		// Project
-		if (!empty($conf->projet->enabled))
+		if (!empty($conf->project->enabled))
 		{
 			$langs->load("projects");
 			$morehtmlref .= '<br>'.$langs->trans('Project').' ';
@@ -2109,7 +2109,7 @@ if ($action == 'create' && $usercancreate)
 				if (!empty($object->fk_project)) {
 					$proj = new Project($db);
 					$proj->fetch($object->fk_project);
-					$morehtmlref .= '<a href="'.DOL_URL_ROOT.'/projet/card.php?id='.$object->fk_project.'" title="'.$langs->trans('ShowProject').'">';
+					$morehtmlref .= '<a href="'.DOL_URL_ROOT.'/project/card.php?id='.$object->fk_project.'" title="'.$langs->trans('ShowProject').'">';
 					$morehtmlref .= $proj->ref;
 					$morehtmlref .= '</a>';
 				} else {

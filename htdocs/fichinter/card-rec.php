@@ -37,9 +37,9 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/fichinter.lib.php';
 
 require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
-if (! empty($conf->projet->enabled)) {
-	require_once DOL_DOCUMENT_ROOT . '/projet/class/project.class.php';
-	require_once DOL_DOCUMENT_ROOT . '/core/class/html.formprojet.class.php';
+if (! empty($conf->project->enabled)) {
+	require_once DOL_DOCUMENT_ROOT . '/project/class/project.class.php';
+	require_once DOL_DOCUMENT_ROOT . '/core/class/html.formproject.class.php';
 }
 if (! empty($conf->contrat->enabled)) {
 	require_once DOL_DOCUMENT_ROOT.'/contrat/class/contrat.class.php';
@@ -231,7 +231,7 @@ $companystatic = new Societe($db);
 if (! empty($conf->contrat->enabled)) {
 	$contratstatic = new Contrat($db);
 }
-if (! empty($conf->projet->enabled)) {
+if (! empty($conf->project->enabled)) {
 	$projectstatic = new Project($db);
 }
 
@@ -259,7 +259,7 @@ if ($action == 'create') {
 		dol_fiche_head();
 
 		$rowspan=4;
-		if (! empty($conf->projet->enabled) && $object->fk_project > 0) $rowspan++;
+		if (! empty($conf->project->enabled) && $object->fk_project > 0) $rowspan++;
 		if (! empty($conf->contrat->enabled) && $object->fk_contrat > 0) $rowspan++;
 
 		print '<table class="border centpercent">';
@@ -297,13 +297,13 @@ if ($action == 'create') {
 		}
 
 		// Project
-		if (! empty($conf->projet->enabled)) {
+		if (! empty($conf->project->enabled)) {
 			$formproject = new FormProjets($db);
 			print "<tr><td>".$langs->trans("Project")."</td><td>";
 			$projectid = GETPOST('projectid')?GETPOST('projectid'):$object->fk_project;
 
 			$numprojet = $formproject->select_projects($object->thirdparty->id, $projectid, 'projectid', 0, 0, 1, 0, 0, 0, 0, '', 0, 0, '');
-			print ' &nbsp; <a href="'.DOL_URL_ROOT.'/projet/card.php?socid='.$object->thirdparty->id;
+			print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid='.$object->thirdparty->id;
 			print '&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"]).'?action=create';
 			print '&socid='.$object->thirdparty->id.(!empty($id)?'&id='.$id:'').'">';
 			print $langs->trans("AddProject").'</a>';
@@ -472,7 +472,7 @@ if ($action == 'create') {
 
 			$morehtmlref.=$langs->trans('ThirdParty') . ' : ' . $object->thirdparty->getNomUrl(1);
 			// Project
-			if (! empty($conf->projet->enabled)) {
+			if (! empty($conf->project->enabled)) {
 				$formproject = new FormProjets($db);
 				$langs->load("projects");
 				$morehtmlref.='<br>'.$langs->trans('Project') . ' ';
@@ -495,7 +495,7 @@ if ($action == 'create') {
 					if (! empty($object->fk_project)) {
 						$proj = new Project($db);
 						$proj->fetch($object->fk_project);
-						$morehtmlref.= '<a href="'.DOL_URL_ROOT.'/projet/card.php?id='.$object->fk_project.'"';
+						$morehtmlref.= '<a href="'.DOL_URL_ROOT.'/project/card.php?id='.$object->fk_project.'"';
 						$morehtmlref.= 'title="'.$langs->trans('ShowProject').'">';
 						$morehtmlref.= $proj->ref;
 						$morehtmlref.= '</a>';
@@ -787,7 +787,7 @@ if ($action == 'create') {
             if (! empty($conf->contrat->enabled)) {
                 print_liste_field_titre("Contract", $_SERVER['PHP_SELF'], "f.fk_contrat", "", "", 'width="100px"', $sortfield, $sortorder, 'left ');
             }
-            if (! empty($conf->projet->enabled)) {
+            if (! empty($conf->project->enabled)) {
                 print_liste_field_titre("Project", $_SERVER['PHP_SELF'], "f.fk_project", "", "", 'width="100px"', $sortfield, $sortorder, 'left ');
             }
             print_liste_field_titre("Duration", $_SERVER['PHP_SELF'], 'f.duree', '', '', 'width="50px"', $sortfield, $sortorder, 'right ');
@@ -826,7 +826,7 @@ if ($action == 'create') {
 						}
 						print '</td>';
 					}
-					if (! empty($conf->projet->enabled)) {
+					if (! empty($conf->project->enabled)) {
 						print '<td>';
 						if ($objp->fk_project > 0) {
 							$projectstatic->fetch($objp->fk_project);

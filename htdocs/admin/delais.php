@@ -41,7 +41,7 @@ $modules=array(
 						'img' => 'action'
 				)
 		),
-		'projet' => array(
+		'project' => array(
 				array(
 						'code' => 'MAIN_DELAY_PROJECT_TO_CLOSE',
 						'img' => 'project'

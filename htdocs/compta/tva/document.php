@@ -34,10 +34,10 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/vat.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
-if (! empty($conf->projet->enabled))
+if (! empty($conf->project->enabled))
 {
-    require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-    require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+    require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
+    require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
 }
 
 // Load translation files required by the page
@@ -94,7 +94,7 @@ if ($action == 'setlib' && $user->rights->tax->charges->creer)
  */
 
 $form = new Form($db);
-if (! empty($conf->projet->enabled)) { $formproject = new FormProjets($db); }
+if (! empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
 
 $title = $langs->trans("VATPayment") . ' - ' . $langs->trans("Documents");
 $help_url='EN:Module_Taxes_and_social_contributions|FR:Module Taxes et dividendes|ES:M&oacute;dulo Impuestos y cargas sociales (IVA, impuestos)';

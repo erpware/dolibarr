@@ -1238,7 +1238,7 @@ class Propal extends CommonObject
 	{
 		global $conf, $hookmanager;
 
-		dol_include_once('/projet/class/project.class.php');
+		dol_include_once('/project/class/project.class.php');
 
 		$error = 0;
 		$now = dol_now();
@@ -1265,7 +1265,7 @@ class Propal extends CommonObject
 			    $object->mode_reglement_id	= (!empty($objsoc->mode_reglement_id) ? $objsoc->mode_reglement_id : 0);
 			    $object->fk_delivery_address = '';
 
-				/*if (!empty($conf->projet->enabled))
+				/*if (!empty($conf->project->enabled))
                 {
                     $project = new Project($db);
     				if ($this->fk_project > 0 && $project->fetch($this->fk_project)) {

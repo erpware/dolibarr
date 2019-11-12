@@ -140,7 +140,7 @@ if ($object->id)
     }
 
     // Project
-    if (! empty($conf->projet->enabled))
+    if (! empty($conf->project->enabled))
     {
     	$langs->load("projects");
     	$morehtmlref.='<br>'.$langs->trans('Project') . ' ';

@@ -73,7 +73,7 @@ parameters:
 		- %currentWorkingDirectory%/htdocs/multicurrency/class
 		- %currentWorkingDirectory%/htdocs/opensurvey/class
 		- %currentWorkingDirectory%/htdocs/product/class
-		- %currentWorkingDirectory%/htdocs/projet/class
+		- %currentWorkingDirectory%/htdocs/project/class
 		- %currentWorkingDirectory%/htdocs/reception/class
 		- %currentWorkingDirectory%/htdocs/resource/class
 		- %currentWorkingDirectory%/htdocs/societe/class

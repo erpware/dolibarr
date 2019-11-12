@@ -175,7 +175,7 @@ llxHeader();
 // List of possible landing pages
 $tmparray=array('index.php'=>'Dashboard');
 if (! empty($conf->societe->enabled)) $tmparray['societe/index.php?mainmenu=companies&leftmenu=']='ThirdPartiesArea';
-if (! empty($conf->projet->enabled)) $tmparray['projet/index.php?mainmenu=project&leftmenu=']='ProjectsArea';
+if (! empty($conf->project->enabled)) $tmparray['project/index.php?mainmenu=project&leftmenu=']='ProjectsArea';
 if (! empty($conf->holiday->enabled) || ! empty($conf->expensereport->enabled)) $tmparray['hrm/index.php?mainmenu=hrm&leftmenu=']='HRMArea';   // TODO Complete list with first level of menus
 if (! empty($conf->product->enabled) || ! empty($conf->service->enabled)) $tmparray['product/index.php?mainmenu=products&leftmenu=']='ProductsAndServicesArea';
 if (! empty($conf->propal->enabled) || ! empty($conf->commande->enabled) || ! empty($conf->ficheinter->enabled) || ! empty($conf->contrat->enabled)) $tmparray['comm/index.php?mainmenu=commercial&leftmenu=']='CommercialArea';

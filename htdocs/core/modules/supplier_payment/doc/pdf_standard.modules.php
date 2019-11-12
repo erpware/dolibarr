@@ -702,7 +702,7 @@ class pdf_standard extends ModelePDFSuppliersPayments
 				$pdf->SetXY($posx,$posy);
         		$langs->load("projects");
 				$pdf->SetTextColor(0,0,60);
-				$pdf->MultiCell(100, 3, $outputlangs->transnoentities("Project")." : " . (empty($object->project->ref)?'':$object->projet->ref), '', 'R');
+				$pdf->MultiCell(100, 3, $outputlangs->transnoentities("Project")." : " . (empty($object->project->ref)?'':$object->project->ref), '', 'R');
 			}
 		}
 

@@ -27,8 +27,8 @@
  */
 
 require_once DOL_DOCUMENT_ROOT.'/core/modules/project/modules_project.php';
-require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-require_once DOL_DOCUMENT_ROOT.'/projet/class/task.class.php';
+require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
+require_once DOL_DOCUMENT_ROOT.'/project/class/task.class.php';
 require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 require_once DOL_DOCUMENT_ROOT.'/user/class/user.class.php';
 require_once DOL_DOCUMENT_ROOT.'/societe/class/societe.class.php';

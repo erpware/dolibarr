@@ -196,13 +196,13 @@ function print_eldy_menu($db, $atarget, $type_user, &$tabMenu, &$menu, $noout = 
 
 	// Projects
 	$tmpentry = array(
-	    'enabled'=> ( ! empty($conf->projet->enabled) ? 1 : 0),
+	    'enabled'=> ( ! empty($conf->project->enabled) ? 1 : 0),
 	    'perms'=> (! empty($user->rights->projet->lire) ? 1 : 0),
-	    'module'=>'projet'
+	    'module'=>'project'
 	);
 	$menu_arr[] = array(
 		'name' => 'Projet',
-		'link' => '/projet/index.php?mainmenu=project&amp;leftmenu=',
+		'link' => '/project/index.php?mainmenu=project&amp;leftmenu=',
 		'title' => (empty($conf->global->PROJECT_USE_OPPORTUNITIES) || $conf->global->PROJECT_USE_OPPORTUNITIES == 2 )
 					? (($conf->global->PROJECT_USE_OPPORTUNITIES == 2)?"Leads":"Projects")
 					: "Projects",
@@ -1633,16 +1633,16 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 		 */
 		if ($mainmenu == 'project')
 		{
-			if (! empty($conf->projet->enabled))
+			if (! empty($conf->project->enabled))
 			{
 				$langs->load("projects");
 
 				$search_project_user = GETPOST('search_project_user', 'int');
 
 				$tmpentry = array(
-                    'enabled'=>(! empty($conf->projet->enabled)),
+                    'enabled'=>(! empty($conf->project->enabled)),
 				    'perms'=>(! empty($user->rights->projet->lire)),
-                    'module'=>'projet'
+                    'module'=>'project'
                 );
 				$showmode=isVisibleToUserType($type_user, $tmpentry, $listofmodulesforexternal);
 
@@ -1659,24 +1659,24 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 				}
 
 				// Project assigned to user
-				$newmenu->add("/projet/index.php?leftmenu=projects".($search_project_user?'&search_project_user='.$search_project_user:''), $titleboth, 0, $user->rights->projet->lire, '', $mainmenu, 'projects');
-				$newmenu->add("/projet/card.php?leftmenu=projects&action=create".($search_project_user?'&search_project_user='.$search_project_user:''), $titlenew, 1, $user->rights->projet->creer);
+				$newmenu->add("/project/index.php?leftmenu=projects".($search_project_user?'&search_project_user='.$search_project_user:''), $titleboth, 0, $user->rights->projet->lire, '', $mainmenu, 'projects');
+				$newmenu->add("/project/card.php?leftmenu=projects&action=create".($search_project_user?'&search_project_user='.$search_project_user:''), $titlenew, 1, $user->rights->projet->creer);
 
 				if ($conf->global->PROJECT_USE_OPPORTUNITIES == 0)
 				{
-					$newmenu->add("/projet/list.php?leftmenu=projets".($search_project_user?'&search_project_user='.$search_project_user:'').'&search_status=99', $langs->trans("List"), 1, $showmode, '', 'project', 'list');
+					$newmenu->add("/project/list.php?leftmenu=projets".($search_project_user?'&search_project_user='.$search_project_user:'').'&search_status=99', $langs->trans("List"), 1, $showmode, '', 'project', 'list');
 				}
 				elseif ($conf->global->PROJECT_USE_OPPORTUNITIES == 1)
 				{
-					$newmenu->add("/projet/list.php?leftmenu=projets".($search_project_user?'&search_project_user='.$search_project_user:''), $langs->trans("List"), 1, $showmode, '', 'project', 'list');
-					$newmenu->add('/projet/list.php?mainmenu=project&amp;leftmenu=list&search_opp_status=openedopp&search_status=99&contextpage=lead', $langs->trans("ListOpenLeads"), 2, $showmode);
-					$newmenu->add('/projet/list.php?mainmenu=project&amp;leftmenu=list&search_opp_status=notopenedopp&search_status=99&contextpage=project', $langs->trans("ListOpenProjects"), 2, $showmode);
+					$newmenu->add("/project/list.php?leftmenu=projets".($search_project_user?'&search_project_user='.$search_project_user:''), $langs->trans("List"), 1, $showmode, '', 'project', 'list');
+					$newmenu->add('/project/list.php?mainmenu=project&amp;leftmenu=list&search_opp_status=openedopp&search_status=99&contextpage=lead', $langs->trans("ListOpenLeads"), 2, $showmode);
+					$newmenu->add('/project/list.php?mainmenu=project&amp;leftmenu=list&search_opp_status=notopenedopp&search_status=99&contextpage=project', $langs->trans("ListOpenProjects"), 2, $showmode);
 				}
 				elseif ($conf->global->PROJECT_USE_OPPORTUNITIES == 2) {	// 2 = leads only
-					$newmenu->add('/projet/list.php?mainmenu=project&amp;leftmenu=list&search_opp_status=openedopp&search_status=99', $langs->trans("List"), 2, $showmode);
+					$newmenu->add('/project/list.php?mainmenu=project&amp;leftmenu=list&search_opp_status=openedopp&search_status=99', $langs->trans("List"), 2, $showmode);
 				}
 
-				$newmenu->add("/projet/stats/index.php?leftmenu=projects", $langs->trans("Statistics"), 1, $user->rights->projet->lire);
+				$newmenu->add("/project/stats/index.php?leftmenu=projects", $langs->trans("Statistics"), 1, $user->rights->projet->lire);
 
 				// Categories
 				if (! empty($conf->categorie->enabled))
@@ -1688,12 +1688,12 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 				if (empty($conf->global->PROJECT_HIDE_TASKS))
 				{
 					// Project affected to user
-					$newmenu->add("/projet/activity/index.php?leftmenu=tasks".($search_project_user?'&search_project_user='.$search_project_user:''), $langs->trans("Activities"), 0, $user->rights->projet->lire);
-					$newmenu->add("/projet/tasks.php?leftmenu=tasks&action=create", $langs->trans("NewTask"), 1, $user->rights->projet->creer);
-					$newmenu->add("/projet/tasks/list.php?leftmenu=tasks".($search_project_user?'&search_project_user='.$search_project_user:''), $langs->trans("List"), 1, $user->rights->projet->lire);
-				    $newmenu->add("/projet/tasks/stats/index.php?leftmenu=projects", $langs->trans("Statistics"), 1, $user->rights->projet->lire);
+					$newmenu->add("/project/activity/index.php?leftmenu=tasks".($search_project_user?'&search_project_user='.$search_project_user:''), $langs->trans("Activities"), 0, $user->rights->projet->lire);
+					$newmenu->add("/project/tasks.php?leftmenu=tasks&action=create", $langs->trans("NewTask"), 1, $user->rights->projet->creer);
+					$newmenu->add("/project/tasks/list.php?leftmenu=tasks".($search_project_user?'&search_project_user='.$search_project_user:''), $langs->trans("List"), 1, $user->rights->projet->lire);
+				    $newmenu->add("/project/tasks/stats/index.php?leftmenu=projects", $langs->trans("Statistics"), 1, $user->rights->projet->lire);
 
-				    $newmenu->add("/projet/activity/perweek.php?leftmenu=tasks".($search_project_user?'&search_project_user='.$search_project_user:''), $langs->trans("NewTimeSpent"), 0, $user->rights->projet->lire);
+				    $newmenu->add("/project/activity/perweek.php?leftmenu=tasks".($search_project_user?'&search_project_user='.$search_project_user:''), $langs->trans("NewTimeSpent"), 0, $user->rights->projet->lire);
 				}
 			}
 		}
@@ -1762,7 +1762,7 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 				$newmenu->add("/expensereport/stats/index.php?leftmenu=expensereport&amp;mainmenu=hrm", $langs->trans("Statistics"), 1, $user->rights->expensereport->lire);
 			}
 
-			if (! empty($conf->projet->enabled))
+			if (! empty($conf->project->enabled))
 			{
 				if (empty($conf->global->PROJECT_HIDE_TASKS))
 				{
@@ -1770,7 +1770,7 @@ function print_left_eldy_menu($db, $menu_array_before, $menu_array_after, &$tabM
 
 					$search_project_user = GETPOST('search_project_user', 'int');
 
-					$newmenu->add("/projet/activity/perweek.php?leftmenu=tasks".($search_project_user?'&search_project_user='.$search_project_user:''), $langs->trans("NewTimeSpent"), 0, $user->rights->projet->lire);
+					$newmenu->add("/project/activity/perweek.php?leftmenu=tasks".($search_project_user?'&search_project_user='.$search_project_user:''), $langs->trans("NewTimeSpent"), 0, $user->rights->projet->lire);
 				}
 			}
 		}

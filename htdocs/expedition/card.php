@@ -48,9 +48,9 @@ if (! empty($conf->product->enabled) || ! empty($conf->service->enabled))  requi
 if (! empty($conf->propal->enabled))   require_once DOL_DOCUMENT_ROOT.'/comm/propal/class/propal.class.php';
 if (! empty($conf->commande->enabled)) require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
 if (! empty($conf->productbatch->enabled)) require_once DOL_DOCUMENT_ROOT.'/product/class/productbatch.class.php';
-if (! empty($conf->projet->enabled)) {
-    require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-    require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+if (! empty($conf->project->enabled)) {
+    require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
+    require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
 }
 
 // Load translation files required by the page
@@ -865,7 +865,7 @@ llxHeader('', $langs->trans('Shipment'), 'Expedition');
 $form = new Form($db);
 $formfile = new FormFile($db);
 $formproduct = new FormProduct($db);
-if (! empty($conf->projet->enabled)) { $formproject = new FormProjets($db); }
+if (! empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
 
 $product_static = new Product($db);
 $shipment_static = new Expedition($db);
@@ -948,7 +948,7 @@ if ($action == 'create')
             print '</tr>';
 
             // Project
-            if (! empty($conf->projet->enabled))
+            if (! empty($conf->project->enabled))
             {
                 $projectid = GETPOST('projectid', 'int')?GETPOST('projectid', 'int'):0;
                 if(empty($projectid) && ! empty($object->fk_project)) $projectid = $object->fk_project;
@@ -958,7 +958,7 @@ if ($action == 'create')
                 print '<tr>';
                 print '<td>' . $langs->trans("Project") . '</td><td colspan="2">';
                 $numprojet = $formproject->select_projects($soc->id, $projectid, 'projectid', 0);
-                print ' &nbsp; <a href="'.DOL_URL_ROOT.'/projet/card.php?socid=' . $soc->id . '&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&socid='.$soc->id).'"><span class="valignmiddle text-plus-circle">' . $langs->trans("AddProject") . '</span><span class="fa fa-plus-circle valignmiddle"></span></a>';
+                print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid=' . $soc->id . '&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&socid='.$soc->id).'"><span class="valignmiddle text-plus-circle">' . $langs->trans("AddProject") . '</span><span class="fa fa-plus-circle valignmiddle"></span></a>';
                 print '</td>';
                 print '</tr>';
             }
@@ -1727,7 +1727,7 @@ elseif ($id || $ref)
 		// Thirdparty
         $morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . $object->thirdparty->getNomUrl(1);
         // Project
-        if (! empty($conf->projet->enabled)) {
+        if (! empty($conf->project->enabled)) {
             $langs->load("projects");
             $morehtmlref .= '<br>' . $langs->trans('Project') . ' ';
             if (0) {    // Do not change on shipment
@@ -1752,7 +1752,7 @@ elseif ($id || $ref)
                 if (! empty($objectsrc->fk_project)) {
                     $proj = new Project($db);
                     $proj->fetch($objectsrc->fk_project);
-                    $morehtmlref .= '<a href="' . DOL_URL_ROOT . '/projet/card.php?id=' . $objectsrc->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
+                    $morehtmlref .= '<a href="' . DOL_URL_ROOT . '/project/card.php?id=' . $objectsrc->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
                     $morehtmlref .= $proj->ref;
                     $morehtmlref .= '</a>';
                 } else {

@@ -938,7 +938,7 @@ class MouvementStock extends CommonObject
 				$origin = new FactureFournisseur($this->db);
 				break;
 			case 'project':
-				require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+				require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 				$origin = new Project($this->db);
 				break;
 
@@ -979,7 +979,7 @@ class MouvementStock extends CommonObject
 			$origin='';
 			if ($origin_element == 'project')
 			{
-				if (!class_exists('Project')) require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+				if (!class_exists('Project')) require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 				$origin = new Project($this->db);
 			}
 

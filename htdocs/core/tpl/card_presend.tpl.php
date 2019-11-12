@@ -244,7 +244,7 @@ if ($action == 'presend')
                 $subelement = 'fournisseur.commande';
             }
             if ($element == 'project') {
-                $element = 'projet';
+                $element = 'project';
             }
 
             dol_include_once('/' . $element . '/class/' . $subelement . '.class.php');

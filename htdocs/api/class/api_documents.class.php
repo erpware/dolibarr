@@ -478,14 +478,14 @@ class Documents extends DolibarrApi
 			}
 			elseif ($modulepart == 'project')
 			{
-				require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+				require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 				$object = new Project($this->db);
 			}
 			elseif ($modulepart == 'task' || $modulepart == 'project_task')
 			{
 				$modulepart = 'project_task';
 
-				require_once DOL_DOCUMENT_ROOT.'/projet/class/task.class.php';
+				require_once DOL_DOCUMENT_ROOT.'/project/class/task.class.php';
 				$object = new Task($this->db);
 
 				$task_result = $object->fetch('', $ref);

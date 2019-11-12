@@ -32,12 +32,12 @@ require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
 require_once DOL_DOCUMENT_ROOT.'/contact/class/contact.class.php';
 require_once DOL_DOCUMENT_ROOT.'/fichinter/class/fichinter.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
-if (!empty($conf->projet->enabled))     require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+if (!empty($conf->project->enabled))     require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 if (!empty($conf->contrat->enabled))    require_once DOL_DOCUMENT_ROOT.'/contrat/class/contrat.class.php';
 
 // Load translation files required by the page
 $langs->loadLangs(array('companies', 'bills', 'interventions'));
-if (!empty($conf->projet->enabled))     $langs->load("projects");
+if (!empty($conf->project->enabled))     $langs->load("projects");
 if (!empty($conf->contrat->enabled))    $langs->load("contracts");
 
 $action = GETPOST('action', 'alpha');
@@ -105,7 +105,7 @@ if (!empty($conf->global->FICHINTER_DISABLE_DETAILS)) unset($fieldstosearchall['
 $arrayfields = array(
 	'f.ref'=>array('label'=>'Ref', 'checked'=>1),
 	's.nom'=>array('label'=>'ThirdParty', 'checked'=>1),
-	'pr.ref'=>array('label'=>'Project', 'checked'=>1, 'enabled'=>(empty($conf->projet->enabled) ? 0 : 1)),
+	'pr.ref'=>array('label'=>'Project', 'checked'=>1, 'enabled'=>(empty($conf->project->enabled) ? 0 : 1)),
 	'c.ref'=>array('label'=>'Contract', 'checked'=>1, 'enabled'=>(empty($conf->contrat->enabled) ? 0 : 1)),
 	'f.description'=>array('label'=>'Description', 'checked'=>1),
 	'f.datec'=>array('label'=>'DateCreation', 'checked'=>0, 'position'=>500),
@@ -178,7 +178,7 @@ $form = new Form($db);
 $formfile = new FormFile($db);
 $objectstatic = new Fichinter($db);
 $companystatic = new Societe($db);
-if (!empty($conf->projet->enabled)) {
+if (!empty($conf->project->enabled)) {
     $projetstatic = new Project($db);
 }
 if (!empty($conf->contrat->enabled)) {
@@ -205,7 +205,7 @@ $sql = "SELECT";
 $sql .= " f.ref, f.rowid, f.fk_statut, f.description, f.datec as date_creation, f.tms as date_update, f.note_private,";
 if (empty($conf->global->FICHINTER_DISABLE_DETAILS) && $atleastonefieldinlines) $sql .= "fd.rowid as lineid, fd.description as descriptiondetail, fd.date as dp, fd.duree,";
 $sql .= " s.nom as name, s.rowid as socid, s.client";
-if (!empty($conf->projet->enabled)) {
+if (!empty($conf->project->enabled)) {
     $sql .= ", pr.rowid as projet_id, pr.ref as projet_ref, pr.title as projet_title";
 }
 if (!empty($conf->contrat->enabled)) {
@@ -220,8 +220,8 @@ $parameters = array();
 $reshook = $hookmanager->executeHooks('printFieldListSelect', $parameters); // Note that $action and $object may have been modified by hook
 $sql .= $hookmanager->resPrint;
 $sql .= " FROM ".MAIN_DB_PREFIX."fichinter as f";
-if (!empty($conf->projet->enabled)) {
-    $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."projet as pr on f.fk_projet = pr.rowid";
+if (!empty($conf->project->enabled)) {
+    $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."project as pr on f.fk_projet = pr.rowid";
 }
 if (!empty($conf->contrat->enabled)) {
     $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."contrat as c on f.fk_contrat = c.rowid";

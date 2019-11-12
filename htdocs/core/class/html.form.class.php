@@ -4370,11 +4370,11 @@ class Form
 		global $langs;
 
 		require_once DOL_DOCUMENT_ROOT.'/core/lib/project.lib.php';
-		require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+		require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
 
 		$out = '';
 
-		$formproject = new FormProjets($this->db);
+		$formproject = new FormProjects($this->db);
 
 		$langs->load("project");
 		if ($htmlname != "none")
@@ -4391,10 +4391,10 @@ class Form
 		{
 			if ($selected)
 			{
-				$projet = new Project($this->db);
-				$projet->fetch($selected);
-				//print '<a href="'.DOL_URL_ROOT.'/projet/card.php?id='.$selected.'">'.$projet->title.'</a>';
-				$out .= $projet->getNomUrl(0, '', 1);
+				$project = new Project($this->db);
+				$project->fetch($selected);
+				//print '<a href="'.DOL_URL_ROOT.'/project/card.php?id='.$selected.'">'.$project->title.'</a>';
+				$out .= $project->getNomUrl(0, '', 1);
 			}
 			else
 			{
@@ -6874,7 +6874,7 @@ class Form
 			if (($object->thirdparty->parent > 0) && !empty($conf->global->THIRDPARTY_INCLUDE_PARENT_IN_LINKTO)) $listofidcompanytoscan .= ','.$object->thirdparty->parent;
 			if (($object->fk_project > 0) && !empty($conf->global->THIRDPARTY_INCLUDE_PROJECT_THIRDPARY_IN_LINKTO))
 			{
-				include_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+				include_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 				$tmpproject = new Project($this->db);
 				$tmpproject->fetch($object->fk_project);
 				if ($tmpproject->socid > 0 && ($tmpproject->socid != $object->thirdparty->id)) $listofidcompanytoscan .= ','.$tmpproject->socid;

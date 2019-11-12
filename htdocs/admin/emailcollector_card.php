@@ -369,7 +369,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		// Thirdparty
 		$morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . $soc->getNomUrl(1);
 		// Project
-		if (! empty($conf->projet->enabled))
+		if (! empty($conf->project->enabled))
 		{
 		    $langs->load("projects");
 		    $morehtmlref.='<br>'.$langs->trans('Project') . ' ';
@@ -394,7 +394,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		        if (! empty($object->fk_project)) {
 		            $proj = new Project($db);
 		            $proj->fetch($object->fk_project);
-		            $morehtmlref.='<a href="'.DOL_URL_ROOT.'/projet/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
+		            $morehtmlref.='<a href="'.DOL_URL_ROOT.'/project/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
 		            $morehtmlref.=$proj->ref;
 		            $morehtmlref.='</a>';
 		        } else {
@@ -556,7 +556,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	    'loadthirdparty'=>$langs->trans('LoadThirdPartyFromName', $langs->transnoentities("ThirdPartyName")),
 	    'loadandcreatethirdparty'=>$langs->trans('LoadThirdPartyFromNameOrCreate', $langs->transnoentities("ThirdPartyName")),
 	    'recordevent'=>'RecordEvent');
-	if ($conf->projet->enabled) $arrayoftypes['project'] = 'CreateLeadAndThirdParty';
+	if ($conf->project->enabled) $arrayoftypes['project'] = 'CreateLeadAndThirdParty';
 	if ($conf->ticket->enabled) $arrayoftypes['ticket'] = 'CreateTicketAndThirdParty';
 	print $form->selectarray('operationtype', $arrayoftypes, '', 1, 0, 0, '', 1, 0, 0, '', 'maxwidth300');
 	print '</td><td>';

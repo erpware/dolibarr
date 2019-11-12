@@ -243,7 +243,7 @@ function restrictedArea($user, $features, $objectid = 0, $tableandshare = '', $f
 		{
 			if (! $user->rights->banque->cheque) { $readok=0; $nbko++; }
 		}
-		elseif ($feature == 'projet')
+		elseif ($feature == 'project')
 		{
 			if (! $user->rights->projet->lire && ! $user->rights->projet->all->lire) { $readok=0; $nbko++; }
 		}
@@ -457,13 +457,13 @@ function checkUserAccessToObject($user, $featuresarray, $objectid = 0, $tableand
 
 		// For backward compatibility
 		if ($feature == 'member')  $feature='adherent';
-		if ($feature == 'project') $feature='projet';
+		if ($feature == 'project') $feature='project';
 		if ($feature == 'task')    $feature='projet_task';
 
 		$check = array('adherent','banque','bom','don','user','usergroup','product','produit','service','produit|service','categorie','resource','expensereport','holiday'); // Test on entity only (Objects with no link to company)
 		$checksoc = array('societe');	 // Test for societe object
 		$checkother = array('contact','agenda');	 // Test on entity and link to third party. Allowed if link is empty (Ex: contacts...).
-		$checkproject = array('projet','project'); // Test for project object
+		$checkproject = array('project','project'); // Test for project object
 		$checktask = array('projet_task');
 		$nocheck = array('barcode','stock');	// No test
 		//$checkdefault = 'all other not already defined'; // Test on entity and link to third party. Not allowed if link is empty (Ex: invoice, orders...).
@@ -567,9 +567,9 @@ function checkUserAccessToObject($user, $featuresarray, $objectid = 0, $tableand
 		}
 		elseif (in_array($feature, $checkproject))
 		{
-			if (! empty($conf->projet->enabled) && empty($user->rights->projet->all->lire))
+			if (! empty($conf->project->enabled) && empty($user->rights->projet->all->lire))
 			{
-				include_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+				include_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 				$projectstatic=new Project($db);
 				$tmps=$projectstatic->getProjectsAuthorizedForUser($user, 0, 1, 0);
 				$tmparray=explode(',', $tmps);
@@ -585,12 +585,12 @@ function checkUserAccessToObject($user, $featuresarray, $objectid = 0, $tableand
 		}
 		elseif (in_array($feature, $checktask))
 		{
-			if (! empty($conf->projet->enabled) && empty($user->rights->projet->all->lire))
+			if (! empty($conf->project->enabled) && empty($user->rights->projet->all->lire))
 			{
 				$task = new Task($db);
 				$task->fetch($objectid);
 
-				include_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+				include_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 				$projectstatic=new Project($db);
 				$tmps=$projectstatic->getProjectsAuthorizedForUser($user, 0, 1, 0);
 				$tmparray=explode(',', $tmps);

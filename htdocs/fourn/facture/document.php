@@ -34,8 +34,8 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/fourn.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/images.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formfile.class.php';
-if (! empty($conf->projet->enabled)) {
-	require_once DOL_DOCUMENT_ROOT . '/projet/class/project.class.php';
+if (! empty($conf->project->enabled)) {
+	require_once DOL_DOCUMENT_ROOT . '/project/class/project.class.php';
 }
 
 $langs->loadLangs(array('bills', 'other', 'companies'));
@@ -103,7 +103,7 @@ if ($object->id > 0)
     $morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . $object->thirdparty->getNomUrl(1);
     if (empty($conf->global->MAIN_DISABLE_OTHER_LINK) && $object->thirdparty->id > 0) $morehtmlref.=' (<a href="'.DOL_URL_ROOT.'/fourn/facture/list.php?socid='.$object->thirdparty->id.'&search_company='.urlencode($object->thirdparty->name).'">'.$langs->trans("OtherBills").'</a>)';
     // Project
-    if (! empty($conf->projet->enabled))
+    if (! empty($conf->project->enabled))
     {
     	$langs->load("projects");
     	$morehtmlref.='<br>'.$langs->trans('Project') . ' ';
@@ -127,7 +127,7 @@ if ($object->id > 0)
     		if (! empty($object->fk_project)) {
     			$proj = new Project($db);
     			$proj->fetch($object->fk_project);
-    			$morehtmlref.='<a href="'.DOL_URL_ROOT.'/projet/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
+    			$morehtmlref.='<a href="'.DOL_URL_ROOT.'/project/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
     			$morehtmlref.=$proj->ref;
     			$morehtmlref.='</a>';
     		} else {

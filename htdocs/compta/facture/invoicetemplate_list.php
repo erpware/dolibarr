@@ -33,11 +33,11 @@ require '../../main.inc.php';
 require_once DOL_DOCUMENT_ROOT.'/compta/facture/class/facture-rec.class.php';
 require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formother.class.php';
-if (! empty($conf->projet->enabled)) {
-	require_once DOL_DOCUMENT_ROOT . '/projet/class/project.class.php';
-	//require_once DOL_DOCUMENT_ROOT . '/core/class/html.formprojet.class.php';
+if (! empty($conf->project->enabled)) {
+	require_once DOL_DOCUMENT_ROOT . '/project/class/project.class.php';
+	//require_once DOL_DOCUMENT_ROOT . '/core/class/html.formproject.class.php';
 }
-require_once DOL_DOCUMENT_ROOT . '/core/class/html.formprojet.class.php';
+require_once DOL_DOCUMENT_ROOT . '/core/class/html.formproject.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/doleditor.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/invoice.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
@@ -206,7 +206,7 @@ llxHeader('', $langs->trans("RepeatableInvoices"), 'ch-facture.html#s-fac-factur
 
 $form = new Form($db);
 $formother = new FormOther($db);
-if (! empty($conf->projet->enabled)) { $formproject = new FormProjets($db); }
+if (! empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
 $companystatic = new Societe($db);
 $invoicerectmp = new FactureRec($db);
 

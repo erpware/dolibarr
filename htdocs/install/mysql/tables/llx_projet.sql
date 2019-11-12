@@ -29,7 +29,7 @@ create table llx_projet
   entity           integer DEFAULT 1 NOT NULL,	-- multi company id
   title            varchar(255) NOT NULL,
   description      text,
-  fk_user_creat    integer NOT NULL,			-- createur du projet
+  fk_user_creat    integer NOT NULL,			-- createur du project
   fk_user_modif    integer,
   public           integer,						-- project is public or not
   fk_statut        integer DEFAULT 0 NOT NULL,	-- open or close

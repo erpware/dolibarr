@@ -28,9 +28,9 @@ require '../main.inc.php';
 require_once DOL_DOCUMENT_ROOT.'/resource/class/dolresource.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/fichinter/class/fichinter.class.php';
-if (!empty($conf->projet->enabled)) {
-    require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-    require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+if (!empty($conf->project->enabled)) {
+    require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
+    require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
 }
 if (!empty($conf->product->enabled) || !empty($conf->service->enabled)) {
     require_once DOL_DOCUMENT_ROOT.'/product/class/product.class.php';
@@ -339,7 +339,7 @@ else
 			// Thirdparty
 			//$morehtmlref.='<br>'.$langs->trans('ThirdParty') . ' : ' . $object->thirdparty->getNomUrl(1);
 			// Project
-			if (!empty($conf->projet->enabled))
+			if (!empty($conf->project->enabled))
 			{
 			    $langs->load("projects");
 			    //$morehtmlref.='<br>'.$langs->trans('Project') . ' ';
@@ -347,7 +347,7 @@ else
 		        if (!empty($act->fk_project)) {
 		            $proj = new Project($db);
 		            $proj->fetch($act->fk_project);
-		            $morehtmlref .= '<a href="'.DOL_URL_ROOT.'/projet/card.php?id='.$act->fk_project.'" title="'.$langs->trans('ShowProject').'">';
+		            $morehtmlref .= '<a href="'.DOL_URL_ROOT.'/project/card.php?id='.$act->fk_project.'" title="'.$langs->trans('ShowProject').'">';
 		            $morehtmlref .= $proj->ref;
 		            $morehtmlref .= '</a>';
 		            if ($proj->title) $morehtmlref .= ' - '.$proj->title;
@@ -500,7 +500,7 @@ else
 			// Thirdparty
 			$morehtmlref .= $langs->trans('ThirdParty').' : '.$fichinter->thirdparty->getNomUrl(1);
 			// Project
-			if (!empty($conf->projet->enabled))
+			if (!empty($conf->project->enabled))
 			{
 				$langs->load("projects");
 				$morehtmlref .= '<br>'.$langs->trans('Project').' ';
@@ -524,7 +524,7 @@ else
 					if (!empty($fichinter->fk_project)) {
 						$proj = new Project($db);
 						$proj->fetch($fichinter->fk_project);
-						$morehtmlref .= '<a href="'.DOL_URL_ROOT.'/projet/card.php?id='.$fichinter->fk_project.'" title="'.$langs->trans('ShowProject').'">';
+						$morehtmlref .= '<a href="'.DOL_URL_ROOT.'/project/card.php?id='.$fichinter->fk_project.'" title="'.$langs->trans('ShowProject').'">';
 						$morehtmlref .= $proj->ref;
 						$morehtmlref .= '</a>';
 					} else {

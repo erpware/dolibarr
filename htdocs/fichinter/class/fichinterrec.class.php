@@ -164,7 +164,7 @@ class FichinterRec extends Fichinter
             $sql.= ", ".(!empty($fichintsrc->note_private)?("'".$this->db->escape($fichintsrc->note_private)."'"):"null");
             $sql.= ", ".(!empty($fichintsrc->note_public)?("'".$this->db->escape($fichintsrc->note_public)."'"):"null");
             $sql.= ", '".$user->id."'";
-            // si c'est la même société on conserve les liens vers le projet et le contrat
+            // si c'est la même société on conserve les liens vers le project et le contrat
             if ($this->socid == $fichintsrc->socid) {
                 $sql.= ", ".(! empty($fichintsrc->fk_project)?$fichintsrc->fk_project:"null");
                 $sql.= ", ".(! empty($fichintsrc->fk_contrat)?$fichintsrc->fk_contrat:"null");

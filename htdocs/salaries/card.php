@@ -31,15 +31,15 @@ require_once DOL_DOCUMENT_ROOT . '/salaries/class/paymentsalary.class.php';
 require_once DOL_DOCUMENT_ROOT . '/compta/bank/class/account.class.php';
 require_once DOL_DOCUMENT_ROOT . '/core/lib/salaries.lib.php';
 require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
-if (! empty($conf->projet->enabled))
+if (! empty($conf->project->enabled))
 {
-	require_once DOL_DOCUMENT_ROOT . '/projet/class/project.class.php';
-	require_once DOL_DOCUMENT_ROOT . '/core/class/html.formprojet.class.php';
+	require_once DOL_DOCUMENT_ROOT . '/project/class/project.class.php';
+	require_once DOL_DOCUMENT_ROOT . '/core/class/html.formproject.class.php';
 }
 
 // Load translation files required by the page
 $langs->loadLangs(array("compta","banks","bills","users","salaries","hrm"));
-if (! empty($conf->projet->enabled))	$langs->load("projects");
+if (! empty($conf->project->enabled))	$langs->load("projects");
 
 $id=GETPOST("id", 'int');
 $action=GETPOST('action', 'aZ09');
@@ -211,7 +211,7 @@ if ($action == 'delete')
 llxHeader("", $langs->trans("SalaryPayment"));
 
 $form = new Form($db);
-if (! empty($conf->projet->enabled)) $formproject = new FormProjets($db);
+if (! empty($conf->project->enabled)) $formproject = new FormProjets($db);
 
 if ($id)
 {
@@ -304,7 +304,7 @@ if ($action == 'create')
 	print '</td></tr>';
 
 	// Project
-	if (! empty($conf->projet->enabled))
+	if (! empty($conf->project->enabled))
 	{
 		$formproject=new FormProjets($db);
 
@@ -385,7 +385,7 @@ if ($id)
 	$morehtmlref.=$langs->trans('Employee') . ' : ' . $userstatic->getNomUrl(1);
 
 	// Project
-	if (! empty($conf->projet->enabled))
+	if (! empty($conf->project->enabled))
 	{
 		$morehtmlref.='<br>'.$langs->trans('Project') . ' ';
 		if ($user->rights->salaries->write)
@@ -408,7 +408,7 @@ if ($id)
 			if (! empty($object->fk_project)) {
 				$proj = new Project($db);
 				$proj->fetch($object->fk_project);
-				$morehtmlref.='<a href="'.DOL_URL_ROOT.'/projet/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
+				$morehtmlref.='<a href="'.DOL_URL_ROOT.'/project/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
 				$morehtmlref.=$proj->ref;
 				$morehtmlref.='</a>';
 			} else {

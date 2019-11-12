@@ -1908,7 +1908,7 @@ div.mainmenu.website {
 	// Add here more div for other menu entries. moduletomainmenu=array('module name'=>'name of class for div')
 
 	$moduletomainmenu = array(
-		'user'=>'', 'syslog'=>'', 'societe'=>'companies', 'projet'=>'project', 'propale'=>'commercial', 'commande'=>'commercial',
+		'user'=>'', 'syslog'=>'', 'societe'=>'companies', 'project'=>'project', 'propale'=>'commercial', 'commande'=>'commercial',
 		'produit'=>'products', 'service'=>'products', 'stock'=>'products',
 		'don'=>'accountancy', 'tax'=>'accountancy', 'banque'=>'accountancy', 'facture'=>'accountancy', 'compta'=>'accountancy', 'accounting'=>'accountancy', 'adherent'=>'members', 'import'=>'tools', 'export'=>'tools', 'mailing'=>'tools',
 		'contrat'=>'commercial', 'ficheinter'=>'commercial', 'ticket'=>'ticket', 'deplacement'=>'commercial',

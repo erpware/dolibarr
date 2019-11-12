@@ -30,10 +30,10 @@ require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.formaccounting.class.php';
 require_once DOL_DOCUMENT_ROOT.'/accountancy/class/accountingaccount.class.php';
 require_once DOL_DOCUMENT_ROOT.'/accountancy/class/accountingjournal.class.php';
-if (! empty($conf->projet->enabled))
+if (! empty($conf->project->enabled))
 {
-	require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
-	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
 }
 
 // Load translation files required by the page
@@ -227,7 +227,7 @@ llxHeader("", $langs->trans("VariousPayment"));
 
 $form = new Form($db);
 if (! empty($conf->accounting->enabled)) $formaccounting = new FormAccounting($db);
-if (! empty($conf->projet->enabled)) $formproject = new FormProjets($db);
+if (! empty($conf->project->enabled)) $formproject = new FormProjets($db);
 
 if ($id)
 {
@@ -325,7 +325,7 @@ if ($action == 'create')
 	}
 
     // Project
-    if (! empty($conf->projet->enabled))
+    if (! empty($conf->project->enabled))
     {
         $formproject=new FormProjets($db);
 
@@ -420,7 +420,7 @@ if ($id)
 
 	$morehtmlref='<div class="refidno">';
 	// Project
-	if (! empty($conf->projet->enabled))
+	if (! empty($conf->project->enabled))
 	{
 		$langs->load("projects");
 		$morehtmlref.=$langs->trans('Project') . ' ';
