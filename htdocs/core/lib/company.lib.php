@@ -112,7 +112,7 @@ function societe_prepare_head(Societe $object)
         $h++;
     }
 
-    if (! empty($conf->project->enabled) && (!empty($user->rights->projet->lire) ))
+    if (! empty($conf->project->enabled) && (!empty($user->rights->project->lire) ))
     {
     	$head[$h][0] = DOL_URL_ROOT.'/societe/project.php?socid='.$object->id;
     	$head[$h][1] = $langs->trans("Projects");
@@ -734,12 +734,12 @@ function show_projects($conf, $langs, $db, $object, $backtopage = '', $nocreatel
 
     $i = -1 ;
 
-    if (! empty($conf->project->enabled) && $user->rights->projet->lire)
+    if (! empty($conf->project->enabled) && $user->rights->project->lire)
     {
         $langs->load("projects");
 
         $newcardbutton='';
-        if (! empty($conf->project->enabled) && $user->rights->projet->creer && empty($nocreatelink))
+        if (! empty($conf->project->enabled) && $user->rights->project->creer && empty($nocreatelink))
         {
             $newcardbutton.= dolGetButtonTitle($langs->trans('AddProject'), '', 'fa fa-plus-circle', DOL_URL_ROOT.'/project/card.php?socid='.$object->id.'&amp;action=create&amp;backtopage='.urlencode($backtopage));
         }
@@ -789,7 +789,7 @@ function show_projects($conf, $langs, $db, $object, $backtopage = '', $nocreatel
                     // To verify role of users
                     $userAccess = $projecttmp->restrictedProjectArea($user);
 
-                    if ($user->rights->projet->lire && $userAccess > 0)
+                    if ($user->rights->project->lire && $userAccess > 0)
                     {
                         print '<tr class="oddeven">';
 

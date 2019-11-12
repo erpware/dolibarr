@@ -67,11 +67,11 @@ function project_prepare_head($object)
 
 		$nbTimeSpent=0;
 		$sql = "SELECT t.rowid";
-		//$sql .= " FROM ".MAIN_DB_PREFIX."projet_task_time as t, ".MAIN_DB_PREFIX."projet_task as pt, ".MAIN_DB_PREFIX."user as u";
+		//$sql .= " FROM ".MAIN_DB_PREFIX."project_task_time as t, ".MAIN_DB_PREFIX."project_task as pt, ".MAIN_DB_PREFIX."user as u";
 		//$sql .= " WHERE t.fk_user = u.rowid AND t.fk_task = pt.rowid";
-		$sql .= " FROM ".MAIN_DB_PREFIX."projet_task_time as t, ".MAIN_DB_PREFIX."projet_task as pt";
+		$sql .= " FROM ".MAIN_DB_PREFIX."project_task_time as t, ".MAIN_DB_PREFIX."project_task as pt";
 		$sql .= " WHERE t.fk_task = pt.rowid";
-		$sql .= " AND pt.fk_projet =".$object->id;
+		$sql .= " AND pt.fk_project =".$object->id;
 		$resql = $db->query($sql);
 		if ($resql)
 		{
@@ -118,7 +118,7 @@ function project_prepare_head($object)
 
 	require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 	require_once DOL_DOCUMENT_ROOT.'/core/class/link.class.php';
-	$upload_dir = $conf->projet->dir_output . "/" . dol_sanitizeFileName($object->ref);
+	$upload_dir = $conf->project->dir_output . "/" . dol_sanitizeFileName($object->ref);
 	$nbFiles = count(dol_dir_list($upload_dir, 'files', 0, '', '(\.meta|_preview.*\.png)$'));
 	$nbLinks=Link::count($db, $object->element, $object->id);
 	$head[$h][0] = DOL_URL_ROOT.'/project/document.php?id='.$object->id;
@@ -181,9 +181,9 @@ function task_prepare_head($object)
 	// Is there timespent ?
 	$nbTimeSpent=0;
 	$sql = "SELECT t.rowid";
-	//$sql .= " FROM ".MAIN_DB_PREFIX."projet_task_time as t, ".MAIN_DB_PREFIX."projet_task as pt, ".MAIN_DB_PREFIX."user as u";
+	//$sql .= " FROM ".MAIN_DB_PREFIX."project_task_time as t, ".MAIN_DB_PREFIX."project_task as pt, ".MAIN_DB_PREFIX."user as u";
 	//$sql .= " WHERE t.fk_user = u.rowid AND t.fk_task = pt.rowid";
-	$sql .= " FROM ".MAIN_DB_PREFIX."projet_task_time as t";
+	$sql .= " FROM ".MAIN_DB_PREFIX."project_task_time as t";
 	$sql .= " WHERE t.fk_task =".$object->id;
 	$resql = $db->query($sql);
 	if ($resql)
@@ -218,7 +218,7 @@ function task_prepare_head($object)
 	}
 
 	$head[$h][0] = DOL_URL_ROOT.'/project/tasks/document.php?id='.$object->id.(GETPOST('withproject')?'&withproject=1':'');
-	$filesdir = $conf->projet->dir_output . "/" . dol_sanitizeFileName($object->project->ref) . '/' .dol_sanitizeFileName($object->ref);
+	$filesdir = $conf->project->dir_output . "/" . dol_sanitizeFileName($object->project->ref) . '/' .dol_sanitizeFileName($object->ref);
 	include_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 	include_once DOL_DOCUMENT_ROOT.'/core/class/link.class.php';
 	$nbFiles = count(dol_dir_list($filesdir, 'files', 0, '', '(\.meta|_preview.*\.png)$'));
@@ -418,7 +418,7 @@ function projectLinesa(&$inc, $parent, &$lines, &$level, $var, $showproject, &$t
 			{
 				// Caller did not ask to filter on tasks of a specific user (this probably means he want also tasks of all users, into public project
 				// or into all other projects if user has permission to).
-				if (empty($user->rights->projet->all->lire))
+				if (empty($user->rights->project->all->lire))
 				{
 					// User is not allowed on this project and project is not public, so we hide line
 					if (! in_array($lines[$i]->fk_project, $projectsArrayId))
@@ -464,7 +464,7 @@ function projectLinesa(&$inc, $parent, &$lines, &$level, $var, $showproject, &$t
 					// Project ref
 					print "<td>";
 					//if ($showlineingray) print '<i>';
-					if ($lines[$i]->public || in_array($lines[$i]->fk_project, $projectsArrayId) || ! empty($user->rights->projet->all->lire)) print $projectstatic->getNomUrl(1);
+					if ($lines[$i]->public || in_array($lines[$i]->fk_project, $projectsArrayId) || ! empty($user->rights->project->all->lire)) print $projectstatic->getNomUrl(1);
 					else print $projectstatic->getNomUrl(1, 'nolink');
 					//if ($showlineingray) print '</i>';
 					print "</td>";
@@ -798,7 +798,7 @@ function projectLinesPerAction(&$inc, $parent, $fuser, $lines, &$level, &$projec
 			{
 				if ($preselectedday)
 				{
-					$projectstatic->loadTimeSpent($preselectedday, 0, $fuser->id);	// Load time spent from table projet_task_time for the project into this->weekWorkLoad and this->weekWorkLoadPerTask for all days of a week
+					$projectstatic->loadTimeSpent($preselectedday, 0, $fuser->id);	// Load time spent from table project_task_time for the project into this->weekWorkLoad and this->weekWorkLoadPerTask for all days of a week
 					$workloadforid[$projectstatic->id]=1;
 				}
 			}
@@ -882,7 +882,7 @@ function projectLinesPerAction(&$inc, $parent, $fuser, $lines, &$level, &$projec
 			//var_dump($lines[$i]);
 			//var_dump($projectsrole[$lines[$i]->fk_project]);
 			// If at least one role for project
-			if ($lines[$i]->public || ! empty($projectsrole[$lines[$i]->fk_project]) || $user->rights->projet->all->creer)
+			if ($lines[$i]->public || ! empty($projectsrole[$lines[$i]->fk_project]) || $user->rights->project->all->creer)
 			{
 				$disabledproject=0;
 				$disabledtask=0;
@@ -1034,7 +1034,7 @@ function projectLinesPerDay(&$inc, $parent, $fuser, $lines, &$level, &$projectsr
 				{
 					if ($preselectedday)
 					{
-						$projectstatic->loadTimeSpent($preselectedday, 0, $fuser->id);	// Load time spent from table projet_task_time for the project into this->weekWorkLoad and this->weekWorkLoadPerTask for all days of a week
+						$projectstatic->loadTimeSpent($preselectedday, 0, $fuser->id);	// Load time spent from table project_task_time for the project into this->weekWorkLoad and this->weekWorkLoadPerTask for all days of a week
 		   				$workloadforid[$projectstatic->id]=1;
 					}
 				}
@@ -1180,7 +1180,7 @@ function projectLinesPerDay(&$inc, $parent, $fuser, $lines, &$level, &$projectsr
 				print "</td>\n";
 
                 // TASK extrafields
-                $extrafieldsobjectkey='projet_task';
+                $extrafieldsobjectkey='project_task';
                 $extrafieldsobjectprefix='efpt.';
                 include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_print_fields.tpl.php';
 
@@ -1225,7 +1225,7 @@ function projectLinesPerDay(&$inc, $parent, $fuser, $lines, &$level, &$projectsr
 				//var_dump($lines[$i]);
 				//var_dump($projectsrole[$lines[$i]->fk_project]);
 				// If at least one role for project
-				if ($lines[$i]->public || ! empty($projectsrole[$lines[$i]->fk_project]) || $user->rights->projet->all->creer)
+				if ($lines[$i]->public || ! empty($projectsrole[$lines[$i]->fk_project]) || $user->rights->project->all->creer)
 				{
 					$disabledproject=0;
 					$disabledtask=0;
@@ -1411,7 +1411,7 @@ function projectLinesPerWeek(&$inc, $firstdaytoshow, $fuser, $parent, $lines, &$
 				//var_dump($projectstatic->weekWorkLoadPerTask);
 				if (empty($workloadforid[$projectstatic->id]))
 				{
-					$projectstatic->loadTimeSpent($firstdaytoshow, 0, $fuser->id);	// Load time spent from table projet_task_time for the project into this->weekWorkLoad and this->weekWorkLoadPerTask for all days of a week
+					$projectstatic->loadTimeSpent($firstdaytoshow, 0, $fuser->id);	// Load time spent from table project_task_time for the project into this->weekWorkLoad and this->weekWorkLoadPerTask for all days of a week
 					$workloadforid[$projectstatic->id]=1;
 				}
 				//var_dump($projectstatic->weekWorkLoadPerTask);
@@ -1560,7 +1560,7 @@ function projectLinesPerWeek(&$inc, $firstdaytoshow, $fuser, $parent, $lines, &$
 				print "</td>\n";
 
 				// TASK extrafields
-                $extrafieldsobjectkey='projet_task';
+                $extrafieldsobjectkey='project_task';
                 $extrafieldsobjectprefix='efpt.';
                 include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_print_fields.tpl.php';
 
@@ -1605,7 +1605,7 @@ function projectLinesPerWeek(&$inc, $firstdaytoshow, $fuser, $parent, $lines, &$
 				//var_dump($lines[$i]);
 				//var_dump($projectsrole[$lines[$i]->fk_project]);
 				// If at least one role for project
-				if ($lines[$i]->public || ! empty($projectsrole[$lines[$i]->fk_project]) || $user->rights->projet->all->creer)
+				if ($lines[$i]->public || ! empty($projectsrole[$lines[$i]->fk_project]) || $user->rights->project->all->creer)
 				{
 					$disabledproject=0;
 					$disabledtask=0;
@@ -1778,20 +1778,20 @@ function print_projecttasks_array($db, $form, $socid, $projectsListId, $mytasks 
 	$sql= " FROM ".MAIN_DB_PREFIX."project as p";
 	if ($mytasks)
 	{
-		$sql.= ", ".MAIN_DB_PREFIX."projet_task as t";
+		$sql.= ", ".MAIN_DB_PREFIX."project_task as t";
 		$sql.= ", ".MAIN_DB_PREFIX."element_contact as ec";
 		$sql.= ", ".MAIN_DB_PREFIX."c_type_contact as ctc";
 	}
 	else
 	{
-		$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."projet_task as t ON p.rowid = t.fk_projet";
+		$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."project_task as t ON p.rowid = t.fk_project";
 	}
 	$sql.= " WHERE p.entity IN (".getEntity('project').")";
 	$sql.= " AND p.rowid IN (".$projectsListId.")";
 	if ($socid) $sql.= "  AND (p.fk_soc IS NULL OR p.fk_soc = 0 OR p.fk_soc = ".$socid.")";
 	if ($mytasks)
 	{
-		$sql.= " AND p.rowid = t.fk_projet";
+		$sql.= " AND p.rowid = t.fk_project";
 		$sql.= " AND ec.element_id = t.rowid";
 		$sql.= " AND ec.fk_socpeople = ".$user->id;
 		$sql.= " AND ec.fk_c_type_contact = ctc.rowid";   // Replace the 2 lines with ec.fk_c_type_contact in $arrayidtypeofcontact
@@ -1841,7 +1841,7 @@ function print_projecttasks_array($db, $form, $socid, $projectsListId, $mytasks 
 	$sql2.= " COUNT(t.rowid) as nb, SUM(t.planned_workload) as planned_workload, SUM(t.planned_workload * t.progress / 100) as declared_progess_workload";
 	$sql2.= " FROM ".MAIN_DB_PREFIX."project as p";
 	$sql2.= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s ON s.rowid = p.fk_soc";
-	$sql2.= " LEFT JOIN ".MAIN_DB_PREFIX."projet_task as t ON p.rowid = t.fk_projet";
+	$sql2.= " LEFT JOIN ".MAIN_DB_PREFIX."project_task as t ON p.rowid = t.fk_project";
 	$sql2.= " WHERE p.rowid IN (".join(',', $arrayidofprojects).")";
 	$sql2.= " GROUP BY p.rowid, p.ref, p.title, p.fk_soc, s.nom, p.fk_user_creat, p.public, p.fk_statut, p.fk_opp_status, p.opp_amount, p.dateo, p.datee";
 	$sql2.= " ORDER BY p.title, p.ref";

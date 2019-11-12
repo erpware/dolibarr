@@ -163,7 +163,7 @@ class FactureRec extends CommonInvoice
 			$sql .= ", note_public";
 			$sql .= ", modelpdf";
 			$sql .= ", fk_user_author";
-			$sql .= ", fk_projet";
+			$sql .= ", fk_project";
 			$sql .= ", fk_account";
 			$sql .= ", fk_cond_reglement";
 			$sql .= ", fk_mode_reglement";
@@ -382,7 +382,7 @@ class FactureRec extends CommonInvoice
 		$sql .= ', f.date_lim_reglement as dlr';
 		$sql .= ', f.note_private, f.note_public, f.fk_user_author';
         $sql .= ', f.modelpdf';
-		$sql .= ', f.fk_mode_reglement, f.fk_cond_reglement, f.fk_projet as fk_project';
+		$sql .= ', f.fk_mode_reglement, f.fk_cond_reglement, f.fk_project as fk_project';
 		$sql .= ', f.fk_account';
 		$sql .= ', f.frequency, f.unit_frequency, f.date_when, f.date_last_gen, f.nb_gen_done, f.nb_gen_max, f.usenewprice, f.auto_validate';
         $sql .= ', f.generate_pdf';

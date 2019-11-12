@@ -1234,7 +1234,7 @@ class EmailCollector extends CommonObject
 
                             $thirdpartyid = $objectemail->fk_soc;
                             $contactid = $objectemail->fk_socpeople;
-                            $projectid = isset($objectemail->fk_project)?$objectemail->fk_project:$objectemail->fk_projet;
+                            $projectid = isset($objectemail->fk_project)?$objectemail->fk_project:$objectemail->fk_project;
                         }
                     }
 

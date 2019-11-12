@@ -142,7 +142,7 @@ class FichinterRec extends Fichinter
             $sql.= ", note_private";
             $sql.= ", note_public";
             $sql.= ", fk_user_author";
-            $sql.= ", fk_projet";
+            $sql.= ", fk_project";
             $sql.= ", fk_contrat";
             $sql.= ", modelpdf";
 
@@ -249,7 +249,7 @@ class FichinterRec extends Fichinter
     public function fetch($rowid = 0, $ref = '', $ref_ext = '', $ref_int = '')
     {
         $sql = 'SELECT f.titre, f.fk_soc';
-        $sql.= ', f.datec, f.duree, f.fk_projet, f.fk_contrat, f.description';
+        $sql.= ', f.datec, f.duree, f.fk_project, f.fk_contrat, f.description';
         $sql.= ', f.note_private, f.note_public, f.fk_user_author';
         $sql.= ', f.frequency, f.unit_frequency, f.date_when, f.date_last_gen, f.nb_gen_done, f.nb_gen_max, f.auto_validate';
         $sql.= ', f.note_private, f.note_public, f.fk_user_author';
@@ -278,7 +278,7 @@ class FichinterRec extends Fichinter
                 $this->duration = $obj->duree;
                 $this->socid				= $obj->fk_soc;
                 $this->statut				= 0;
-                $this->fk_project			= $obj->fk_projet;
+                $this->fk_project			= $obj->fk_project;
                 $this->fk_contrat			= $obj->fk_contrat;
                 $this->note_private		    = $obj->note_private;
                 $this->note_public			= $obj->note_public;

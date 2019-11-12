@@ -84,9 +84,9 @@ $search_array_options = $extrafields->getOptionalsFromPost($object->table_elemen
 // Security check
 $socid = 0;
 //if ($user->socid > 0) $socid = $user->socid;    // For external user, no check is done on company because readability is managed by public status of project and assignement.
-if (!$user->rights->projet->lire) accessforbidden();
+if (!$user->rights->project->lire) accessforbidden();
 
-$diroutputmassaction = $conf->projet->dir_output.'/tasks/temp/massgeneration/'.$user->id;
+$diroutputmassaction = $conf->project->dir_output.'/tasks/temp/massgeneration/'.$user->id;
 
 $limit = GETPOST('limit', 'int') ?GETPOST('limit', 'int') : $conf->liste_limit;
 $sortfield = GETPOST("sortfield", 'alpha');
@@ -184,9 +184,9 @@ if (empty($reshook))
 	// Mass actions
 	$objectclass = 'Task';
 	$objectlabel = 'Tasks';
-	$permissiontoread = $user->rights->projet->lire;
-	$permissiontodelete = $user->rights->projet->supprimer;
-	$uploaddir = $conf->projet->dir_output.'/tasks';
+	$permissiontoread = $user->rights->project->lire;
+	$permissiontodelete = $user->rights->project->supprimer;
+	$uploaddir = $conf->project->dir_output.'/tasks';
 	include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
 }
 
@@ -224,7 +224,7 @@ if ($id)
 }
 
 // Get list of project id allowed to user (in a string list separated by coma)
-if (!$user->rights->projet->all->lire) $projectsListId = $projectstatic->getProjectsAuthorizedForUser($user, 0, 1, $socid);
+if (!$user->rights->project->all->lire) $projectsListId = $projectstatic->getProjectsAuthorizedForUser($user, 0, 1, $socid);
 //var_dump($projectsListId);
 
 // Get id of types of contacts for projects (This list never contains a lot of elements)
@@ -282,17 +282,17 @@ $sql .= " FROM ".MAIN_DB_PREFIX."project as p";
 $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s on p.fk_soc = s.rowid";
 // We'll need this table joined to the select in order to filter by categ
 if (!empty($search_categ)) $sql .= ' LEFT JOIN '.MAIN_DB_PREFIX."categorie_project as cs ON p.rowid = cs.fk_project"; // We'll need this table joined to the select in order to filter by categ
-$sql .= ", ".MAIN_DB_PREFIX."projet_task as t";
+$sql .= ", ".MAIN_DB_PREFIX."project_task as t";
 if (!empty($arrayfields['t.tobill']['checked']) || !empty($arrayfields['t.billed']['checked']))
 {
-    $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."projet_task_time as tt ON tt.fk_task = t.rowid";
+    $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."project_task_time as tt ON tt.fk_task = t.rowid";
 }
 if (is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label'])) $sql .= " LEFT JOIN ".MAIN_DB_PREFIX.$object->table_element."_extrafields as ef on (t.rowid = ef.fk_object)";
 if ($search_project_user > 0)  $sql .= ", ".MAIN_DB_PREFIX."element_contact as ecp";
 if ($search_task_user > 0)     $sql .= ", ".MAIN_DB_PREFIX."element_contact as ect";
-$sql .= " WHERE t.fk_projet = p.rowid";
+$sql .= " WHERE t.fk_project = p.rowid";
 $sql .= " AND p.entity IN (".getEntity('project').')';
-if (!$user->rights->projet->all->lire) $sql .= " AND p.rowid IN (".($projectsListId ? $projectsListId : '0').")"; // public and assigned to projects, or restricted to company for external users
+if (!$user->rights->project->all->lire) $sql .= " AND p.rowid IN (".($projectsListId ? $projectsListId : '0').")"; // public and assigned to projects, or restricted to company for external users
 if (is_object($projectstatic) && $projectstatic->id > 0) $sql .= " AND p.rowid = ".$projectstatic->id;
 // No need to check company, as filtering of projects must be done by getProjectsAuthorizedForUser
 if ($socid) $sql .= "  AND (p.fk_soc IS NULL OR p.fk_soc = 0 OR p.fk_soc = ".$socid.")";
@@ -365,11 +365,11 @@ if ($num == 1 && !empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $
 {
 	$obj = $db->fetch_object($resql);
 	$id = $obj->id;
-	header("Location: ".DOL_URL_ROOT.'/project/tasks/task.php?id='.$id.'&withprojet=1');
+	header("Location: ".DOL_URL_ROOT.'/project/tasks/task.php?id='.$id.'&withproject=1');
 	exit;
 }
 
-$help_url = "EN:Module_Projects|FR:Module_Projets|ES:M&oacute;dulo_Proyectos";
+$help_url = "EN:Module_Projects|FR:Module_Projects|ES:M&oacute;dulo_Proyectos";
 llxHeader("", $title, $help_url);
 
 $param = '';
@@ -408,7 +408,7 @@ if (in_array($massaction, array('presend', 'predelete'))) $arrayofmassactions = 
 $massactionbutton = $form->selectMassAction('', $arrayofmassactions);
 
 $newcardbutton = '';
-if ($user->rights->projet->creer)
+if ($user->rights->project->creer)
 {
     $newcardbutton .= dolGetButtonTitle($langs->trans('NewTask'), '', 'fa fa-plus-circle', DOL_URL_ROOT.'/project/tasks.php?action=create');
 }
@@ -429,7 +429,7 @@ $texthelp = '';
 if ($search_task_user == $user->id) $texthelp .= $langs->trans("MyTasksDesc");
 else
 {
-    if ($user->rights->projet->all->lire && !$socid) $texthelp .= $langs->trans("TasksOnProjectsDesc");
+    if ($user->rights->project->all->lire && !$socid) $texthelp .= $langs->trans("TasksOnProjectsDesc");
     else $texthelp .= $langs->trans("TasksOnProjectsPublicDesc");
 }
 

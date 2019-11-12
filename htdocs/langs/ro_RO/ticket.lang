@@ -34,7 +34,7 @@ TicketTypeShortBUGSOFT=Logică disfuncţională
 TicketTypeShortBUGHARD=Material disfuncţional
 TicketTypeShortCOM=Întrebare comercială
 TicketTypeShortINCIDENT=Cerere de asistență
-TicketTypeShortPROJET=Proiect
+TicketTypeShortPROJECT=Proiect
 TicketTypeShortOTHER=Altele
 
 TicketSeverityShortLOW=Scăzut

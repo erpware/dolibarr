@@ -226,7 +226,7 @@ if (empty($reshook))
 $form = new Form($db);
 $formfile = new FormFile($db);
 $formproduct = new FormProduct($db);
-if (! empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
+if (! empty($conf->project->enabled)) { $formproject = new FormProjects($db); }
 
 llxHeader('', $langs->trans('OrderCard'), '');
 

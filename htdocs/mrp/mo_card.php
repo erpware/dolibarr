@@ -173,7 +173,7 @@ if (empty($reshook))
 
 $form = new Form($db);
 $formfile = new FormFile($db);
-$formproject = new FormProjets($db);
+$formproject = new FormProjects($db);
 
 llxHeader('', $langs->trans('Mo'), '');
 

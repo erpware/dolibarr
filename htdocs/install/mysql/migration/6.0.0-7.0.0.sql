@@ -498,7 +498,7 @@ ALTER TABLE llx_actioncomm ADD INDEX idx_actioncomm_recurid (recurid);
 
 ALTER TABLE llx_actioncomm ADD INDEX idx_actioncomm_ref_ext (ref_ext);
 
-ALTER TABLE llx_payment_various ADD COLUMN fk_projet integer DEFAULT NULL after accountancy_code;
+ALTER TABLE llx_payment_various ADD COLUMN fk_project integer DEFAULT NULL after accountancy_code;
 
 UPDATE llx_const set name = __ENCRYPT('ONLINE_PAYMENT_MESSAGE_OK')__  where name = __ENCRYPT('PAYPAL_MESSAGE_OK')__;
 UPDATE llx_const set name = __ENCRYPT('ONLINE_PAYMENT_MESSAGE_KO')__  where name = __ENCRYPT('PAYPAL_MESSAGE_KO')__;
@@ -523,7 +523,7 @@ insert into llx_c_action_trigger (code,label,description,elementtype,rang) value
 insert into llx_c_action_trigger (code,label,description,elementtype,rang) values ('PROPOSAL_SUPPLIER_CLOSE_SIGNED','Price request closed signed','Executed when a customer proposal is closed signed','proposal_supplier',10);
 insert into llx_c_action_trigger (code,label,description,elementtype,rang) values ('PROPOSAL_SUPPLIER_CLOSE_REFUSED','Price request closed refused','Executed when a customer proposal is closed refused','proposal_supplier',10);
 
-DROP TABLE llx_projet_task_comment;
+DROP TABLE llx_project_task_comment;
 
 CREATE TABLE llx_comment (
     rowid integer AUTO_INCREMENT PRIMARY KEY,
@@ -564,7 +564,7 @@ ALTER TABLE llx_c_paiement ADD UNIQUE INDEX uk_c_paiement(id, entity, code);
 ALTER TABLE llx_c_payment_term ADD COLUMN entity integer DEFAULT 1 NOT NULL AFTER rowid;
 ALTER TABLE llx_c_payment_term ADD UNIQUE INDEX uk_c_payment_term(rowid, entity, code);
 
-ALTER TABLE llx_projet CHANGE datec datec datetime;
+ALTER TABLE llx_project CHANGE datec datec datetime;
 
 create table llx_c_email_senderprofile
 (

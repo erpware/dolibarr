@@ -1480,7 +1480,7 @@ $form = new Form($db);
 $formfile = new FormFile($db);
 $formorder = new FormOrder($db);
 $formmargin = new FormMargin($db);
-if (!empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
+if (!empty($conf->project->enabled)) { $formproject = new FormProjects($db); }
 
 // Mode creation
 if ($action == 'create' && $usercancreate)
@@ -1733,7 +1733,7 @@ if ($action == 'create' && $usercancreate)
 		$langs->load("projects");
 		print '<tr>';
 		print '<td>'.$langs->trans("Project").'</td><td>';
-		$numprojet = $formproject->select_projects(($soc->id > 0 ? $soc->id : -1), $projectid, 'projectid', 0, 0, 1, 0, 0, 0, 0, '', 0, 0);
+		$numproject = $formproject->select_projects(($soc->id > 0 ? $soc->id : -1), $projectid, 'projectid', 0, 0, 1, 0, 0, 0, 0, '', 0, 0);
 		print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid='.$soc->id.'&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&socid='.$soc->id).'"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle"></span></a>';
 		print '</td>';
 		print '</tr>';

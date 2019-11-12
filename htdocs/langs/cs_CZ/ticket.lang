@@ -34,7 +34,7 @@ TicketTypeShortBUGSOFT=Logika Dysfonctionnement
 TicketTypeShortBUGHARD=Dysfonctionnement matériel -nějaký mišmaš ???
 TicketTypeShortCOM=Obchodní otázka
 TicketTypeShortINCIDENT=Žádost o pomoc
-TicketTypeShortPROJET=Projekt
+TicketTypeShortPROJECT=Projekt
 TicketTypeShortOTHER=Jiný
 
 TicketSeverityShortLOW=Nízký

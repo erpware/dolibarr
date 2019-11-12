@@ -64,7 +64,7 @@ if (! GETPOST($htmlname) && ! GETPOST($idprod)) return;
 // When used from jQuery, the search term is added as GET param "term".
 $searchkey=((!empty($idprod) && GETPOST($idprod))?GETPOST($idprod):(GETPOST($htmlname)?GETPOST($htmlname):''));
 
-$form = new FormProjets($db);
+$form = new FormProjects($db);
 $arrayresult=$form->select_projects_list($socid, '', $htmlname, 0, 0, 1, $discard_closed, 0, 0, 1, $searchkey);
 
 $db->close();

@@ -1618,7 +1618,7 @@ $form = new Form($db);
 $formfile = new FormFile($db);
 $bankaccountstatic = new Account($db);
 $paymentstatic = new PaiementFourn($db);
-if (!empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
+if (!empty($conf->project->enabled)) { $formproject = new FormProjects($db); }
 
 $now = dol_now();
 
@@ -2023,7 +2023,7 @@ if ($action == 'create')
 	// Project
 	if (!empty($conf->project->enabled))
 	{
-		$formproject = new FormProjets($db);
+		$formproject = new FormProjects($db);
 
 		$langs->load('projects');
 		print '<tr><td>'.$langs->trans('Project').'</td><td>';

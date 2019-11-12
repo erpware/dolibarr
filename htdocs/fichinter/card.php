@@ -812,7 +812,7 @@ if (empty($reshook))
 $form = new Form($db);
 $formfile = new FormFile($db);
 if ($conf->contrat->enabled) $formcontract = new FormContract($db);
-if (! empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
+if (! empty($conf->project->enabled)) { $formproject = new FormProjects($db); }
 
 llxHeader('', $langs->trans("Intervention"));
 
@@ -928,19 +928,19 @@ if ($action == 'create')
 		// Project
 		if (! empty($conf->project->enabled))
 		{
-			$formproject=new FormProjets($db);
+			$formproject=new FormProjects($db);
 
 			$langs->load("project");
 
             print '<tr><td>'.$langs->trans("Project").'</td><td>';
             /* Fix: If a project must be linked to any companies (suppliers or not), project must be not be set as limited to customer but must be not linked to any particular thirdparty
             if ($societe->fournisseur==1)
-            	$numprojet=select_projects(-1,$_POST["projectid"],'projectid');
+            	$numproject=select_projects(-1,$_POST["projectid"],'projectid');
             else
-            	$numprojet=select_projects($societe->id,$_POST["projectid"],'projectid');
+            	$numproject=select_projects($societe->id,$_POST["projectid"],'projectid');
             	*/
-            $numprojet=$formproject->select_projects($soc->id, $projectid, 'projectid');
-            if ($numprojet==0)
+            $numproject=$formproject->select_projects($soc->id, $projectid, 'projectid');
+            if ($numproject==0)
             {
                 print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid='.$soc->id.'&action=create"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle"></span></a>';
             }

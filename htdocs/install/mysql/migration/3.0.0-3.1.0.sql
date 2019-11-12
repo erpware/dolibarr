@@ -37,7 +37,7 @@ ALTER TABLE llx_facture_fourn MODIFY model_pdf varchar(255);
 ALTER TABLE llx_facture MODIFY model_pdf varchar(255);
 ALTER TABLE llx_fichinter MODIFY model_pdf varchar(255);
 ALTER TABLE llx_livraison MODIFY model_pdf varchar(255);
-ALTER TABLE llx_projet MODIFY model_pdf varchar(255);
+ALTER TABLE llx_project MODIFY model_pdf varchar(255);
 ALTER TABLE llx_propal MODIFY model_pdf varchar(255);
 
 ALTER TABLE llx_societe MODIFY siren varchar(32);
@@ -419,7 +419,7 @@ update llx_actioncomm set elementtype='order' where elementtype='commande';
 update llx_actioncomm set elementtype='contract' where elementtype='contrat';
 
 
-alter table llx_propal add column   tms             timestamp after fk_projet;
+alter table llx_propal add column   tms             timestamp after fk_project;
 
 
 create table llx_product_extrafields

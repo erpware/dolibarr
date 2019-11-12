@@ -104,13 +104,13 @@ ALTER TABLE llx_payment_salary ADD INDEX idx_payment_salary_dateep (dateep);
 ALTER TABLE llx_payment_salary ADD CONSTRAINT fk_payment_salary_user FOREIGN KEY (fk_user) REFERENCES llx_user (rowid);
 
 
-UPDATE llx_projet_task_time SET task_datehour = task_date where task_datehour IS NULL;
-ALTER TABLE llx_projet_task_time ADD COLUMN task_date_withhour integer DEFAULT 0 AFTER task_datehour;
+UPDATE llx_project_task_time SET task_datehour = task_date where task_datehour IS NULL;
+ALTER TABLE llx_project_task_time ADD COLUMN task_date_withhour integer DEFAULT 0 AFTER task_datehour;
 
-ALTER TABLE llx_projet_task MODIFY COLUMN duration_effective real DEFAULT 0 NULL;
-ALTER TABLE llx_projet_task MODIFY COLUMN planned_workload real DEFAULT 0 NULL;
+ALTER TABLE llx_project_task MODIFY COLUMN duration_effective real DEFAULT 0 NULL;
+ALTER TABLE llx_project_task MODIFY COLUMN planned_workload real DEFAULT 0 NULL;
 
--- VPGSQL8.2 ALTER TABLE llx_projet_task ALTER COLUMN planned_workload DROP NOT NULL;
+-- VPGSQL8.2 ALTER TABLE llx_project_task ALTER COLUMN planned_workload DROP NOT NULL;
 
 ALTER TABLE llx_commande_fournisseur MODIFY COLUMN date_livraison datetime;
 
@@ -266,7 +266,7 @@ CREATE TABLE llx_expensereport_det
    rowid integer NOT NULL AUTO_INCREMENT PRIMARY KEY,
    fk_expensereport integer NOT NULL,
    fk_c_type_fees integer NOT NULL,
-   fk_projet integer,
+   fk_project integer,
    comments text NOT NULL,
    product_type integer DEFAULT -1,
    qty real NOT NULL,
@@ -289,7 +289,7 @@ CREATE TABLE llx_expensereport_det
    import_key					varchar(14)
 ) ENGINE=innodb;
 
-ALTER TABLE llx_expensereport_det MODIFY COLUMN fk_projet integer NULL;
+ALTER TABLE llx_expensereport_det MODIFY COLUMN fk_project integer NULL;
 ALTER TABLE llx_expensereport_det MODIFY COLUMN fk_c_tva integer NULL;
 
 create table llx_payment_expensereport
@@ -309,7 +309,7 @@ create table llx_payment_expensereport
 )ENGINE=innodb;
 
 
-ALTER TABLE llx_projet ADD COLUMN budget_amount double(24,8);
+ALTER TABLE llx_project ADD COLUMN budget_amount double(24,8);
 -- Alias names (commercial, trademark or alias names)
 ALTER TABLE llx_societe ADD COLUMN name_alias varchar(128) NULL;
 
@@ -342,10 +342,10 @@ ALTER TABLE llx_commande_fournisseurdet ADD COLUMN special_code	 integer DEFAULT
 ALTER TABLE llx_commande_fournisseurdet ADD COLUMN rang integer DEFAULT 0;
 ALTER TABLE llx_commande_fournisseurdet ADD COLUMN fk_parent_line integer NULL AFTER fk_commande;
 
-ALTER TABLE llx_projet ADD COLUMN date_close datetime DEFAULT NULL;
-ALTER TABLE llx_projet ADD COLUMN fk_user_close integer DEFAULT NULL;
-ALTER TABLE llx_projet ADD COLUMN fk_opp_status integer DEFAULT NULL AFTER fk_statut;
-ALTER TABLE llx_projet ADD COLUMN opp_amount double(24,8) DEFAULT NULL;
+ALTER TABLE llx_project ADD COLUMN date_close datetime DEFAULT NULL;
+ALTER TABLE llx_project ADD COLUMN fk_user_close integer DEFAULT NULL;
+ALTER TABLE llx_project ADD COLUMN fk_opp_status integer DEFAULT NULL AFTER fk_statut;
+ALTER TABLE llx_project ADD COLUMN opp_amount double(24,8) DEFAULT NULL;
 
 
 -- Module AskPriceSupplier --
@@ -356,7 +356,7 @@ CREATE TABLE llx_askpricesupplier (
   ref_ext varchar(255) DEFAULT NULL,
   ref_int varchar(255) DEFAULT NULL,
   fk_soc integer DEFAULT NULL,
-  fk_projet integer DEFAULT NULL,
+  fk_project integer DEFAULT NULL,
   tms timestamp,
   datec datetime DEFAULT NULL,
   date_valid datetime DEFAULT NULL,
@@ -485,8 +485,8 @@ ALTER TABLE llx_societe_extrafields ADD UNIQUE INDEX uk_societe_extrafields (fk_
 ALTER TABLE llx_don ADD COLUMN fk_country integer NOT NULL DEFAULT 0 AFTER country;
 ALTER TABLE llx_don CHANGE COLUMN fk_paiement fk_payment integer;
 ALTER TABLE llx_don ADD COLUMN paid smallint DEFAULT 0 NOT NULL AFTER fk_payment;
-ALTER TABLE llx_don CHANGE COLUMN fk_don_projet fk_projet integer NULL;
-ALTER TABLE llx_don CHANGE COLUMN fk_project fk_projet integer NULL;
+ALTER TABLE llx_don CHANGE COLUMN fk_don_project fk_project integer NULL;
+ALTER TABLE llx_don CHANGE COLUMN fk_project fk_project integer NULL;
 
 create table llx_don_extrafields
 (

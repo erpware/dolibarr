@@ -36,7 +36,7 @@ TicketTypeShortCOM=Commercial question
 TicketTypeShortHELP=Request for functionnal help
 TicketTypeShortISSUE=Issue, bug or problem
 TicketTypeShortREQUEST=Change or enhancement request
-TicketTypeShortPROJET=Project
+TicketTypeShortPROJECT=Project
 TicketTypeShortOTHER=Other
 
 TicketSeverityShortLOW=Low

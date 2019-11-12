@@ -94,8 +94,8 @@ class mod_task_simple extends ModeleNumRefTask
 
 		$posindice=8;
 		$sql = "SELECT MAX(CAST(SUBSTRING(task.ref FROM " . $posindice . ") AS SIGNED)) as max";
-		$sql .= " FROM " . MAIN_DB_PREFIX . "projet_task AS task, ";
-		$sql .= MAIN_DB_PREFIX . "project AS project WHERE task.fk_projet=project.rowid";
+		$sql .= " FROM " . MAIN_DB_PREFIX . "project_task AS task, ";
+		$sql .= MAIN_DB_PREFIX . "project AS project WHERE task.fk_project=project.rowid";
 		$sql .= " AND task.ref LIKE '" . $db->escape($this->prefix) . "____-%'";
 		$sql .= " AND project.entity = " . $conf->entity;
         $resql=$db->query($sql);
@@ -131,7 +131,7 @@ class mod_task_simple extends ModeleNumRefTask
 		// D'abord on recupere la valeur max
 		$posindice=8;
 		$sql = "SELECT MAX(CAST(SUBSTRING(ref FROM ".$posindice.") AS SIGNED)) as max";
-		$sql.= " FROM ".MAIN_DB_PREFIX."projet_task";
+		$sql.= " FROM ".MAIN_DB_PREFIX."project_task";
 		$sql.= " WHERE ref LIKE '".$db->escape($this->prefix)."____-%'";
 
 		$resql=$db->query($sql);

@@ -239,7 +239,7 @@ if (empty($reshook))
  */
 
 $form = new Form($db);
-$formproject = new FormProjets($db);
+$formproject = new FormProjects($db);
 if (! empty($conf->accounting->enabled)) $formaccounting = new FormAccounting($db);
 
 $title = $langs->trans("Loan") . ' - ' . $langs->trans("Card");
@@ -309,9 +309,9 @@ if ($action == 'create')
 	// Project
 	if (! empty($conf->project->enabled))
 	{
-		$formproject=new FormProjets($db);
+		$formproject=new FormProjects($db);
 
-		// Projet associe
+		// Project associe
 		$langs->loadLangs(array("projects"));
 
 		print '<tr><td>'.$langs->trans("Project").'</td><td>';

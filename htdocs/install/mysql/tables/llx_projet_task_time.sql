@@ -16,7 +16,7 @@
 --
 -- ===========================================================================
 
-create table llx_projet_task_time
+create table llx_project_task_time
 (
   rowid            integer AUTO_INCREMENT PRIMARY KEY,
   fk_task          integer NOT NULL,

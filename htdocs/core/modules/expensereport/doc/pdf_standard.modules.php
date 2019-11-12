@@ -167,7 +167,7 @@ class pdf_standard extends ModeleExpenseReport
 		$this->posxcomment=$this->marge_gauche+10;
 		//$this->posxdate=88;
 		//$this->posxtype=107;
-		//$this->posxprojet=120;
+		//$this->posxproject=120;
 		$this->posxtva=130;
 		$this->posxup=145;
 		$this->posxqty=168;
@@ -182,7 +182,7 @@ class pdf_standard extends ModeleExpenseReport
 		{
 			$this->posxdate-=20;
 			$this->posxtype-=20;
-			$this->posxprojet-=20;
+			$this->posxproject-=20;
 			$this->posxtva-=20;
 			$this->posxup-=20;
 			$this->posxqty-=20;
@@ -570,7 +570,7 @@ class pdf_standard extends ModeleExpenseReport
             $nextColumnPosX = $this->posxtva;
         }
         if (!empty($conf->project->enabled)) {
-            $nextColumnPosX = $this->posxprojet;
+            $nextColumnPosX = $this->posxproject;
         }
 
         $expensereporttypecode = $object->lines[$linenumber]->type_fees_code;
@@ -586,8 +586,8 @@ class pdf_standard extends ModeleExpenseReport
         //if (! empty($conf->project->enabled))
         //{
         //    $pdf->SetFont('','', $default_font_size - 1);
-        //    $pdf->SetXY($this->posxprojet, $curY);
-        //    $pdf->MultiCell($this->posxtva-$this->posxprojet-0.8, 4, $object->lines[$linenumber]->projet_ref, 0, 'C');
+        //    $pdf->SetXY($this->posxproject, $curY);
+        //    $pdf->MultiCell($this->posxtva-$this->posxproject-0.8, 4, $object->lines[$linenumber]->project_ref, 0, 'C');
         //}
 
         // VAT Rate
@@ -613,8 +613,8 @@ class pdf_standard extends ModeleExpenseReport
         $pdf->SetXY($this->posxcomment, $curY);
         $comment = $outputlangs->trans("Date").':'. dol_print_date($object->lines[$linenumber]->date, "day", false, $outputlangs).' ';
         $comment .= $outputlangs->trans("Type").':'. $expensereporttypecodetoshow.'<br>';
-        if (! empty($object->lines[$linenumber]->projet_ref)) {
-            $comment .= $outputlangs->trans("Project").':'. $object->lines[$linenumber]->projet_ref.'<br>';
+        if (! empty($object->lines[$linenumber]->project_ref)) {
+            $comment .= $outputlangs->trans("Project").':'. $object->lines[$linenumber]->project_ref.'<br>';
         }
         $comment .= $object->lines[$linenumber]->comments;
         $pdf->writeHTMLCell($this->posxtva-$this->posxcomment-0.8, 4, $this->posxcomment-1, $curY, $comment, 0, 1);
@@ -918,16 +918,16 @@ class pdf_standard extends ModeleExpenseReport
 		//if (empty($hidetop))
 		//{
 		//	$pdf->SetXY($this->posxtype-1, $tab_top+1);
-		//	$pdf->MultiCell($this->posxprojet-$this->posxtype - 1, 2, $outputlangs->transnoentities("Type"), '', 'C');
+		//	$pdf->MultiCell($this->posxproject-$this->posxtype - 1, 2, $outputlangs->transnoentities("Type"), '', 'C');
 		//}
 
         //if (!empty($conf->project->enabled))
         //{
         //    // Project
-        //    $pdf->line($this->posxprojet - 1, $tab_top, $this->posxprojet - 1, $tab_top + $tab_height);
+        //    $pdf->line($this->posxproject - 1, $tab_top, $this->posxproject - 1, $tab_top + $tab_height);
     	//	if (empty($hidetop)) {
-        //        $pdf->SetXY($this->posxprojet - 1, $tab_top + 1);
-        //        $pdf->MultiCell($this->posxtva - $this->posxprojet - 1, 2, $outputlangs->transnoentities("Project"), '', 'C');
+        //        $pdf->SetXY($this->posxproject - 1, $tab_top + 1);
+        //        $pdf->MultiCell($this->posxtva - $this->posxproject - 1, 2, $outputlangs->transnoentities("Project"), '', 'C');
     	//	}
         //}
 

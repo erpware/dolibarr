@@ -84,7 +84,7 @@ if (! empty($conf->use_javascript_ajax))
 //$title=$langs->trans("Gantt").($object->ref?' - '.$object->ref.' '.$object->name:'');
 $title=$langs->trans("Gantt");
 if (! empty($conf->global->MAIN_HTML_TITLE) && preg_match('/projectnameonly/', $conf->global->MAIN_HTML_TITLE) && $object->name) $title=($object->ref?$object->ref.' '.$object->name.' - ':'').$langs->trans("Gantt");
-$help_url="EN:Module_Projects|FR:Module_Projets|ES:M&oacute;dulo_Proyectos";
+$help_url="EN:Module_Projects|FR:Module_Projects|ES:M&oacute;dulo_Proyectos";
 llxHeader("", $title, $help_url, '', 0, 0, $arrayofjs, $arrayofcss);
 
 if (($id > 0 && is_numeric($id)) || ! empty($ref))
@@ -119,7 +119,7 @@ if (($id > 0 && is_numeric($id)) || ! empty($ref))
     $morehtmlref.='</div>';
 
     // Define a complementary filter for search of next/prev ref.
-    if (! $user->rights->projet->all->lire)
+    if (! $user->rights->project->all->lire)
     {
         $objectsListId = $object->getProjectsAuthorizedForUser($user, 0, 0);
         $object->next_prev_filter=" rowid in (".(count($objectsListId)?join(',', array_keys($objectsListId)):'0').")";
@@ -232,7 +232,7 @@ if (($id > 0 && is_numeric($id)) || ! empty($ref))
 // Link to create task
 $linktocreatetaskParam = array();
 $linktocreatetaskUserRight = false;
-if ($user->rights->projet->all->creer || $user->rights->projet->creer) {
+if ($user->rights->project->all->creer || $user->rights->project->creer) {
 	if ($object->public || $userWrite > 0){
         $linktocreatetaskUserRight = true;
 	}else{

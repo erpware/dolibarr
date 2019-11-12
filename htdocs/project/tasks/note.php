@@ -41,7 +41,7 @@ $project_ref = GETPOST('project_ref', 'alpha');
 // Security check
 $socid=0;
 //if ($user->socid > 0) $socid = $user->socid;    // For external user, no check is done on company because readability is managed by public status of project and assignement.
-if (!$user->rights->projet->lire) accessforbidden();
+if (!$user->rights->project->lire) accessforbidden();
 //$result = restrictedArea($user, 'project', $id, '', 'task'); // TODO ameliorer la verification
 
 $object = new Task($db);
@@ -65,7 +65,7 @@ if ($id > 0 || ! empty($ref))
 }
 
 
-// Retreive First Task ID of Project if withprojet is on to allow project prev next to work
+// Retreive First Task ID of Project if withproject is on to allow project prev next to work
 if (! empty($project_ref) && ! empty($withproject))
 {
 	if ($projectstatic->fetch(0, $project_ref) > 0)
@@ -83,7 +83,7 @@ if (! empty($project_ref) && ! empty($withproject))
 	}
 }
 
-$permissionnote=($user->rights->projet->creer || $user->rights->projet->all->creer);
+$permissionnote=($user->rights->project->creer || $user->rights->project->all->creer);
 
 
 /*
@@ -131,7 +131,7 @@ if ($object->id > 0)
 		$morehtmlref.='</div>';
 
 		// Define a complementary filter for search of next/prev ref.
-		if (! $user->rights->projet->all->lire)
+		if (! $user->rights->project->all->lire)
 		{
 		    $objectsListId = $projectstatic->getProjectsAuthorizedForUser($user, 0, 0);
 		    $projectstatic->next_prev_filter=" rowid in (".(count($objectsListId)?join(',', array_keys($objectsListId)):'0').")";
@@ -242,9 +242,9 @@ if ($object->id > 0)
 	if (! GETPOST('withproject') || empty($projectstatic->id))
 	{
 	    $projectsListId = $projectstatic->getProjectsAuthorizedForUser($user, 0, 1);
-	    $object->next_prev_filter=" fk_projet in (".$projectsListId.")";
+	    $object->next_prev_filter=" fk_project in (".$projectsListId.")";
 	}
-	else $object->next_prev_filter=" fk_projet = ".$projectstatic->id;
+	else $object->next_prev_filter=" fk_project = ".$projectstatic->id;
 
 	$morehtmlref='';
 

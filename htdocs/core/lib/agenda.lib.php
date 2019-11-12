@@ -122,10 +122,10 @@ function print_actions_filter($form, $canedit, $status, $year, $month, $day, $sh
 		print '</td></tr>';
 	}
 
-	if (! empty($conf->project->enabled) && $user->rights->projet->lire)
+	if (! empty($conf->project->enabled) && $user->rights->project->lire)
 	{
 		require_once DOL_DOCUMENT_ROOT.'/core/class/html.formproject.class.php';
-		$formproject=new FormProjets($db);
+		$formproject=new FormProjects($db);
 
 		print '<tr>';
 		print '<td class="nowrap" style="padding-bottom: 2px;">';

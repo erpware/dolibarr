@@ -43,7 +43,7 @@ foreach ($tmptype2label as $key => $val) $type2label[$key]=$langs->transnoentiti
 
 $action=GETPOST('action', 'alpha');
 $attrname=GETPOST('attrname', 'alpha');
-$elementtype='projet_task';
+$elementtype='project_task';
 
 if (!$user->admin) accessforbidden();
 

@@ -91,9 +91,9 @@ EXPENSE_REPORT_VALIDATEInDolibarr=Relatório de despesas %s, validado
 EXPENSE_REPORT_APPROVEInDolibarr=Relatório de despesas %s, aprovado
 EXPENSE_REPORT_DELETEInDolibarr=Relatório de despesas %s, eliminado
 EXPENSE_REPORT_REFUSEDInDolibarr=Relatório de despesas %s, recusado
-PROJECT_CREATEInDolibarr=Projeto %s criado
-PROJECT_MODIFYInDolibarr=Projeto %s, modificado
-PROJECT_DELETEInDolibarr=Projeto %s, eliminado
+PROJECT_CREATEInDolibarr=Projecto %s criado
+PROJECT_MODIFYInDolibarr=Projecto %s, modificado
+PROJECT_DELETEInDolibarr=Projecto %s, eliminado
 TICKET_CREATEInDolibarr=Ticket %s created
 TICKET_MODIFYInDolibarr=Ticket %s modified
 TICKET_ASSIGNEDInDolibarr=Ticket %s assigned
@@ -107,7 +107,7 @@ AgendaUrlOptions1=Também pode adicionar os seguintes parâmetros de filtro de s
 AgendaUrlOptions3=<b>logina=%s</b> para restringir a produção para as acções criadas pelo utilizador <b>%s</b>.
 AgendaUrlOptionsNotAdmin=<b>logina =!%s</b> para restringir a saída às ações que não pertencem ao utilizador <b>%s</b>.
 AgendaUrlOptions4=<b>logint =%s</b> para restringir a saída às ações atribuídas ao utilizador <b>%s</b> (proprietário e outros).
-AgendaUrlOptionsProject=<b>project=__PROJECT_ID__</b> para que apenas obtenha eventos vinculados ao projeto <b>__PROJECT_ID__ </b>.
+AgendaUrlOptionsProject=<b>project=__PROJECT_ID__</b> para que apenas obtenha eventos vinculados ao projecto <b>__PROJECT_ID__ </b>.
 AgendaUrlOptionsNotAutoEvent=<b> notactiontype = systemauto </ b> para excluir eventos automáticos.
 AgendaShowBirthdayEvents=Mostrar aniversários dos contactos
 AgendaHideBirthdayEvents=Ocultar aniversários dos contactos

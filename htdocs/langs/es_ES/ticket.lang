@@ -34,7 +34,7 @@ TicketTypeShortBUGSOFT=Mal funcionamiento del software
 TicketTypeShortBUGHARD=Mal funcionamiento del hardware
 TicketTypeShortCOM=Pregunta comercial
 TicketTypeShortINCIDENT=Solicitar asistencia
-TicketTypeShortPROJET=Proyecto
+TicketTypeShortPROJECT=Proyecto
 TicketTypeShortOTHER=Otro
 
 TicketSeverityShortLOW=Bajo

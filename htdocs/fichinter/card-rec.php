@@ -298,11 +298,11 @@ if ($action == 'create') {
 
 		// Project
 		if (! empty($conf->project->enabled)) {
-			$formproject = new FormProjets($db);
+			$formproject = new FormProjects($db);
 			print "<tr><td>".$langs->trans("Project")."</td><td>";
 			$projectid = GETPOST('projectid')?GETPOST('projectid'):$object->fk_project;
 
-			$numprojet = $formproject->select_projects($object->thirdparty->id, $projectid, 'projectid', 0, 0, 1, 0, 0, 0, 0, '', 0, 0, '');
+			$numproject = $formproject->select_projects($object->thirdparty->id, $projectid, 'projectid', 0, 0, 1, 0, 0, 0, 0, '', 0, 0, '');
 			print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid='.$object->thirdparty->id;
 			print '&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"]).'?action=create';
 			print '&socid='.$object->thirdparty->id.(!empty($id)?'&id='.$id:'').'">';
@@ -473,7 +473,7 @@ if ($action == 'create') {
 			$morehtmlref.=$langs->trans('ThirdParty') . ' : ' . $object->thirdparty->getNomUrl(1);
 			// Project
 			if (! empty($conf->project->enabled)) {
-				$formproject = new FormProjets($db);
+				$formproject = new FormProjects($db);
 				$langs->load("projects");
 				$morehtmlref.='<br>'.$langs->trans('Project') . ' ';
 				if ($user->rights->ficheinter->creer) {
@@ -738,7 +738,7 @@ if ($action == 'create') {
 		 *  List mode
 		 */
 		$sql = "SELECT f.rowid as fich_rec, s.nom as name, s.rowid as socid, f.rowid as facid, f.titre as title,";
-		$sql.= " f.duree, f.fk_contrat, f.fk_projet as fk_project, f.frequency, f.nb_gen_done, f.nb_gen_max,";
+		$sql.= " f.duree, f.fk_contrat, f.fk_project as fk_project, f.frequency, f.nb_gen_done, f.nb_gen_max,";
 		$sql.= " f.date_last_gen, f.date_when, f.datec";
 
 		$sql.= " FROM ".MAIN_DB_PREFIX."fichinter_rec as f";

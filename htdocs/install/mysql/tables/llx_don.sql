@@ -44,7 +44,7 @@ create table llx_don
   phone           varchar(24),
   phone_mobile    varchar(24),
   public          smallint DEFAULT 1 NOT NULL,  -- Donation is public ? (0,1)
-  fk_projet       integer NULL,                 -- Donation is given for a project ?
+  fk_project       integer NULL,                 -- Donation is given for a project ?
   datec           datetime,                     -- Create date
   fk_user_author  integer NOT NULL,
   fk_user_modif   integer,

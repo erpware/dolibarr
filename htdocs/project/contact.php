@@ -57,7 +57,7 @@ $hookmanager->initHooks(array('projectcontactcard','globalcard'));
  */
 
 // Add new contact
-if ($action == 'addcontact' && $user->rights->projet->creer)
+if ($action == 'addcontact' && $user->rights->project->creer)
 {
 	$result = 0;
 	$result = $object->fetch($id);
@@ -88,7 +88,7 @@ if ($action == 'addcontact' && $user->rights->projet->creer)
 }
 
 // bascule du statut d'un contact
-if ($action == 'swapstatut' && $user->rights->projet->creer)
+if ($action == 'swapstatut' && $user->rights->project->creer)
 {
 	if ($object->fetch($id))
 	{
@@ -101,7 +101,7 @@ if ($action == 'swapstatut' && $user->rights->projet->creer)
 }
 
 // Efface un contact
-if (($action == 'deleteline' || $action == 'deletecontact') && $user->rights->projet->creer)
+if (($action == 'deleteline' || $action == 'deletecontact') && $user->rights->project->creer)
 {
 	$object->fetch($id);
 	$result = $object->delete_contact(GETPOST("lineid"));
@@ -124,7 +124,7 @@ if (($action == 'deleteline' || $action == 'deletecontact') && $user->rights->pr
 
 $title=$langs->trans("ProjectContact").' - '.$object->ref.' '.$object->name;
 if (! empty($conf->global->MAIN_HTML_TITLE) && preg_match('/projectnameonly/', $conf->global->MAIN_HTML_TITLE) && $object->name) $title=$object->ref.' '.$object->name.' - '.$langs->trans("ProjectContact");
-$help_url="EN:Module_Projects|FR:Module_Projets|ES:M&oacute;dulo_Proyectos";
+$help_url="EN:Module_Projects|FR:Module_Projects|ES:M&oacute;dulo_Proyectos";
 llxHeader('', $title, $help_url);
 
 $form = new Form($db);
@@ -167,7 +167,7 @@ if ($id > 0 || ! empty($ref))
     $morehtmlref.='</div>';
 
     // Define a complementary filter for search of next/prev ref.
-    if (! $user->rights->projet->all->lire)
+    if (! $user->rights->project->all->lire)
     {
         $objectsListId = $object->getProjectsAuthorizedForUser($user, 0, 0);
         $object->next_prev_filter=" rowid in (".(count($objectsListId)?join(',', array_keys($objectsListId)):'0').")";

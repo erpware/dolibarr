@@ -173,7 +173,7 @@ class Contrat extends CommonObject
 	 * @deprecated Use fk_project instead
 	 * @see $fk_project
 	 */
-	public $fk_projet;
+	public $fk_project;
 
 	public $extraparams = array();
 
@@ -638,7 +638,7 @@ class Contrat extends CommonObject
         $sql .= " entity,";
 		$sql .= " fk_user_mise_en_service, date_contrat as datecontrat,";
 		$sql .= " fk_user_author, fin_validite, date_cloture,";
-		$sql .= " fk_projet as fk_project,";
+		$sql .= " fk_project as fk_project,";
 		$sql .= " fk_commercial_signature, fk_commercial_suivi,";
 		$sql .= " note_private, note_public, model_pdf, extraparams";
 		$sql .= " FROM ".MAIN_DB_PREFIX."contrat";
@@ -698,7 +698,7 @@ class Contrat extends CommonObject
 					$this->note_public = $obj->note_public;
 					$this->modelpdf					= $obj->model_pdf;
 
-					$this->fk_projet				= $obj->fk_project; // deprecated
+					$this->fk_project				= $obj->fk_project; // deprecated
 					$this->fk_project = $obj->fk_project;
 
 					$this->socid = $obj->fk_soc;
@@ -940,7 +940,7 @@ class Contrat extends CommonObject
 
 		// Insert contract
 		$sql = "INSERT INTO ".MAIN_DB_PREFIX."contrat (datec, fk_soc, fk_user_author, date_contrat,";
-		$sql .= " fk_commercial_signature, fk_commercial_suivi, fk_projet,";
+		$sql .= " fk_commercial_signature, fk_commercial_suivi, fk_project,";
 		$sql .= " ref, entity, note_private, note_public, ref_customer, ref_supplier, ref_ext)";
 		$sql .= " VALUES ('".$this->db->idate($now)."',".$this->socid.",".$user->id;
 		$sql .= ", ".(dol_strlen($this->date_contrat) != 0 ? "'".$this->db->idate($this->date_contrat)."'" : "NULL");
@@ -1292,7 +1292,7 @@ class Contrat extends CommonObject
 		if (empty($this->fk_commercial_signature) && $this->commercial_signature_id > 0) $this->fk_commercial_signature = $this->commercial_signature_id;
 		if (empty($this->fk_commercial_suivi) && $this->commercial_suivi_id > 0) $this->fk_commercial_suivi = $this->commercial_suivi_id;
 		if (empty($this->fk_soc) && $this->socid > 0) $this->fk_soc = $this->socid;
-		if (empty($this->fk_project) && $this->projet > 0) $this->fk_project = $this->projet;
+		if (empty($this->fk_project) && $this->project > 0) $this->fk_project = $this->project;
 
 		if (isset($this->ref)) $this->ref = trim($this->ref);
 		if (isset($this->ref_customer)) $this->ref_customer = trim($this->ref_customer);
@@ -1326,7 +1326,7 @@ class Contrat extends CommonObject
 		$sql .= " fin_validite=".(dol_strlen($this->fin_validite) != 0 ? "'".$this->db->idate($this->fin_validite)."'" : 'null').",";
 		$sql .= " date_cloture=".(dol_strlen($this->date_cloture) != 0 ? "'".$this->db->idate($this->date_cloture)."'" : 'null').",";
 		$sql .= " fk_soc=".($this->fk_soc > 0 ? $this->fk_soc : "null").",";
-		$sql .= " fk_projet=".($this->fk_project > 0 ? $this->fk_project : "null").",";
+		$sql .= " fk_project=".($this->fk_project > 0 ? $this->fk_project : "null").",";
 		$sql .= " fk_commercial_signature=".(isset($this->fk_commercial_signature) ? $this->fk_commercial_signature : "null").",";
 		$sql .= " fk_commercial_suivi=".(isset($this->fk_commercial_suivi) ? $this->fk_commercial_suivi : "null").",";
 		$sql .= " fk_user_mise_en_service=".(isset($this->fk_user_mise_en_service) ? $this->fk_user_mise_en_service : "null").",";
@@ -2357,7 +2357,7 @@ class Contrat extends CommonObject
 		$this->commercial_suivi_id = 1;
 		$this->note_private = 'This is a comment (private)';
 		$this->note_public = 'This is a comment (public)';
-		$this->fk_projet = 0;
+		$this->fk_project = 0;
 		// Lines
 		$nbp = 5;
 		$xnbp = 0;

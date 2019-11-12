@@ -416,9 +416,9 @@ if (!$error && $massaction == 'confirm_presend')
                 foreach ($looparray as $objectid => $objecttmp)		// $objecttmp is a real object or an empty object if we choose to send one email per thirdparty instead of one per object
 				{
 					// Make substitution in email content
-					if (!empty($conf->project->enabled) && method_exists($objecttmp, 'fetch_projet') && is_null($objecttmp->project))
+					if (!empty($conf->project->enabled) && method_exists($objecttmp, 'fetch_project') && is_null($objecttmp->project))
 					{
-						$objecttmp->fetch_projet();
+						$objecttmp->fetch_project();
 					}
 					$substitutionarray = getCommonSubstitutionArray($langs, 0, null, $objecttmp);
 					$substitutionarray['__ID__']    = ($oneemailperrecipient ? join(', ', array_keys($listofqualifiedobj)) : $objecttmp->id);
@@ -1234,7 +1234,7 @@ if (!$error && ($massaction == 'delete' || ($action == 'delete' && $confirm == '
 
 			if ($objectclass == "Task" && $objecttmp->hasChildren() > 0)
 			{
-				$sql = "UPDATE ".MAIN_DB_PREFIX."projet_task SET fk_task_parent = 0 WHERE fk_task_parent = ".$objecttmp->id;
+				$sql = "UPDATE ".MAIN_DB_PREFIX."project_task SET fk_task_parent = 0 WHERE fk_task_parent = ".$objecttmp->id;
 				$res = $db->query($sql);
 
 				if (!$res)

@@ -92,7 +92,7 @@ INSERT INTO llx_c_forme_juridique (fk_pays, code, libelle) VALUES (80, '8008', '
 INSERT INTO llx_c_forme_juridique (fk_pays, code, libelle) VALUES (80, '8009', 'SPE-selskab');
 
 ALTER TABLE llx_payment_salary ADD COLUMN ref varchar(30) NULL after rowid;
-ALTER TABLE llx_payment_salary ADD COLUMN fk_projet integer DEFAULT NULL after amount;
+ALTER TABLE llx_payment_salary ADD COLUMN fk_project integer DEFAULT NULL after amount;
 
 ALTER TABLE llx_payment_various ADD COLUMN ref varchar(30) NULL after rowid;
 
@@ -288,5 +288,5 @@ DELETE from llx_accounting_account where rowid in (select minid from tmp_llx_acc
 ALTER TABLE llx_accounting_account DROP INDEX uk_accounting_account;
 ALTER TABLE llx_accounting_account ADD UNIQUE INDEX uk_accounting_account (account_number, entity, fk_pcg_version);
 
-UPDATE llx_projet SET fk_opp_status = NULL WHERE fk_opp_status = -1;
+UPDATE llx_project SET fk_opp_status = NULL WHERE fk_opp_status = -1;
 

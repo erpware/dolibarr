@@ -143,7 +143,7 @@ class PaymentVarious extends CommonObject
 		$sql.= " note='".$this->db->escape($this->note)."',";
 		$sql.= " accountancy_code='".$this->db->escape($this->accountancy_code)."',";
         $sql.= " subledger_account='".$this->db->escape($this->subledger_account)."',";
-		$sql.= " fk_projet='".$this->db->escape($this->fk_project)."',";
+		$sql.= " fk_project='".$this->db->escape($this->fk_project)."',";
 		$sql.= " fk_bank=".($this->fk_bank > 0 ? $this->fk_bank:"null").",";
 		$sql.= " fk_user_author=".$this->fk_user_author.",";
 		$sql.= " fk_user_modif=".$this->fk_user_modif;
@@ -201,7 +201,7 @@ class PaymentVarious extends CommonObject
 		$sql.= " v.note,";
 		$sql.= " v.accountancy_code,";
 		$sql.= " v.subledger_account,";
-		$sql.= " v.fk_projet as fk_project,";
+		$sql.= " v.fk_project as fk_project,";
 		$sql.= " v.fk_bank,";
 		$sql.= " v.fk_user_author,";
 		$sql.= " v.fk_user_modif,";
@@ -368,7 +368,7 @@ class PaymentVarious extends CommonObject
 		$sql.= ", label";
 		$sql.= ", accountancy_code";
 		$sql.= ", subledger_account";
-		$sql.= ", fk_projet";
+		$sql.= ", fk_project";
 		$sql.= ", fk_user_author";
 		$sql.= ", datec";
 		$sql.= ", fk_bank";

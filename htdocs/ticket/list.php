@@ -391,7 +391,7 @@ if ($projectid > 0 || $project_ref) {
         $morehtmlref .= '</div>';
 
         // Define a complementary filter for search of next/prev ref.
-        if (!$user->rights->projet->all->lire)
+        if (!$user->rights->project->all->lire)
         {
         	$objectsListId = $object->getProjectsAuthorizedForUser($user, 0, 0);
         	$object->next_prev_filter = " rowid in (".(count($objectsListId) ?join(',', array_keys($objectsListId)) : '0').")";
@@ -463,7 +463,7 @@ if ($socid)     print '<input type="hidden" name="socid" value="'.$socid.'" >';
 if ($projectid) print '<input type="hidden" name="projectid" value="'.$projectid.'" >';
 
 $newcardbutton = '';
-$newcardbutton .= dolGetButtonTitle($langs->trans('NewTicket'), '', 'fa fa-plus-circle', DOL_URL_ROOT.'/ticket/card.php?action=create'.($socid ? '&socid='.$socid : '').($projectid ? '&origin=projet_project&originid='.$projectid : ''), '', !empty($user->rights->ticket->write));
+$newcardbutton .= dolGetButtonTitle($langs->trans('NewTicket'), '', 'fa fa-plus-circle', DOL_URL_ROOT.'/ticket/card.php?action=create'.($socid ? '&socid='.$socid : '').($projectid ? '&origin=project_project&originid='.$projectid : ''), '', !empty($user->rights->ticket->write));
 
 $picto = 'ticket';
 if ($socid > 0) $picto = '';

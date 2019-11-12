@@ -159,7 +159,7 @@ class ProjectStats extends Stats
 		// Get list of project id allowed to user (in a string list separated by coma)
 		$object = new Project($this->db);
 		$projectsListId='';
-		if (! $user->rights->projet->all->lire) $projectsListId = $object->getProjectsAuthorizedForUser($user, 0, 1, $user->socid);
+		if (! $user->rights->project->all->lire) $projectsListId = $object->getProjectsAuthorizedForUser($user, 0, 1, $user->socid);
 
 		$sqlwhere[] = ' t.entity IN (' . getEntity('project') . ')';
 
@@ -177,7 +177,7 @@ class ProjectStats extends Stats
 		if (! empty($this->status))
 			$sqlwhere[] = " t.fk_opp_status IN (" . $this->status . ")";
 
-		if (! $user->rights->projet->all->lire) $sqlwhere[] = " t.rowid IN (".$projectsListId.")";     // public and assigned to, or restricted to company for external users
+		if (! $user->rights->project->all->lire) $sqlwhere[] = " t.rowid IN (".$projectsListId.")";     // public and assigned to, or restricted to company for external users
 
 		if (count($sqlwhere) > 0) {
 			$sqlwhere_str = ' WHERE ' . implode(' AND ', $sqlwhere);

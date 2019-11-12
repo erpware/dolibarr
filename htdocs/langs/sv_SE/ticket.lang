@@ -34,7 +34,7 @@ TicketTypeShortBUGSOFT=Programfel
 TicketTypeShortBUGHARD=Hårdvarufel
 TicketTypeShortCOM=Kommersiell fråga
 TicketTypeShortINCIDENT=Begäran om hjälp
-TicketTypeShortPROJET=Projekt
+TicketTypeShortPROJECT=Projekt
 TicketTypeShortOTHER=Andra
 
 TicketSeverityShortLOW=Låg

@@ -30,7 +30,7 @@ create table llx_commande_fournisseur
   ref_supplier				varchar(255),
 
   fk_soc					integer NOT NULL,
-  fk_projet					integer DEFAULT 0,             -- project id
+  fk_project					integer DEFAULT 0,             -- project id
 
   tms						timestamp,
   date_creation				datetime,                      -- date de creation 

@@ -51,7 +51,7 @@ include DOL_DOCUMENT_ROOT.'/core/actions_fetchobject.inc.php';  // Must be inclu
 if(! empty($conf->global->PROJECT_ALLOW_COMMENT_ON_PROJECT) && method_exists($object, 'fetchComments') && empty($object->comments)) $object->fetchComments();
 
 if ($id > 0 || ! empty($ref)) {
-    $upload_dir = $conf->projet->dir_output . "/" . dol_sanitizeFileName($object->ref);
+    $upload_dir = $conf->project->dir_output . "/" . dol_sanitizeFileName($object->ref);
 }
 
 // Get parameters
@@ -84,7 +84,7 @@ include_once DOL_DOCUMENT_ROOT . '/core/actions_linkedfiles.inc.php';
 
 $title=$langs->trans("Project").' - '.$langs->trans("Document").' - '.$object->ref.' '.$object->name;
 if (! empty($conf->global->MAIN_HTML_TITLE) && preg_match('/projectnameonly/', $conf->global->MAIN_HTML_TITLE) && $object->name) $title=$object->ref.' '.$object->name.' - '.$langs->trans("Document");
-$help_url="EN:Module_Projects|FR:Module_Projets|ES:M&oacute;dulo_Proyectos";
+$help_url="EN:Module_Projects|FR:Module_Projects|ES:M&oacute;dulo_Proyectos";
 
 llxHeader('', $title, $help_url);
 
@@ -92,7 +92,7 @@ $form = new Form($db);
 
 if ($object->id > 0)
 {
-	$upload_dir = $conf->projet->dir_output.'/'.dol_sanitizeFileName($object->ref);
+	$upload_dir = $conf->project->dir_output.'/'.dol_sanitizeFileName($object->ref);
 
     // To verify role of users
     //$userAccess = $object->restrictedProjectArea($user,'read');
@@ -127,7 +127,7 @@ if ($object->id > 0)
 	$morehtmlref.='</div>';
 
 	// Define a complementary filter for search of next/prev ref.
-	if (! $user->rights->projet->all->lire)
+	if (! $user->rights->project->all->lire)
 	{
 	    $objectsListId = $object->getProjectsAuthorizedForUser($user, 0, 0);
 	    $object->next_prev_filter=" rowid in (".(count($objectsListId)?join(',', array_keys($objectsListId)):'0').")";

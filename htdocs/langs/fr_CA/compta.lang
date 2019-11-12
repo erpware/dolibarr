@@ -68,4 +68,4 @@ ImportDataset_tax_contrib=Charges sociales
 ImportDataset_tax_vat=Paiements de vat
 ErrorBankAccountNotFound=Erreur: compte bancaire introuvable
 FiscalPeriod=Période de comptabilité
-ListSocialContributionAssociatedProject=Liste des contributions sociales associées au projet
+ListSocialContributionAssociatedProject=Liste des contributions sociales associées au project

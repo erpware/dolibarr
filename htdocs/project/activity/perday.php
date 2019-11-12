@@ -182,7 +182,7 @@ if (GETPOST('submitdateselect'))
 
 include DOL_DOCUMENT_ROOT.'/core/actions_changeselectedfields.inc.php';
 
-if ($action == 'addtime' && $user->rights->projet->lire && GETPOST('assigntask') && GETPOST('formfilteraction') != 'listafterchangingselectedfields')
+if ($action == 'addtime' && $user->rights->project->lire && GETPOST('assigntask') && GETPOST('formfilteraction') != 'listafterchangingselectedfields')
 {
 	$action = 'assigntask';
 
@@ -259,7 +259,7 @@ if ($action == 'addtime' && $user->rights->projet->lire && GETPOST('assigntask')
 	$action='';
 }
 
-if ($action == 'addtime' && $user->rights->projet->lire && GETPOST('formfilteraction') != 'listafterchangingselectedfields')
+if ($action == 'addtime' && $user->rights->project->lire && GETPOST('formfilteraction') != 'listafterchangingselectedfields')
 {
 	$timespent_duration=array();
 
@@ -352,7 +352,7 @@ if ($action == 'addtime' && $user->rights->projet->lire && GETPOST('formfilterac
 $form=new Form($db);
 $formother = new FormOther($db);
 $formcompany=new FormCompany($db);
-$formproject=new FormProjets($db);
+$formproject=new FormProjects($db);
 $projectstatic=new Project($db);
 $project = new Project($db);
 $taskstatic = new Task($db);
@@ -399,7 +399,7 @@ include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_search_sql.tpl.php';
 $search_array_options = $search_array_options_task;
 $extrafieldsobjectprefix='efpt.';
 $search_options_pattern='search_task_options_';
-$extrafieldsobjectkey='projet_task';
+$extrafieldsobjectkey='project_task';
 include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_search_sql.tpl.php';
 
 $tasksarray=$taskstatic->getTasksArray(0, 0, ($project->id?$project->id:0), $socid, 0, $search_project_ref, $onlyopenedproject, $morewherefilter, ($search_usertoprocessid?$search_usertoprocessid:0), 0, $extrafields);    // We want to see all task of opened project i am allowed to see and that match filter, not only my tasks. Later only mine will be editable later.
@@ -466,7 +466,7 @@ else
 {
 	if (empty($usertoprocess->id) || $usertoprocess->id < 0)
 	{
-		if ($user->rights->projet->all->lire && ! $socid) print $langs->trans("ProjectsDesc").'.'.($onlyopenedproject?' '.$langs->trans("OnlyOpenedProject"):'').'<br>';
+		if ($user->rights->project->all->lire && ! $socid) print $langs->trans("ProjectsDesc").'.'.($onlyopenedproject?' '.$langs->trans("OnlyOpenedProject"):'').'<br>';
 		else print $langs->trans("ProjectsPublicTaskDesc").'.'.($onlyopenedproject?' '.$langs->trans("OnlyOpenedProject"):'').'<br>';
 	}
 }
@@ -562,7 +562,7 @@ if (! empty($conf->global->PROJECT_TIMESHEET_DISABLEBREAK_ON_PROJECT)) print '<t
 print '<td class="liste_titre"><input type="text" size="4" name="search_task_label" value="'.dol_escape_htmltag($search_task_label).'"></td>';
 // TASK fields
 $search_options_pattern='search_task_options_';
-$extrafieldsobjectkey='projet_task';
+$extrafieldsobjectkey='project_task';
 $extrafieldsobjectprefix='efpt.';
 include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_search_input.tpl.php';
 print '<td class="liste_titre"></td>';
@@ -590,7 +590,7 @@ if (! empty($conf->global->PROJECT_TIMESHEET_DISABLEBREAK_ON_PROJECT)) print '<t
 if (! empty($conf->global->PROJECT_TIMESHEET_DISABLEBREAK_ON_PROJECT)) print '<th>'.$langs->trans("ThirdParty").'</th>';
 print '<th>'.$langs->trans("Task").'</th>';
 // TASK fields
-$extrafieldsobjectkey='projet_task';
+$extrafieldsobjectkey='project_task';
 $extrafieldsobjectprefix='efpt.';
 include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_search_title.tpl.php';
 if (! empty($arrayfields['t.planned_workload']['checked']))
@@ -711,7 +711,7 @@ if (count($tasksarray) > 0)
 	foreach($listofdistinctprojectid as $tmpprojectid)
 	{
 		$projectstatic->id=$tmpprojectid;
-		$projectstatic->loadTimeSpent($daytoparse, 0, $usertoprocess->id);	// Load time spent from table projet_task_time for the project into this->weekWorkLoad and this->weekWorkLoadPerTask for all days of a week
+		$projectstatic->loadTimeSpent($daytoparse, 0, $usertoprocess->id);	// Load time spent from table project_task_time for the project into this->weekWorkLoad and this->weekWorkLoadPerTask for all days of a week
 		for ($idw = 0; $idw < 7; $idw++)
 		{
 			$tmpday=dol_time_plus_duree($daytoparse, $idw, 'd');

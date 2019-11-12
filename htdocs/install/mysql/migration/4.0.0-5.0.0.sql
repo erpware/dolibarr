@@ -47,7 +47,7 @@ ALTER TABLE llx_facture_fourn_det ADD INDEX idx_facture_fourn_det_fk_product (fk
 
 ALTER TABLE llx_facture_rec ADD COLUMN fk_user_modif integer;
 ALTER TABLE llx_expedition ADD COLUMN fk_user_modif integer;
-ALTER TABLE llx_projet ADD COLUMN fk_user_modif integer;
+ALTER TABLE llx_project ADD COLUMN fk_user_modif integer;
 
 ALTER TABLE llx_adherent ADD COLUMN model_pdf varchar(255);
 
@@ -105,7 +105,7 @@ ALTER TABLE llx_categorie_project ADD INDEX idx_categorie_project_fk_categorie (
 ALTER TABLE llx_categorie_project ADD INDEX idx_categorie_project_fk_project (fk_project);
 
 ALTER TABLE llx_categorie_project ADD CONSTRAINT fk_categorie_project_categorie_rowid FOREIGN KEY (fk_categorie) REFERENCES llx_categorie (rowid);
-ALTER TABLE llx_categorie_project ADD CONSTRAINT fk_categorie_project_fk_project_rowid FOREIGN KEY (fk_project) REFERENCES llx_projet (rowid);
+ALTER TABLE llx_categorie_project ADD CONSTRAINT fk_categorie_project_fk_project_rowid FOREIGN KEY (fk_project) REFERENCES llx_project (rowid);
 
 ALTER TABLE llx_societe_remise_except ADD COLUMN entity	integer DEFAULT 1 NOT NULL after rowid;
 ALTER TABLE llx_societe_remise ADD COLUMN entity	integer DEFAULT 1 NOT NULL after rowid;
@@ -201,9 +201,9 @@ ALTER TABLE llx_bank_account ADD COLUMN note_public     		text;
 ALTER TABLE llx_bank_account ADD COLUMN model_pdf       		varchar(255);
 ALTER TABLE llx_bank_account ADD COLUMN import_key      		varchar(14);
 
-ALTER TABLE llx_projet ADD COLUMN import_key      	        	varchar(14);
-ALTER TABLE llx_projet_task ADD COLUMN import_key      		    varchar(14);
-ALTER TABLE llx_projet_task_time ADD COLUMN import_key      	varchar(14);
+ALTER TABLE llx_project ADD COLUMN import_key      	        	varchar(14);
+ALTER TABLE llx_project_task ADD COLUMN import_key      		    varchar(14);
+ALTER TABLE llx_project_task_time ADD COLUMN import_key      	varchar(14);
 
 
 ALTER TABLE llx_overwrite_trans ADD COLUMN entity integer DEFAULT 1 NOT NULL AFTER rowid;
@@ -258,8 +258,8 @@ ALTER TABLE llx_links ADD UNIQUE INDEX uk_links (objectid,label);
 
 ALTER TABLE llx_expensereport ADD UNIQUE INDEX idx_expensereport_uk_ref (ref, entity);
 
-UPDATE llx_projet_task SET ref = NULL WHERE ref = '';
-ALTER TABLE llx_projet_task ADD UNIQUE INDEX uk_projet_task_ref (ref, entity);
+UPDATE llx_project_task SET ref = NULL WHERE ref = '';
+ALTER TABLE llx_project_task ADD UNIQUE INDEX uk_project_task_ref (ref, entity);
 
 ALTER TABLE llx_contrat ADD COLUMN fk_user_modif integer;
 

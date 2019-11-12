@@ -609,7 +609,7 @@ if (GETPOSTISSET('actionbis') && $action == 'presend') $action = 'presend_addmes
 $userstat = new User($db);
 $form = new Form($db);
 $formticket = new FormTicket($db);
-if (! empty($conf->project->enabled)) $formproject = new FormProjets($db);
+if (! empty($conf->project->enabled)) $formproject = new FormProjects($db);
 
 $help_url = 'FR:DocumentationModuleTicket';
 $page_title = $actionobject->getTitle($action);
@@ -687,7 +687,7 @@ if (empty($action) || $action == 'view' || $action == 'addlink' || $action == 'd
                 dol_fiche_head($head, 'ticket', $langs->trans("Project"), 0, ($projectstat->public ? 'projectpub' : 'project'));
 
                 /*
-                 *   Projet synthese pour rappel
+                 *   Project synthese pour rappel
                  */
                 print '<table class="border centpercent">';
 
@@ -696,7 +696,7 @@ if (empty($action) || $action == 'view' || $action == 'addlink' || $action == 'd
                 // Ref
                 print '<tr><td width="30%">' . $langs->trans('Ref') . '</td><td colspan="3">';
                 // Define a complementary filter for search of next/prev ref.
-                if (!$user->rights->projet->all->lire) {
+                if (!$user->rights->project->all->lire) {
                     $objectsListId = $projectstat->getProjectsAuthorizedForUser($user, $mine, 0);
                     $projectstat->next_prev_filter = " rowid in (" . (count($objectsListId) ? join(',', array_keys($objectsListId)) : '0') . ")";
                 }

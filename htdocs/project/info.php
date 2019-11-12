@@ -65,7 +65,7 @@ $socid=0;
 //if ($user->socid > 0) $socid = $user->socid;    // For external user, no check is done on company because readability is managed by public status of project and assignement.
 $result=restrictedArea($user, 'project', $id, '');
 
-if (!$user->rights->projet->lire)	accessforbidden();
+if (!$user->rights->project->lire)	accessforbidden();
 
 
 
@@ -103,7 +103,7 @@ if ($id > 0 || ! empty($ref))
 
 $title=$langs->trans("Project").' - '.$object->ref.' '.$object->name;
 if (! empty($conf->global->MAIN_HTML_TITLE) && preg_match('/projectnameonly/', $conf->global->MAIN_HTML_TITLE) && $object->name) $title=$object->ref.' '.$object->name.' - '.$langs->trans("Info");
-$help_url="EN:Module_Projects|FR:Module_Projets|ES:M&oacute;dulo_Proyectos";
+$help_url="EN:Module_Projects|FR:Module_Projects|ES:M&oacute;dulo_Proyectos";
 llxHeader("", $title, $help_url);
 
 $head = project_prepare_head($object);
@@ -126,7 +126,7 @@ if ($object->thirdparty->id > 0)
 $morehtmlref.='</div>';
 
 // Define a complementary filter for search of next/prev ref.
-if (! $user->rights->projet->all->lire)
+if (! $user->rights->project->all->lire)
 {
     $objectsListId = $object->getProjectsAuthorizedForUser($user, 0, 0);
     $object->next_prev_filter=" rowid in (".(count($objectsListId)?join(',', array_keys($objectsListId)):'0').")";

@@ -34,7 +34,7 @@ TicketTypeShortBUGSOFT=Lógica do sistema de desconexão
 TicketTypeShortBUGHARD=Disfonctionnement matériel
 TicketTypeShortCOM=Questão comercial
 TicketTypeShortINCIDENT=Pedir assistência
-TicketTypeShortPROJET=Projeto
+TicketTypeShortPROJECT=Projecto
 TicketTypeShortOTHER=Outro
 
 TicketSeverityShortLOW=Baixo

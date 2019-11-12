@@ -39,11 +39,11 @@ if ($module == 'propal')				{ $permission=$user->rights->propale->creer; }
 elseif ($module == 'fichinter')			{ $permission=$user->rights->ficheinter->creer; }
 elseif ($module == 'order_supplier')	{ $permission=$user->rights->fournisseur->commande->creer; }
 elseif ($module == 'invoice_supplier')	{ $permission=$user->rights->fournisseur->facture->creer; }
-elseif ($module == 'project')		{ $permission=$user->rights->projet->creer; }
+elseif ($module == 'project')		{ $permission=$user->rights->project->creer; }
 elseif ($module == 'action')		{ $permission=$user->rights->agenda->myactions->create; }
 elseif ($module == 'shipping')		{ $permission=$user->rights->expedition->creer; }
 elseif ($module == 'reception')		{ $permission=$user->rights->reception->creer; }
-elseif ($module == 'project_task')	{ $permission=$user->rights->projet->creer; }
+elseif ($module == 'project_task')	{ $permission=$user->rights->project->creer; }
 elseif (! isset($permission) && isset($user->rights->$module->creer))
 {
 	$permission=$user->rights->$module->creer;

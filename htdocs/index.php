@@ -143,7 +143,7 @@ if (empty($user->socid) && empty($conf->global->MAIN_DISABLE_GLOBAL_BOXSTATS))
 		! empty($conf->supplier_order->enabled) && $user->rights->fournisseur->commande->lire && empty($conf->global->SOCIETE_DISABLE_SUPPLIERS_ORDERS_STATS),
 		! empty($conf->supplier_invoice->enabled) && $user->rights->fournisseur->facture->lire && empty($conf->global->SOCIETE_DISABLE_SUPPLIERS_INVOICES_STATS),
 		! empty($conf->supplier_proposal->enabled) && $user->rights->supplier_proposal->lire && empty($conf->global->SOCIETE_DISABLE_SUPPLIERS_PROPOSAL_STATS),
-	    ! empty($conf->project->enabled) && $user->rights->projet->lire,
+	    ! empty($conf->project->enabled) && $user->rights->project->lire,
 	    ! empty($conf->expensereport->enabled) && $user->rights->expensereport->lire,
         ! empty($conf->holiday->enabled) && $user->rights->holiday->read,
 		! empty($conf->don->enabled) && $user->rights->don->lire
@@ -368,14 +368,14 @@ if (empty($conf->global->MAIN_DISABLE_GLOBAL_WORKBOARD)) {
     }
 
     // Number of project opened
-    if (!empty($conf->project->enabled) && $user->rights->projet->lire) {
+    if (!empty($conf->project->enabled) && $user->rights->project->lire) {
         include_once DOL_DOCUMENT_ROOT . '/project/class/project.class.php';
         $board = new Project($db);
         $dashboardlines[$board->element] = $board->load_board($user);
     }
 
     // Number of tasks to do (late)
-    if (!empty($conf->project->enabled) && empty($conf->global->PROJECT_HIDE_TASKS) && $user->rights->projet->lire) {
+    if (!empty($conf->project->enabled) && empty($conf->global->PROJECT_HIDE_TASKS) && $user->rights->project->lire) {
         include_once DOL_DOCUMENT_ROOT . '/project/class/task.class.php';
         $board = new Task($db);
         $dashboardlines[$board->element] = $board->load_board($user);

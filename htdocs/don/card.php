@@ -314,7 +314,7 @@ llxHeader('', $langs->trans("Donation"), 'EN:Module_Donations|FR:Module_Dons|ES:
 $form=new Form($db);
 $formfile = new FormFile($db);
 $formcompany = new FormCompany($db);
-if (! empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
+if (! empty($conf->project->enabled)) { $formproject = new FormProjects($db); }
 
 if ($action == 'create')
 {
@@ -575,7 +575,7 @@ if (! empty($id) && $action == 'edit')
     // Project
     if (! empty($conf->project->enabled))
     {
-    	$formproject=new FormProjets($db);
+    	$formproject=new FormProjects($db);
 
         $langs->load('projects');
         print '<tr><td>'.$langs->trans('Project').'</td><td>';

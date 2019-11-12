@@ -157,7 +157,7 @@ ALTER TABLE llx_user ADD COLUMN salaryextra double(24,8);
 ALTER TABLE llx_user ADD COLUMN weeklyhours double(16,8);
 
 
-ALTER TABLE llx_projet_task_time ADD COLUMN task_datehour datetime after task_date;
+ALTER TABLE llx_project_task_time ADD COLUMN task_datehour datetime after task_date;
 
 ALTER TABLE llx_actioncomm_resources CHANGE COLUMN transparent transparency smallint default 1;
 
@@ -221,7 +221,7 @@ ALTER TABLE  llx_product_price ADD CONSTRAINT fk_product_price_product FOREIGN K
 ALTER TABLE llx_commande_fournisseur MODIFY COLUMN date_livraison datetime; 
 
 ALTER TABLE llx_commande_fournisseur ADD COLUMN fk_account integer AFTER date_livraison;
-ALTER TABLE llx_facture_fourn ADD COLUMN fk_account integer AFTER fk_projet;
+ALTER TABLE llx_facture_fourn ADD COLUMN fk_account integer AFTER fk_project;
 
 -- Fiscal years
 create table llx_accounting_fiscalyear
@@ -1099,14 +1099,14 @@ ALTER TABLE llx_c_type_fees ADD COLUMN accountancy_code varchar(32) DEFAULT NULL
 
 ALTER TABLE llx_actioncomm ADD INDEX idx_actioncomm_fk_element (fk_element);
 
-ALTER TABLE llx_projet_task_time ADD INDEX idx_projet_task_time_task (fk_task);
-ALTER TABLE llx_projet_task_time ADD INDEX idx_projet_task_time_date (task_date);
-ALTER TABLE llx_projet_task_time ADD INDEX idx_projet_task_time_datehour (task_datehour);
+ALTER TABLE llx_project_task_time ADD INDEX idx_project_task_time_task (fk_task);
+ALTER TABLE llx_project_task_time ADD INDEX idx_project_task_time_date (task_date);
+ALTER TABLE llx_project_task_time ADD INDEX idx_project_task_time_datehour (task_datehour);
 
-ALTER TABLE llx_projet_task MODIFY COLUMN duration_effective real DEFAULT 0 NULL;
-ALTER TABLE llx_projet_task MODIFY COLUMN planned_workload real DEFAULT 0 NULL;
+ALTER TABLE llx_project_task MODIFY COLUMN duration_effective real DEFAULT 0 NULL;
+ALTER TABLE llx_project_task MODIFY COLUMN planned_workload real DEFAULT 0 NULL;
   
--- VPGSQL8.2 ALTER TABLE llx_projet_task ALTER COLUMN planned_workload DROP NOT NULL;
+-- VPGSQL8.2 ALTER TABLE llx_project_task ALTER COLUMN planned_workload DROP NOT NULL;
 
 -- add extrafield on ficheinter lines
 CREATE TABLE llx_fichinterdet_extrafields

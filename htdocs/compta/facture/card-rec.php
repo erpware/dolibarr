@@ -965,7 +965,7 @@ llxHeader('', $langs->trans("RepeatableInvoices"), 'ch-facture.html#s-fac-factur
 
 $form = new Form($db);
 $formother = new FormOther($db);
-if (!empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
+if (!empty($conf->project->enabled)) { $formproject = new FormProjects($db); }
 $companystatic = new Societe($db);
 $invoicerectmp = new FactureRec($db);
 
@@ -1080,7 +1080,7 @@ if ($action == 'create')
 			$projectid = GETPOST('projectid') ?GETPOST('projectid') : $object->fk_project;
 			$langs->load('projects');
 			print '<tr><td>'.$langs->trans('Project').'</td><td>';
-			$numprojet = $formproject->select_projects($object->thirdparty->id, $projectid, 'projectid', 0, 0, 1, 0, 0, 0, 0, '', 0, 0, '');
+			$numproject = $formproject->select_projects($object->thirdparty->id, $projectid, 'projectid', 0, 0, 1, 0, 0, 0, 0, '', 0, 0, '');
 			print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid='.$object->thirdparty->id.'&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&socid='.$object->thirdparty->id.(!empty($id) ? '&id='.$id : '')).'">'.$langs->trans("AddProject").'</a>';
 			print '</td></tr>';
 		}

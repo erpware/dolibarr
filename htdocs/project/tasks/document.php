@@ -48,7 +48,7 @@ $project_ref = GETPOST('project_ref', 'alpha');
 $socid=0;
 //if ($user->socid > 0) $socid = $user->socid;    // For external user, no check is done on company because readability is managed by public status of project and assignement.
 //$result=restrictedArea($user,'project',$id,'');
-if (!$user->rights->projet->lire) accessforbidden();
+if (!$user->rights->project->lire) accessforbidden();
 
 // Get parameters
 $sortfield = GETPOST("sortfield", 'alpha');
@@ -68,7 +68,7 @@ $projectstatic = new Project($db);
  * Actions
  */
 
-// Retreive First Task ID of Project if withprojet is on to allow project prev next to work
+// Retreive First Task ID of Project if withproject is on to allow project prev next to work
 if (! empty($project_ref) && ! empty($withproject))
 {
 	if ($projectstatic->fetch(0, $project_ref) > 0)
@@ -101,7 +101,7 @@ if ($id > 0 || ! empty($ref))
 
 		$object->project = clone $projectstatic;
 
-		$upload_dir = $conf->projet->dir_output.'/'.dol_sanitizeFileName($projectstatic->ref).'/'.dol_sanitizeFileName($object->ref);
+		$upload_dir = $conf->project->dir_output.'/'.dol_sanitizeFileName($projectstatic->ref).'/'.dol_sanitizeFileName($object->ref);
 	}
 	else
 	{
@@ -151,7 +151,7 @@ if ($object->id > 0)
         $morehtmlref.='</div>';
 
         // Define a complementary filter for search of next/prev ref.
-        if (! $user->rights->projet->all->lire)
+        if (! $user->rights->project->all->lire)
         {
             $objectsListId = $projectstatic->getProjectsAuthorizedForUser($user, 0, 0);
             $projectstatic->next_prev_filter=" rowid in (".(count($objectsListId)?join(',', array_keys($objectsListId)):'0').")";
@@ -269,9 +269,9 @@ if ($object->id > 0)
 	if (! GETPOST('withproject') || empty($projectstatic->id))
 	{
 	    $projectsListId = $projectstatic->getProjectsAuthorizedForUser($user, 0, 1);
-	    $object->next_prev_filter=" fk_projet in (".$projectsListId.")";
+	    $object->next_prev_filter=" fk_project in (".$projectsListId.")";
 	}
-	else $object->next_prev_filter=" fk_projet = ".$projectstatic->id;
+	else $object->next_prev_filter=" fk_project = ".$projectstatic->id;
 
 	$morehtmlref='';
 
@@ -311,8 +311,8 @@ if ($object->id > 0)
 	$param='';
 	if ($withproject) $param .= '&withproject=1';
 	$modulepart = 'project_task';
-	$permission = $user->rights->projet->creer;
-	$permtoedit = $user->rights->projet->creer;
+	$permission = $user->rights->project->creer;
+	$permtoedit = $user->rights->project->creer;
 	$relativepathwithnofile=dol_sanitizeFileName($projectstatic->ref).'/'.dol_sanitizeFileName($object->ref).'/';
 	include_once DOL_DOCUMENT_ROOT . '/core/tpl/document_actions_post_headers.tpl.php';
 }

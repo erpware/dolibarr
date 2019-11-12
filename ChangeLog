@@ -1474,7 +1474,7 @@ FIX: Fetch task will now fetch comments
 FIX: filter supplier invoice list by societe name.
 FIX: $fk_account is always empty, must be $soc->fk_account
 FIX: Force stripe api version to avoid trouble if we update stripe api
-FIX: getEntity project and not projet
+FIX: getEntity project and not project
 FIX: Get templates in a forced language
 FIX: global $mysoc missing (to avoid php notice on lines 279, 280 & 281)
 FIX: Injection
@@ -1535,7 +1535,7 @@ FIX: intervention: extrafield error when calling insertExtrafields
 FIX: It's not possible to remove a contact which is assigned to an event #8852
 FIX: javascript showempty error
 FIX: Keep supplier proposal price for supplier order
-FIX: link for projets not linked to a thirdparties
+FIX: link for projects not linked to a thirdparties
 FIX: Missing extrafields in export of stock or products
 FIX: missing filters during ordering
 FIX: missing filters during reordering
@@ -1617,7 +1617,7 @@ FIX: Only approved expense report must be journalized
 FIX: payment term doc-specific label was not used
 FIX: payment term doc-specific label was not used (issue #8414)
 FIX: project category is type 6 not 5
-FIX: Projet is not prefilled when created from overwiew page
+FIX: Project is not prefilled when created from overwiew page
 FIX: Related contact printed in societe agenda
 FIX: Removed error when no error on accounting setup page
 FIX: remove var_dump
@@ -2005,7 +2005,7 @@ FIX: dol_delete_file must work in a context without db handler loaded
 FIX: entity test must be on product_fourn_price table and not product table
 FIX: Fetch shipping will now fetch project id
 FIX: $fk_account is always empty, must be $soc->fk_account
-FIX: getEntity project and not projet
+FIX: getEntity project and not project
 FIX: If we enable 3 steps for supplier order approbation, we must not delete all fourn rights def.
 FIX: Keep supplier proposal price for supplier order
 FIX: langs fr
@@ -2893,7 +2893,7 @@ NEW: Add picto on module list to show warning and if module is an external modul
 NEW: Add product type filter on turnover report
 NEW: Add state into list of fields available for personalized fields of thirdparties
 NEW: Add statistics for interventions module
-NEW: Add statistics on number of projets on home page
+NEW: Add statistics on number of projects on home page
 NEW: Add statistics and late records into dashboard for supplier proposals.
 NEW: Add the admin info on combo of type of contact
 NEW: Add the event BILL_PAYED to the list of supported events for module notification.
@@ -2980,7 +2980,7 @@ NEW: Created AccountLine::insert function and started using it for transaction c
 NEW: Created Account::__toString, Account::getFieldsToShow and Account::getAccountNumberOrder to refactor the way account number was shown
 NEW: Created FormBank::getIBANLabel function to get the label of "IBAN" depending on bank account country
 NEW: prepare for additional warehouse statuses
-NEW: project sharing in select_projetcs_list function
+NEW: project sharing in select_projectcs_list function
 NEW: Removed deprecated CommonObject::client property. Please use CommonObject::thirdparty instead
 NEW: Removed unused FormOrder::selectSourcesCommande function
 NEW: Renamed ActionComm::add function to ActionComm::create
@@ -4102,7 +4102,7 @@ FIX: multientity warehouse management
 FIX: New adherent from, always redirect on entity
 FIX: No check warehouse is provided if module stock is not enabled.
 FIX: no need to remove file into mail form, the temp dir will be deleted after any sending
-FIX: no projet_task_time id from trigger TASK_TIMESPENT_CREATE
+FIX: no project_task_time id from trigger TASK_TIMESPENT_CREATE
 FIX: Not showing task extrafields when creating from left menu
 FIX: only active customer should be return into new invoice creation select list
 FIX: Payed invoices are showed as canceled FIX: Bad date filter on customer order
@@ -4394,7 +4394,7 @@ FIX: facturestat bad sql when customer view is limited
 FIX: If supplier invoice block linked element is display after other block total HT amount is not reset to 0 and sum other block (like customer orders values)
 FIX: keep filter by category or by not enough stock if we switch page
 FIX: no need to remove file into mail form, the temp dir will be deleted after any sending
-FIX: no projet_task_time id from trigger TASK_TIMESPENT_CREATE
+FIX: no project_task_time id from trigger TASK_TIMESPENT_CREATE
 FIX: pmp
 FIX: send mail, copy sendto don't read the list of contact
 FIX: The hours of date filter aren't correct
@@ -4811,7 +4811,7 @@ Fix: Avoid home project page to hung when too many tasks opened.
 Fix: bug #1295: Error when creating an agenda extrafield with a number as reference
 Fix: Translation of number for pt_PT.
 Fix: Error on ajax_constantonoff function.
-Fix: [ bug #1323 ] problème pour générer un odt depuis les taches dans projet.
+Fix: [ bug #1323 ] problème pour générer un odt depuis les taches dans project.
 Fix: Can not make withdrawals
 
 ***** ChangeLog for 3.5.1 compared to 3.5.0 *****

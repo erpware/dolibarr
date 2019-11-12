@@ -913,7 +913,7 @@ class SupplierProposal extends CommonObject
         $sql.= ", fk_account";
         $sql.= ", date_livraison";
         $sql.= ", fk_shipping_method";
-        $sql.= ", fk_projet";
+        $sql.= ", fk_project";
         $sql.= ", entity";
         $sql.= ", fk_multicurrency";
         $sql.= ", multicurrency_code";
@@ -1229,7 +1229,7 @@ class SupplierProposal extends CommonObject
         $sql.= ", p.date_livraison as date_livraison";
         $sql.= ", p.model_pdf, p.extraparams";
         $sql.= ", p.note_private, p.note_public";
-        $sql.= ", p.fk_projet as fk_project, p.fk_statut";
+        $sql.= ", p.fk_project as fk_project, p.fk_statut";
         $sql.= ", p.fk_user_author, p.fk_user_valid, p.fk_user_cloture";
         $sql.= ", p.fk_cond_reglement";
         $sql.= ", p.fk_mode_reglement";

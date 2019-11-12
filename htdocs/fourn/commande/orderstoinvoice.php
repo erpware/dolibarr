@@ -356,7 +356,7 @@ if ($action == 'create' && !$error) {
 	print '</td></tr>';
 	// Project
 	if (!empty($conf->project->enabled)) {
-		$formproject = new FormProjets($db);
+		$formproject = new FormProjects($db);
 
 		$langs->load('projects');
 		print '<tr><td>'.$langs->trans('Project').'</td><td colspan="2">';

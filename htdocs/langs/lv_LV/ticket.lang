@@ -34,7 +34,7 @@ TicketTypeShortBUGSOFT=Dysfontionnement logiciel
 TicketTypeShortBUGHARD=Dysfonctionnement matériel
 TicketTypeShortCOM=Tirdzniecības jautājums
 TicketTypeShortINCIDENT=Palīdzības pieprasījums
-TicketTypeShortPROJET=Projekts
+TicketTypeShortPROJECT=Projekts
 TicketTypeShortOTHER=Cits
 
 TicketSeverityShortLOW=Zems

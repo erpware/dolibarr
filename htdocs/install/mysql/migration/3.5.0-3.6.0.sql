@@ -101,7 +101,7 @@ ALTER TABLE llx_c_tva ADD UNIQUE INDEX uk_c_tva_id (fk_pays, taux, recuperableon
 
 ALTER TABLE llx_accountingaccount MODIFY COLUMN label varchar(255);
 
-ALTER TABLE llx_projet_task ADD COLUMN  entity integer DEFAULT 1 NOT NULL AFTER ref;
+ALTER TABLE llx_project_task ADD COLUMN  entity integer DEFAULT 1 NOT NULL AFTER ref;
 
 create table llx_product_customer_price
 (
@@ -226,7 +226,7 @@ ALTER TABLE llx_stock_mouvement ADD origintype VARCHAR(32);
 
 -- New 1300 : Add THM on user
 ALTER TABLE llx_user ADD thm double(24,8) AFTER fk_user;
-ALTER TABLE llx_projet_task_time ADD thm double(24,8) AFTER fk_user;
+ALTER TABLE llx_project_task_time ADD thm double(24,8) AFTER fk_user;
 
 
 -- New : extrafield on categories

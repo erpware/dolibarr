@@ -55,9 +55,9 @@ if ($socid > 0)
 	$soc->fetch($socid);
 	$title .= ' (<a href="list.php">'.$soc->name.'</a>)';
 }
-if (!$user->rights->projet->lire) accessforbidden();
+if (!$user->rights->project->lire) accessforbidden();
 
-$diroutputmassaction = $conf->projet->dir_output.'/temp/massgeneration/'.$user->id;
+$diroutputmassaction = $conf->project->dir_output.'/temp/massgeneration/'.$user->id;
 
 $limit = GETPOST('limit', 'int') ?GETPOST('limit', 'int') : $conf->liste_limit;
 $sortfield = GETPOST("sortfield", "alpha");
@@ -202,13 +202,13 @@ if (empty($reshook))
 	// Mass actions
 	$objectclass = 'Project';
 	$objectlabel = 'Project';
-	$permissiontoread = $user->rights->projet->lire;
-	$permissiontodelete = $user->rights->projet->supprimer;
-	$uploaddir = $conf->projet->dir_output;
+	$permissiontoread = $user->rights->project->lire;
+	$permissiontodelete = $user->rights->project->supprimer;
+	$uploaddir = $conf->project->dir_output;
 	include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
 
     // Close records
-    if (!$error && $massaction == 'close' && $user->rights->projet->creer)
+    if (!$error && $massaction == 'close' && $user->rights->project->creer)
     {
         $db->begin();
 
@@ -262,14 +262,14 @@ if (empty($reshook))
 $socstatic = new Societe($db);
 $form = new Form($db);
 $formother = new FormOther($db);
-$formproject = new FormProjets($db);
+$formproject = new FormProjects($db);
 
 $title = $langs->trans("Projects");
 
 
 // Get list of project id allowed to user (in a string list separated by coma)
 $projectsListId = '';
-if (!$user->rights->projet->all->lire) $projectsListId = $object->getProjectsAuthorizedForUser($user, 0, 1, $socid);
+if (!$user->rights->project->all->lire) $projectsListId = $object->getProjectsAuthorizedForUser($user, 0, 1, $socid);
 
 // Get id of types of contacts for projects (This list never contains a lot of elements)
 $listofprojectcontacttype = array();
@@ -317,7 +317,7 @@ if ($search_project_user > 0)
 	$sql .= ", ".MAIN_DB_PREFIX."element_contact as ecp";
 }
 $sql .= " WHERE p.entity IN (".getEntity('project').')';
-if (!$user->rights->projet->all->lire) $sql .= " AND p.rowid IN (".$projectsListId.")"; // public and assigned to, or restricted to company for external users
+if (!$user->rights->project->all->lire) $sql .= " AND p.rowid IN (".$projectsListId.")"; // public and assigned to, or restricted to company for external users
 // No need to check if company is external user, as filtering of projects must be done by getProjectsAuthorizedForUser
 if ($socid > 0) $sql .= " AND (p.fk_soc = ".$socid.")"; // This filter if when we use a hard coded filter on company on url (not related to filter for external users)
 if ($search_categ > 0)    $sql .= " AND cs.fk_categorie = ".$db->escape($search_categ);
@@ -397,7 +397,7 @@ if ($num == 1 && !empty($conf->global->MAIN_SEARCH_DIRECT_OPEN_IF_ONLY_ONE) && $
 	exit;
 }
 
-$help_url = "EN:Module_Projects|FR:Module_Projets|ES:M&oacute;dulo_Proyectos";
+$help_url = "EN:Module_Projects|FR:Module_Projects|ES:M&oacute;dulo_Proyectos";
 llxHeader("", $title, $help_url);
 
 $param = '';
@@ -433,14 +433,14 @@ $arrayofmassactions = array(
     //'presend'=>$langs->trans("SendByMail"),
 );
 //if($user->rights->societe->creer) $arrayofmassactions['createbills']=$langs->trans("CreateInvoiceForThisCustomer");
-if ($user->rights->projet->creer) $arrayofmassactions['close'] = $langs->trans("Close");
+if ($user->rights->project->creer) $arrayofmassactions['close'] = $langs->trans("Close");
 if ($user->rights->societe->supprimer) $arrayofmassactions['predelete'] = '<span class="fa fa-trash paddingrightonly"></span>'.$langs->trans("Delete");
 if (in_array($massaction, array('presend', 'predelete'))) $arrayofmassactions = array();
 
 $massactionbutton = $form->selectMassAction('', $arrayofmassactions);
 
 $newcardbutton = '';
-if ($user->rights->projet->creer)
+if ($user->rights->project->creer)
 {
     $newcardbutton .= dolGetButtonTitle($langs->trans('NewProject'), '', 'fa fa-plus-circle', DOL_URL_ROOT.'/project/card.php?action=create');
 }
@@ -461,7 +461,7 @@ $texthelp = '';
 if ($search_project_user == $user->id) $texthelp .= $langs->trans("MyProjectsDesc");
 else
 {
-    if ($user->rights->projet->all->lire && !$socid) $texthelp .= $langs->trans("ProjectsDesc");
+    if ($user->rights->project->all->lire && !$socid) $texthelp .= $langs->trans("ProjectsDesc");
     else $texthelp .= $langs->trans("ProjectsPublicDesc");
 }
 

@@ -19,16 +19,16 @@
 DELETE FROM llx_user_param WHERE param = 'MAIN_THEME' and value = 'freelug';
 
 
-update llx_propal set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_commande set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_facture set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_commande_fournisseur set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_contrat set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_deplacement set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_facture_fourn set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_facture_rec set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_fichinter set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_projet_task set fk_projet = null where fk_projet not in (select rowid from llx_projet);
+update llx_propal set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_commande set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_facture set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_commande_fournisseur set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_contrat set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_deplacement set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_facture_fourn set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_facture_rec set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_fichinter set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_project_task set fk_project = null where fk_project not in (select rowid from llx_project);
 
 update llx_propal set fk_user_author = null where fk_user_author not in (select rowid from llx_user);
 update llx_propal set fk_user_valid = null where fk_user_valid not in (select rowid from llx_user);
@@ -226,40 +226,40 @@ ALTER TABLE llx_expedition ADD CONSTRAINT fk_expedition_fk_expedition_methode 	F
 
 -- VMYSQL4.1 UPDATE llx_chargesociales set tms = date_creation WHERE tms = '0000-00-00 00:00:00';
 
-ALTER TABLE llx_propal MODIFY fk_projet integer DEFAULT NULL;
+ALTER TABLE llx_propal MODIFY fk_project integer DEFAULT NULL;
 ALTER TABLE llx_propal ADD COLUMN fk_account integer AFTER total;
 ALTER TABLE llx_propal ADD COLUMN fk_currency varchar(2) AFTER fk_account;
 ALTER TABLE llx_propal ADD INDEX idx_propal_fk_user_author (fk_user_author);
 ALTER TABLE llx_propal ADD INDEX idx_propal_fk_user_valid (fk_user_valid);
 ALTER TABLE llx_propal ADD INDEX idx_propal_fk_user_cloture (fk_user_cloture);
-ALTER TABLE llx_propal ADD INDEX idx_propal_fk_projet (fk_projet);
+ALTER TABLE llx_propal ADD INDEX idx_propal_fk_project (fk_project);
 ALTER TABLE llx_propal ADD INDEX idx_propal_fk_account(fk_account);
 ALTER TABLE llx_propal ADD INDEX idx_propal_fk_currency(fk_currency);
 ALTER TABLE llx_propal ADD CONSTRAINT fk_propal_fk_user_author	FOREIGN KEY (fk_user_author) REFERENCES llx_user (rowid);
 ALTER TABLE llx_propal ADD CONSTRAINT fk_propal_fk_user_valid	FOREIGN KEY (fk_user_valid)  REFERENCES llx_user (rowid);
 ALTER TABLE llx_propal ADD CONSTRAINT fk_propal_fk_user_cloture	FOREIGN KEY (fk_user_cloture) REFERENCES llx_user (rowid);
-ALTER TABLE llx_propal ADD CONSTRAINT fk_propal_fk_projet		FOREIGN KEY (fk_projet) REFERENCES llx_projet (rowid);
+ALTER TABLE llx_propal ADD CONSTRAINT fk_propal_fk_project		FOREIGN KEY (fk_project) REFERENCES llx_project (rowid);
 ALTER TABLE llx_propal DROP FOREIGN KEY fk_propal_fk_account;
 ALTER TABLE llx_propal DROP FOREIGN KEY fk_propal_fk_currency;
 
-ALTER TABLE llx_commande MODIFY fk_projet integer DEFAULT NULL;
+ALTER TABLE llx_commande MODIFY fk_project integer DEFAULT NULL;
 ALTER TABLE llx_commande ADD COLUMN fk_account integer AFTER facture;
 ALTER TABLE llx_commande ADD COLUMN fk_currency varchar(2) AFTER fk_account;
 ALTER TABLE llx_commande ADD INDEX idx_commande_fk_user_author (fk_user_author);
 ALTER TABLE llx_commande ADD INDEX idx_commande_fk_user_valid (fk_user_valid);
 ALTER TABLE llx_commande ADD INDEX idx_commande_fk_user_cloture (fk_user_cloture);
-ALTER TABLE llx_commande ADD INDEX idx_commande_fk_projet (fk_projet);
+ALTER TABLE llx_commande ADD INDEX idx_commande_fk_project (fk_project);
 ALTER TABLE llx_commande ADD INDEX idx_commande_fk_account(fk_account);
 ALTER TABLE llx_commande ADD INDEX idx_commande_fk_currency(fk_currency);
 ALTER TABLE llx_commande ADD CONSTRAINT fk_commande_fk_user_author	FOREIGN KEY (fk_user_author) REFERENCES llx_user (rowid);
 ALTER TABLE llx_commande ADD CONSTRAINT fk_commande_fk_user_valid	FOREIGN KEY (fk_user_valid)  REFERENCES llx_user (rowid);
 ALTER TABLE llx_commande ADD CONSTRAINT fk_commande_fk_user_cloture	FOREIGN KEY (fk_user_cloture) REFERENCES llx_user (rowid);
-ALTER TABLE llx_commande ADD CONSTRAINT fk_commande_fk_projet		FOREIGN KEY (fk_projet) REFERENCES llx_projet (rowid);
+ALTER TABLE llx_commande ADD CONSTRAINT fk_commande_fk_project		FOREIGN KEY (fk_project) REFERENCES llx_project (rowid);
 ALTER TABLE llx_commande DROP FOREIGN KEY fk_commande_fk_account;
 ALTER TABLE llx_commande DROP FOREIGN KEY fk_commande_fk_currency;
 
-ALTER TABLE llx_facture MODIFY fk_projet integer DEFAULT NULL;
-ALTER TABLE llx_facture ADD COLUMN fk_account integer AFTER fk_projet;
+ALTER TABLE llx_facture MODIFY fk_project integer DEFAULT NULL;
+ALTER TABLE llx_facture ADD COLUMN fk_account integer AFTER fk_project;
 ALTER TABLE llx_facture ADD COLUMN fk_currency varchar(2) AFTER fk_account;
 ALTER TABLE llx_facture ADD INDEX idx_facture_fk_account (fk_account);
 ALTER TABLE llx_facture ADD INDEX idx_facture_fk_currency (fk_currency);

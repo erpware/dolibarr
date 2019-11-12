@@ -1334,7 +1334,7 @@ if (empty($reshook))
     	$rowid = $_POST['rowid'];
     	$type_fees_id = GETPOST('fk_c_type_fees', 'int');
 		$fk_c_exp_tax_cat = GETPOST('fk_c_exp_tax_cat', 'int');
-    	$projet_id = $fk_project;
+    	$project_id = $fk_project;
     	$comments = GETPOST('comments', 'none');
     	$qty = GETPOST('qty', 'int');
     	$vatrate = GETPOST('vatrate', 'alpha');
@@ -1372,7 +1372,7 @@ if (empty($reshook))
     	if (! $error)
     	{
     	    // TODO Use update method of ExpenseReportLine
-    	    $result = $object->updateline($rowid, $type_fees_id, $projet_id, $vatrate, $comments, $qty, $value_unit, $date, $id, $fk_c_exp_tax_cat, $fk_ecm_files);
+    	    $result = $object->updateline($rowid, $type_fees_id, $project_id, $vatrate, $comments, $qty, $value_unit, $date, $id, $fk_c_exp_tax_cat, $fk_ecm_files);
     		if ($result >= 0)
     		{
     			if ($result > 0)
@@ -1433,7 +1433,7 @@ llxHeader("", $title, $helpurl);
 
 $form = new Form($db);
 $formfile = new FormFile($db);
-$formproject = new FormProjets($db);
+$formproject = new FormProjects($db);
 $projecttmp = new Project($db);
 $paymentexpensereportstatic=new PaymentExpenseReport($db);
 $bankaccountstatic = new Account($db);
@@ -2161,8 +2161,8 @@ else
 								if ($line->fk_project > 0)
 								{
 									$projecttmp->id=$line->fk_project;
-									$projecttmp->ref=$line->projet_ref;
-									$projecttmp->title=$line->projet_title;
+									$projecttmp->ref=$line->project_ref;
+									$projecttmp->title=$line->project_title;
 									print $projecttmp->getNomUrl(1);
 								}
 								print '</td>';

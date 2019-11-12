@@ -148,7 +148,7 @@ class pdf_beluga extends ModelePDFProjects
         // phpcs:enable
 		global $conf, $hookmanager, $langs, $user;
 
-        $formproject=new FormProjets($this->db);
+        $formproject=new FormProjects($this->db);
 
 		if (! is_object($outputlangs)) $outputlangs=$langs;
 		// For backward compatibility with FPDF, force output charset to ISO, because FPDF expect text to be encoded in ISO
@@ -157,12 +157,12 @@ class pdf_beluga extends ModelePDFProjects
 		// Load traductions files required by page
 		$outputlangs->loadLangs(array("main", "dict", "companies", "projects"));
 
-		if ($conf->projet->dir_output)
+		if ($conf->project->dir_output)
 		{
 			//$nblines = count($object->lines);  // This is set later with array of tasks
 
 			$objectref = dol_sanitizeFileName($object->ref);
-			$dir = $conf->projet->dir_output;
+			$dir = $conf->project->dir_output;
 			if (! preg_match('/specimen/i', $objectref)) $dir.= "/" . $objectref;
 			$file = $dir . "/" . $objectref . ".pdf";
 
@@ -397,7 +397,7 @@ class pdf_beluga extends ModelePDFProjects
                 	$datefieldname=$value['datefieldname'];
                 	$qualified=$value['test'];
                 	$langstoload=$value['lang'];
-                    $projectField=isset($value['project_field']) ? $value['project_field'] : 'fk_projet';
+                    $projectField=isset($value['project_field']) ? $value['project_field'] : 'fk_project';
                 	$langs->load($langstoload);
 
                     if (! $qualified) continue;

@@ -147,7 +147,7 @@ ALTER TABLE llx_c_price_expression MODIFY COLUMN expression varchar(255) NOT NUL
 
 UPDATE llx_bank_url set url = REPLACE( url, 'compta/salaries/', 'salaries/');
 
-ALTER TABLE llx_stock_mouvement ADD COLUMN fk_projet INTEGER NOT NULL DEFAULT 0 AFTER model_pdf;
+ALTER TABLE llx_stock_mouvement ADD COLUMN fk_project INTEGER NOT NULL DEFAULT 0 AFTER model_pdf;
 
 ALTER TABLE llx_oauth_token ADD COLUMN fk_soc integer DEFAULT NULL after token;
 
@@ -157,12 +157,12 @@ ALTER TABLE llx_adherent_type ADD COLUMN duration varchar(6) DEFAULT NULL after 
 ALTER TABLE llx_mailing ADD COLUMN tms timestamp;
 ALTER TABLE llx_mailing_cibles ADD COLUMN tms timestamp;
 
-ALTER TABLE llx_projet ADD COLUMN usage_opportunity integer DEFAULT 0;
-ALTER TABLE llx_projet ADD COLUMN usage_task integer DEFAULT 1;
-ALTER TABLE llx_projet CHANGE COLUMN bill_time usage_bill_time integer DEFAULT 0;		-- rename existing field
-ALTER TABLE llx_projet ADD COLUMN usage_organize_event integer DEFAULT 0;
+ALTER TABLE llx_project ADD COLUMN usage_opportunity integer DEFAULT 0;
+ALTER TABLE llx_project ADD COLUMN usage_task integer DEFAULT 1;
+ALTER TABLE llx_project CHANGE COLUMN bill_time usage_bill_time integer DEFAULT 0;		-- rename existing field
+ALTER TABLE llx_project ADD COLUMN usage_organize_event integer DEFAULT 0;
 
-UPDATE llx_projet set usage_opportunity = 1 WHERE fk_opp_status > 0;
+UPDATE llx_project set usage_opportunity = 1 WHERE fk_opp_status > 0;
 
 create table llx_societe_contacts
 (
@@ -330,7 +330,7 @@ create table llx_fichinter_rec
 	datec				datetime,  -- date de creation
 	fk_contrat			integer DEFAULT 0,          -- contrat auquel est rattache la fiche
 	fk_user_author		integer,                    -- createur
-	fk_projet			integer,                    -- project auquel est associe la facture
+	fk_project			integer,                    -- project auquel est associe la facture
 	duree				real,                       -- duree totale de l'intervention
 	description			text,
 	modelpdf			varchar(50),
@@ -349,9 +349,9 @@ create table llx_fichinter_rec
 ALTER TABLE llx_fichinter_rec ADD UNIQUE INDEX idx_fichinter_rec_uk_titre (titre, entity);
 ALTER TABLE llx_fichinter_rec ADD INDEX idx_fichinter_rec_fk_soc (fk_soc);
 ALTER TABLE llx_fichinter_rec ADD INDEX idx_fichinter_rec_fk_user_author (fk_user_author);
-ALTER TABLE llx_fichinter_rec ADD INDEX idx_fichinter_rec_fk_projet (fk_projet);
+ALTER TABLE llx_fichinter_rec ADD INDEX idx_fichinter_rec_fk_project (fk_project);
 ALTER TABLE llx_fichinter_rec ADD CONSTRAINT fk_fichinter_rec_fk_user_author    FOREIGN KEY (fk_user_author) REFERENCES llx_user (rowid);
-ALTER TABLE llx_fichinter_rec ADD CONSTRAINT fk_fichinter_rec_fk_projet         FOREIGN KEY (fk_projet) REFERENCES llx_projet (rowid);
+ALTER TABLE llx_fichinter_rec ADD CONSTRAINT fk_fichinter_rec_fk_project         FOREIGN KEY (fk_project) REFERENCES llx_project (rowid);
 
 create table llx_fichinterdet_rec
 (

@@ -47,8 +47,8 @@ $langues = array(
 		'titrePage' => 'Tools',
 		'txtAlias' => 'Your aliased softwares',
 		'txtNoAlias' => 'No Alias found.',
-		'txtProjet' => 'Your Softwares',
-		'txtNoProjet' => 'No other softwares. To create a new one, just create a directory in \'www\'.',
+		'txtProject' => 'Your Softwares',
+		'txtNoProject' => 'No other softwares. To create a new one, just create a directory in \'www\'.',
 		'txtApp' => 'Applications',
 		'FromLocalNetwork' => 'URL for local access',
 		'FromInternet' => 'URL for Intranet or Internet',
@@ -72,8 +72,8 @@ $langues = array(
 		'titrePage' => 'Outils',
 		'txtAlias' => 'Alias d\'applications',
 		'txtNoAlias' => 'Aucun alias.',
-		'txtProjet' => 'Autres applications (sans alias)',
-		'txtNoProjet' => 'Pas d\'autre application. Pour en ajouter une nouvelle, cr&eacute;ez simplement un r&eacute;pertoire dans \'www\'.',
+		'txtProject' => 'Autres applications (sans alias)',
+		'txtNoProject' => 'Pas d\'autre application. Pour en ajouter une nouvelle, cr&eacute;ez simplement un r&eacute;pertoire dans \'www\'.',
 		'txtApp' => 'Applications',
 		'FromLocalNetwork' => 'URL accès local',
 		'FromInternet' => 'URL accès par Intranet ou Internet',
@@ -97,8 +97,8 @@ $langues = array(
 		'titrePage' => 'Utilidades',
 		'txtAlias' => 'Alias de aplicaciones',
 		'txtNoAlias' => 'Ning&uacute;n alias.',
-		'txtProjet' => 'Otras aplicaciones (sin alias)',
-		'txtNoProjet' => 'Ninguna otra aplicaci&oacute;n. Para a&ntilde;adir una nueva, simplemente cree una carpeta en \'www\'.',
+		'txtProject' => 'Otras aplicaciones (sin alias)',
+		'txtNoProject' => 'Ninguna otra aplicaci&oacute;n. Para a&ntilde;adir una nueva, simplemente cree una carpeta en \'www\'.',
 		'txtApp' => 'Aplicaciones',
 		'FromLocalNetwork' => 'URL para local access',
 		'FromInternet' => 'URL para Intranet o Internet',
@@ -398,7 +398,7 @@ foreach($listoffiles as $file)
 }
 
 if (!isset($projectContents))
-	$projectContents = '<tr><td colspan="3">'.$langues[$langue]['txtNoProjet'].'</td></tr>';
+	$projectContents = '<tr><td colspan="3">'.$langues[$langue]['txtNoProject'].'</td></tr>';
 
 
 

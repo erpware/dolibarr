@@ -142,11 +142,11 @@ class CommonObjectTest extends PHPUnit\Framework\TestCase
     }
 
     /**
-     *  testFetchProjet
+     *  testFetchProject
      *
      *  @return void
      */
-    public function testFetchProjet()
+    public function testFetchProject()
     {
         global $conf,$user,$langs,$db;
         $conf=$this->savconf;
@@ -156,7 +156,7 @@ class CommonObjectTest extends PHPUnit\Framework\TestCase
 
         $localobject=new Commande($this->savdb);
         $localobject->fetch(1);
-        $result=$localobject->fetch_projet();
+        $result=$localobject->fetch_project();
 
         print __METHOD__." result=".$result."\n";
         $this->assertLessThanOrEqual($result, 0);

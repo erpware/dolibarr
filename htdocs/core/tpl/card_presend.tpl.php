@@ -39,7 +39,7 @@ if ($action == 'presend')
 
 	$titreform='SendMail';
 
-	$object->fetch_projet();
+	$object->fetch_project();
 
 	if (! in_array($object->element, array('societe', 'user', 'member')))
 	{

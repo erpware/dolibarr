@@ -250,8 +250,8 @@ CREATE TABLE IF NOT EXISTS llx_user_rib (
   owner_address  varchar(255)
 )ENGINE=innodb;
 
-ALTER TABLE llx_projet_task_time ADD COLUMN invoice_id integer DEFAULT NULL;
-ALTER TABLE llx_projet_task_time ADD COLUMN invoice_line_id integer DEFAULT NULL;
+ALTER TABLE llx_project_task_time ADD COLUMN invoice_id integer DEFAULT NULL;
+ALTER TABLE llx_project_task_time ADD COLUMN invoice_line_id integer DEFAULT NULL;
 
 
 create table llx_stock_lotserial
@@ -415,7 +415,7 @@ ALTER TABLE llx_categorie_project ADD INDEX idx_categorie_project_fk_categorie (
 ALTER TABLE llx_categorie_project ADD INDEX idx_categorie_project_fk_project (fk_project);
 
 ALTER TABLE llx_categorie_project ADD CONSTRAINT fk_categorie_project_categorie_rowid FOREIGN KEY (fk_categorie) REFERENCES llx_categorie (rowid);
-ALTER TABLE llx_categorie_project ADD CONSTRAINT fk_categorie_project_fk_project   FOREIGN KEY (fk_project) REFERENCES llx_projet (rowid);
+ALTER TABLE llx_categorie_project ADD CONSTRAINT fk_categorie_project_fk_project   FOREIGN KEY (fk_project) REFERENCES llx_project (rowid);
 
 
 ALTER TABLE llx_c_tva ADD COLUMN code varchar(10) DEFAULT '' after fk_pays;

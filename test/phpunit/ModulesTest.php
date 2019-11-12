@@ -134,7 +134,7 @@ class ModulesTest extends PHPUnit\Framework\TestCase
 		'ECM','EmailCollector','Expedition','ExpenseReport','Export','ExternalRss','ExternalSite',
 		'Facture','Fckeditor','Ficheinter','Fournisseur','FTP','GeoIPMaxmind','Gravatar','Holiday','HRM','Import','Incoterm','Label','Ldap','Loan',
 		'Mailing','MailmanSpip','Margin','ModuleBuilder','MultiCurrency',
-		'Notification','Oauth','OpenSurvey','Paybox','Paypal','Prelevement','Printing','Product','ProductBatch','Projet','Propale','ReceiptPrinter','Resource',
+		'Notification','Oauth','OpenSurvey','Paybox','Paypal','Prelevement','Printing','Product','ProductBatch','Project','Propale','ReceiptPrinter','Resource',
 		'Salaries','Service','SocialNetworks','Societe','Stock','Stripe','SupplierProposal','Syslog','TakePos','Tax','Ticket','User','Variants','WebServices','WebServicesClient','Website','Workflow');
 		foreach($modulelist as $modlabel)
 		{

@@ -34,7 +34,7 @@ TicketTypeShortBUGSOFT=اشکال نرم‌افزاری
 TicketTypeShortBUGHARD=اشکال نرم‌افزاری
 TicketTypeShortCOM=سوال تجاری
 TicketTypeShortINCIDENT=درخواست پشتیبانی
-TicketTypeShortPROJET=طرح
+TicketTypeShortPROJECT=طرح
 TicketTypeShortOTHER=سایر
 
 TicketSeverityShortLOW=کم

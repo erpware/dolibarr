@@ -328,7 +328,7 @@ class FactureFournisseur extends CommonInvoice
         $sql.= ", fk_soc";
         $sql.= ", datec";
         $sql.= ", datef";
-		$sql.= ", fk_projet";
+		$sql.= ", fk_project";
 		$sql.= ", fk_cond_reglement";
 		$sql.= ", fk_mode_reglement";
         $sql.= ", fk_account";
@@ -594,7 +594,7 @@ class FactureFournisseur extends CommonInvoice
         $sql.= " t.fk_user_author,";
         $sql.= " t.fk_user_valid,";
         $sql.= " t.fk_facture_source,";
-        $sql.= " t.fk_projet as fk_project,";
+        $sql.= " t.fk_project as fk_project,";
         $sql.= " t.fk_cond_reglement,";
         $sql.= " t.fk_account,";
         $sql.= " t.fk_mode_reglement,";
@@ -897,7 +897,7 @@ class FactureFournisseur extends CommonInvoice
         $sql.= " fk_user_author=".(isset($this->author)?$this->author:"null").",";
         $sql.= " fk_user_valid=".(isset($this->fk_user_valid)?$this->fk_user_valid:"null").",";
         $sql.= " fk_facture_source=".(isset($this->fk_facture_source)?$this->fk_facture_source:"null").",";
-        $sql.= " fk_projet=".(isset($this->fk_project)?$this->fk_project:"null").",";
+        $sql.= " fk_project=".(isset($this->fk_project)?$this->fk_project:"null").",";
         $sql.= " fk_cond_reglement=".(isset($this->cond_reglement_id)?$this->cond_reglement_id:"null").",";
         $sql.= " date_lim_reglement=".(dol_strlen($this->date_echeance)!=0 ? "'".$this->db->idate($this->date_echeance)."'" : 'null').",";
         $sql.= " note_private=".(isset($this->note_private)?"'".$this->db->escape($this->note_private)."'":"null").",";

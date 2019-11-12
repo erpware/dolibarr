@@ -90,7 +90,7 @@ $sql = "SELECT d.rowid, d.datedon, d.fk_soc as socid, d.firstname, d.lastname, d
 $sql.= " d.amount, d.fk_statut as status,";
 $sql.= " p.rowid as pid, p.ref, p.title, p.public";
 $sql.= " FROM ".MAIN_DB_PREFIX."don as d LEFT JOIN ".MAIN_DB_PREFIX."project AS p";
-$sql.= " ON p.rowid = d.fk_projet WHERE d.entity IN (".getEntity('donation').")";
+$sql.= " ON p.rowid = d.fk_project WHERE d.entity IN (".getEntity('donation').")";
 if ($search_status != '' && $search_status != '-1')
 {
 	$sql .= " AND d.fk_statut IN (".$db->escape($search_status).")";
@@ -215,7 +215,7 @@ if ($resql)
 	if (! empty($conf->project->enabled))
 	{
 	    $langs->load("projects");
-	    print_liste_field_titre("Project", $_SERVER["PHP_SELF"], "d.fk_projet", "", $param, "", $sortfield, $sortorder);
+	    print_liste_field_titre("Project", $_SERVER["PHP_SELF"], "d.fk_project", "", $param, "", $sortfield, $sortorder);
 	}
 	print_liste_field_titre("Amount", $_SERVER["PHP_SELF"], "d.amount", "", $param, '', $sortfield, $sortorder, 'right ');
 	print_liste_field_titre("Status", $_SERVER["PHP_SELF"], "d.fk_statut", "", $param, '', $sortfield, $sortorder, 'right ');

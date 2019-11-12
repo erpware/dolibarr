@@ -17,7 +17,7 @@
 --
 -- ===========================================================================
 
-create table llx_projet
+create table llx_project
 (
   rowid            integer AUTO_INCREMENT PRIMARY KEY,
   fk_soc           integer,

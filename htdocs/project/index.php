@@ -46,7 +46,7 @@ if ($search_project_user == $user->id) $mine = 1;
 // Security check
 $socid=0;
 //if ($user->socid > 0) $socid = $user->socid;    // For external user, no check is done on company because readability is managed by public status of project and assignement.
-if (!$user->rights->projet->lire) accessforbidden();
+if (!$user->rights->project->lire) accessforbidden();
 
 $sortfield = GETPOST("sortfield", 'alpha');
 $sortorder = GETPOST("sortorder", 'alpha');
@@ -63,11 +63,11 @@ $projectstatic=new Project($db);
 $form=new Form($db);
 $formfile=new FormFile($db);
 
-$projectset = ($mine?$mine:(empty($user->rights->projet->all->lire)?0:2));
+$projectset = ($mine?$mine:(empty($user->rights->project->all->lire)?0:2));
 $projectsListId = $projectstatic->getProjectsAuthorizedForUser($user, $projectset, 1);
 //var_dump($projectsListId);
 
-llxHeader("", $langs->trans("Projects"), "EN:Module_Projects|FR:Module_Projets|ES:M&oacute;dulo_Proyectos");
+llxHeader("", $langs->trans("Projects"), "EN:Module_Projects|FR:Module_Projects|ES:M&oacute;dulo_Proyectos");
 
 $title=$langs->trans("ProjectsArea");
 //if ($mine) $title=$langs->trans("MyProjectsArea");
@@ -75,7 +75,7 @@ $title=$langs->trans("ProjectsArea");
 
 // Title for combo list see all projects
 $titleall=$langs->trans("AllAllowedProjects");
-if (! empty($user->rights->projet->all->lire) && ! $socid) $titleall=$langs->trans("AllProjects");
+if (! empty($user->rights->project->all->lire) && ! $socid) $titleall=$langs->trans("AllProjects");
 else $titleall=$langs->trans("AllAllowedProjects").'<br><br>';
 
 $morehtml='';
@@ -95,7 +95,7 @@ print '<div class="opacitymedium">';
 if ($mine) print $langs->trans("MyProjectsDesc").'<br><br>';
 else
 {
-	if (! empty($user->rights->projet->all->lire) && ! $socid) print $langs->trans("ProjectsDesc").'<br><br>';
+	if (! empty($user->rights->project->all->lire) && ! $socid) print $langs->trans("ProjectsDesc").'<br><br>';
 	else print $langs->trans("ProjectsPublicDesc").'<br><br>';
 }
 print '</div>';
@@ -130,7 +130,7 @@ print '<div class="fichecenter"><div class="fichethirdleft">';
 if (! empty($conf->global->MAIN_SEARCH_FORM_ON_HOME_AREAS))     // This is useless due to the global search combo
 {
     // Search project
-    if (! empty($conf->project->enabled) && $user->rights->projet->lire)
+    if (! empty($conf->project->enabled) && $user->rights->project->lire)
     {
     	$listofsearchfields['search_project']=array('text'=>'Project');
     }
@@ -177,7 +177,7 @@ $sql.= " s.rowid as socid, s.nom as name, s.email, s.client, s.fournisseur, s.co
 $sql.= " FROM ".MAIN_DB_PREFIX."project as p";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s on p.fk_soc = s.rowid";
 $sql.= " WHERE p.entity IN (".getEntity('project').")";
-if ($mine || empty($user->rights->projet->all->lire)) $sql.= " AND p.rowid IN (".$projectsListId.")";		// If we have this test true, it also means projectset is not 2
+if ($mine || empty($user->rights->project->all->lire)) $sql.= " AND p.rowid IN (".$projectsListId.")";		// If we have this test true, it also means projectset is not 2
 if ($socid)	$sql.= " AND (p.fk_soc IS NULL OR p.fk_soc = 0 OR p.fk_soc = ".$socid.")";
 $sql.= " ORDER BY p.tms DESC";
 $sql.= $db->plimit($max, 0);
@@ -270,7 +270,7 @@ $sql.= " FROM ".MAIN_DB_PREFIX."project as p";
 $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s on p.fk_soc = s.rowid";
 $sql.= " WHERE p.entity IN (".getEntity('project').")";
 $sql.= " AND p.fk_statut = 1";
-if ($mine || empty($user->rights->projet->all->lire)) $sql.= " AND p.rowid IN (".$projectsListId.")";		// If we have this test true, it also means projectset is not 2
+if ($mine || empty($user->rights->project->all->lire)) $sql.= " AND p.rowid IN (".$projectsListId.")";		// If we have this test true, it also means projectset is not 2
 if ($socid)	$sql.= " AND (p.fk_soc IS NULL OR p.fk_soc = 0 OR p.fk_soc = ".$socid.")";
 $sql.= " GROUP BY s.nom, s.rowid";
 $sql.= $db->order($sortfield, $sortorder);

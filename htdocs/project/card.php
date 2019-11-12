@@ -117,7 +117,7 @@ if (empty($reshook))
 		$action = '';
 	}
 
-	if ($action == 'add' && $user->rights->projet->creer)
+	if ($action == 'add' && $user->rights->project->creer)
 	{
 		$error=0;
 		if (empty($_POST["ref"]))
@@ -231,7 +231,7 @@ if (empty($reshook))
 		}
 	}
 
-	if ($action == 'update' && ! $_POST["cancel"] && $user->rights->projet->creer)
+	if ($action == 'update' && ! $_POST["cancel"] && $user->rights->project->creer)
 	{
 		$error=0;
 
@@ -344,7 +344,7 @@ if (empty($reshook))
 	}
 
 	// Build doc
-	if ($action == 'builddoc' && $user->rights->projet->creer)
+	if ($action == 'builddoc' && $user->rights->project->creer)
 	{
 		// Save last template used to generate document
 		if (GETPOST('model')) $object->setDocModel($user, GETPOST('model', 'alpha'));
@@ -364,14 +364,14 @@ if (empty($reshook))
 	}
 
 	// Delete file in doc form
-	if ($action == 'remove_file' && $user->rights->projet->creer)
+	if ($action == 'remove_file' && $user->rights->project->creer)
 	{
 		if ($object->id > 0)
 		{
 			require_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
 
 			$langs->load("other");
-			$upload_dir = $conf->projet->dir_output;
+			$upload_dir = $conf->project->dir_output;
 			$file = $upload_dir . '/' . GETPOST('file');
 			$ret = dol_delete_file($file, 0, 0, 0, $object);
 			if ($ret)
@@ -410,7 +410,7 @@ if (empty($reshook))
 		}
 	}
 
-	if ($action == 'confirm_delete' && GETPOST("confirm") == "yes" && $user->rights->projet->supprimer)
+	if ($action == 'confirm_delete' && GETPOST("confirm") == "yes" && $user->rights->project->supprimer)
 	{
 		$object->fetch($id);
 		$result=$object->delete($user);
@@ -427,7 +427,7 @@ if (empty($reshook))
 		}
 	}
 
-	if ($action == 'confirm_clone' && $user->rights->projet->creer && $confirm == 'yes')
+	if ($action == 'confirm_clone' && $user->rights->project->creer && $confirm == 'yes')
 	{
 		$clone_contacts=GETPOST('clone_contacts')?1:0;
 		$clone_tasks=GETPOST('clone_tasks')?1:0;
@@ -470,12 +470,12 @@ if (empty($reshook))
 
 $form = new Form($db);
 $formfile = new FormFile($db);
-$formproject = new FormProjets($db);
+$formproject = new FormProjects($db);
 $userstatic = new User($db);
 
 $title=$langs->trans("Project").' - '.$object->ref.($object->thirdparty->name?' - '.$object->thirdparty->name:'').($object->title?' - '.$object->title:'');
 if (! empty($conf->global->MAIN_HTML_TITLE) && preg_match('/projectnameonly/', $conf->global->MAIN_HTML_TITLE)) $title=$object->ref.($object->thirdparty->name?' - '.$object->thirdparty->name:'').($object->title?' - '.$object->title:'');
-$help_url="EN:Module_Projects|FR:Module_Projets|ES:M&oacute;dulo_Proyectos";
+$help_url="EN:Module_Projects|FR:Module_Projects|ES:M&oacute;dulo_Proyectos";
 
 llxHeader("", $title, $help_url);
 
@@ -491,7 +491,7 @@ if ($conf->global->PROJECT_USE_OPPORTUNITIES == 2) {	// 2 = leads only
 	$titlenew = $langs->trans("NewLead");
 }
 
-if ($action == 'create' && $user->rights->projet->creer)
+if ($action == 'create' && $user->rights->project->creer)
 {
 	/*
      * Create
@@ -961,7 +961,7 @@ elseif ($object->id > 0)
 		$morehtmlref.='</div>';
 
 		// Define a complementary filter for search of next/prev ref.
-		if (! $user->rights->projet->all->lire)
+		if (! $user->rights->project->all->lire)
 		{
 			$objectsListId = $object->getProjectsAuthorizedForUser($user, 0, 0);
 			$object->next_prev_filter=" rowid in (".(count($objectsListId)?join(',', array_keys($objectsListId)):'0').")";
@@ -1183,7 +1183,7 @@ elseif ($object->id > 0)
 			}
 
 			// Modify
-			if ($object->statut != 2 && $user->rights->projet->creer)
+			if ($object->statut != 2 && $user->rights->project->creer)
 			{
 				if ($userWrite > 0)
 				{
@@ -1196,7 +1196,7 @@ elseif ($object->id > 0)
 			}
 
 			// Validate
-			if ($object->statut == 0 && $user->rights->projet->creer)
+			if ($object->statut == 0 && $user->rights->project->creer)
 			{
 				if ($userWrite > 0)
 				{
@@ -1209,7 +1209,7 @@ elseif ($object->id > 0)
 			}
 
 			// Close
-			if ($object->statut == 1 && $user->rights->projet->creer)
+			if ($object->statut == 1 && $user->rights->project->creer)
 			{
 				if ($userWrite > 0)
 				{
@@ -1222,7 +1222,7 @@ elseif ($object->id > 0)
 			}
 
 			// Reopen
-			if ($object->statut == 2 && $user->rights->projet->creer)
+			if ($object->statut == 2 && $user->rights->project->creer)
 			{
 				if ($userWrite > 0)
 				{
@@ -1290,7 +1290,7 @@ elseif ($object->id > 0)
 			}
 
 			// Clone
-			if ($user->rights->projet->creer)
+			if ($user->rights->project->creer)
 			{
 				if ($userWrite > 0)
 				{
@@ -1303,9 +1303,9 @@ elseif ($object->id > 0)
 			}
 
 			// Delete
-			if ($user->rights->projet->supprimer || ($object->statut == 0 && $user->rights->projet->creer))
+			if ($user->rights->project->supprimer || ($object->statut == 0 && $user->rights->project->creer))
 			{
-				if ($userDelete > 0 || ($object->statut == 0 && $user->rights->projet->creer))
+				if ($userDelete > 0 || ($object->statut == 0 && $user->rights->project->creer))
 				{
 					print '<a class="butActionDelete" href="card.php?id='.$object->id.'&amp;action=delete">'.$langs->trans("Delete").'</a>';
 				}
@@ -1332,10 +1332,10 @@ elseif ($object->id > 0)
          * Documents generes
          */
 		$filename=dol_sanitizeFileName($object->ref);
-		$filedir=$conf->projet->dir_output . "/" . dol_sanitizeFileName($object->ref);
+		$filedir=$conf->project->dir_output . "/" . dol_sanitizeFileName($object->ref);
 		$urlsource=$_SERVER["PHP_SELF"]."?id=".$object->id;
-		$genallowed=($user->rights->projet->lire && $userAccess > 0);
-		$delallowed=($user->rights->projet->creer && $userWrite > 0);
+		$genallowed=($user->rights->project->lire && $userAccess > 0);
+		$delallowed=($user->rights->project->creer && $userWrite > 0);
 
 		print $formfile->showdocuments('project', $filename, $filedir, $urlsource, $genallowed, $delallowed, $object->modelpdf);
 
@@ -1358,7 +1358,7 @@ elseif ($object->id > 0)
 	// Presend form
 	$modelmail='project';
 	$defaulttopic='SendProjectRef';
-	$diroutput = $conf->projet->dir_output;
+	$diroutput = $conf->project->dir_output;
 	$autocopy='MAIN_MAIL_AUTOCOPY_PROJECT_TO';		// used to know the automatic BCC to add
 	$trackid = 'proj'.$object->id;
 

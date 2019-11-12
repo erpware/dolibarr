@@ -977,7 +977,7 @@ class Propal extends CommonObject
 		$sql .= ", fk_shipping_method";
 		$sql .= ", fk_availability";
 		$sql .= ", fk_input_reason";
-		$sql .= ", fk_projet";
+		$sql .= ", fk_project";
 		$sql .= ", fk_incoterms";
 		$sql .= ", location_incoterms";
 		$sql .= ", entity";
@@ -1379,7 +1379,7 @@ class Propal extends CommonObject
 		$sql .= ", p.date_livraison as date_livraison";
 		$sql .= ", p.model_pdf, p.last_main_doc, p.ref_client, p.extraparams";
 		$sql .= ", p.note_private, p.note_public";
-		$sql .= ", p.fk_projet as fk_project, p.fk_statut";
+		$sql .= ", p.fk_project as fk_project, p.fk_statut";
 		$sql .= ", p.fk_user_author, p.fk_user_valid, p.fk_user_cloture";
 		$sql .= ", p.fk_delivery_address";
 		$sql .= ", p.fk_availability";
@@ -1565,7 +1565,7 @@ class Propal extends CommonObject
 		$sql .= " fk_statut=".(isset($this->statut) ? $this->statut : "null").",";
 		$sql .= " fk_user_author=".(isset($this->user_author_id) ? $this->user_author_id : "null").",";
 		$sql .= " fk_user_valid=".(isset($this->user_valid) ? $this->user_valid : "null").",";
-		$sql .= " fk_projet=".(isset($this->fk_project) ? $this->fk_project : "null").",";
+		$sql .= " fk_project=".(isset($this->fk_project) ? $this->fk_project : "null").",";
 		$sql .= " fk_cond_reglement=".(isset($this->cond_reglement_id) ? $this->cond_reglement_id : "null").",";
 		$sql .= " fk_mode_reglement=".(isset($this->mode_reglement_id) ? $this->mode_reglement_id : "null").",";
 		$sql .= " note_private=".(isset($this->note_private) ? "'".$this->db->escape($this->note_private)."'" : "null").",";

@@ -34,7 +34,7 @@ TicketTypeShortBUGSOFT=软件故障
 TicketTypeShortBUGHARD=硬件故障
 TicketTypeShortCOM=商业问题
 TicketTypeShortINCIDENT=请求帮助
-TicketTypeShortPROJET=项目
+TicketTypeShortPROJECT=项目
 TicketTypeShortOTHER=其他
 
 TicketSeverityShortLOW=低

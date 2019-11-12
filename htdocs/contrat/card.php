@@ -1089,7 +1089,7 @@ llxHeader('', $langs->trans("Contract"), "");
 
 $form = new Form($db);
 $formfile = new FormFile($db);
-if (! empty($conf->project->enabled)) $formproject = new FormProjets($db);
+if (! empty($conf->project->enabled)) $formproject = new FormProjects($db);
 
 // Load object modContract
 $module=(! empty($conf->global->CONTRACT_ADDON)?$conf->global->CONTRACT_ADDON:'mod_contract_serpis');
@@ -1243,7 +1243,7 @@ if ($action == 'create')
 	{
 		$langs->load('projects');
 
-		$formproject=new FormProjets($db);
+		$formproject=new FormProjects($db);
 
 		print '<tr><td>'.$langs->trans("Project").'</td><td>';
 		$formproject->select_projects(($soc->id>0?$soc->id:-1), $projectid, "projectid", 0, 0, 1, 1);

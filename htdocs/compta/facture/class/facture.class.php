@@ -491,7 +491,7 @@ class Facture extends CommonInvoice
 		$sql .= ", note_public";
 		$sql .= ", ref_client, ref_int";
         $sql .= ", fk_account";
-		$sql .= ", module_source, pos_source, fk_fac_rec_source, fk_facture_source, fk_user_author, fk_projet";
+		$sql .= ", module_source, pos_source, fk_fac_rec_source, fk_facture_source, fk_user_author, fk_project";
 		$sql .= ", fk_cond_reglement, fk_mode_reglement, date_lim_reglement, model_pdf";
 		$sql .= ", situation_cycle_ref, situation_counter, situation_final";
 		$sql .= ", fk_incoterms, location_incoterms";
@@ -1363,7 +1363,7 @@ class Facture extends CommonInvoice
 		$sql .= ', f.tms as datem';
 		$sql .= ', f.note_private, f.note_public, f.fk_statut, f.paye, f.close_code, f.close_note, f.fk_user_author, f.fk_user_valid, f.model_pdf, f.last_main_doc';
 		$sql .= ', f.fk_facture_source, f.fk_fac_rec_source';
-		$sql .= ', f.fk_mode_reglement, f.fk_cond_reglement, f.fk_projet as fk_project, f.extraparams';
+		$sql .= ', f.fk_mode_reglement, f.fk_cond_reglement, f.fk_project as fk_project, f.extraparams';
 		$sql .= ', f.situation_cycle_ref, f.situation_counter, f.situation_final';
 		$sql .= ', f.fk_account';
 		$sql .= ", f.fk_multicurrency, f.multicurrency_code, f.multicurrency_tx, f.multicurrency_total_ht, f.multicurrency_total_tva, f.multicurrency_total_ttc";
@@ -1725,7 +1725,7 @@ class Facture extends CommonInvoice
 		$sql .= " fk_user_author=".(isset($this->user_author) ? $this->db->escape($this->user_author) : "null").",";
 		$sql .= " fk_user_valid=".(isset($this->fk_user_valid) ? $this->db->escape($this->fk_user_valid) : "null").",";
 		$sql .= " fk_facture_source=".(isset($this->fk_facture_source) ? $this->db->escape($this->fk_facture_source) : "null").",";
-		$sql .= " fk_projet=".(isset($this->fk_project) ? $this->db->escape($this->fk_project) : "null").",";
+		$sql .= " fk_project=".(isset($this->fk_project) ? $this->db->escape($this->fk_project) : "null").",";
 		$sql .= " fk_cond_reglement=".(isset($this->cond_reglement_id) ? $this->db->escape($this->cond_reglement_id) : "null").",";
 		$sql .= " fk_mode_reglement=".(isset($this->mode_reglement_id) ? $this->db->escape($this->mode_reglement_id) : "null").",";
 		$sql .= " date_lim_reglement=".(strval($this->date_lim_reglement) != '' ? "'".$this->db->idate($this->date_lim_reglement)."'" : 'null').",";

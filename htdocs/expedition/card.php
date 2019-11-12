@@ -865,7 +865,7 @@ llxHeader('', $langs->trans('Shipment'), 'Expedition');
 $form = new Form($db);
 $formfile = new FormFile($db);
 $formproduct = new FormProduct($db);
-if (! empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
+if (! empty($conf->project->enabled)) { $formproject = new FormProjects($db); }
 
 $product_static = new Product($db);
 $shipment_static = new Expedition($db);
@@ -957,7 +957,7 @@ if ($action == 'create')
                 $langs->load("projects");
                 print '<tr>';
                 print '<td>' . $langs->trans("Project") . '</td><td colspan="2">';
-                $numprojet = $formproject->select_projects($soc->id, $projectid, 'projectid', 0);
+                $numproject = $formproject->select_projects($soc->id, $projectid, 'projectid', 0);
                 print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid=' . $soc->id . '&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&socid='.$soc->id).'"><span class="valignmiddle text-plus-circle">' . $langs->trans("AddProject") . '</span><span class="fa fa-plus-circle valignmiddle"></span></a>';
                 print '</td>';
                 print '</tr>';

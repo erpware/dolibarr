@@ -6100,11 +6100,11 @@ function getCommonSubstitutionArray($outputlangs, $onlykey = 0, $exclude = null,
 				$substitutionarray['__PROJECT_REF__'] = (is_object($object->project) ? $object->project->ref : '');
 				$substitutionarray['__PROJECT_NAME__'] = (is_object($object->project) ? $object->project->title : '');
 			}
-			if (is_object($object->projet) && $object->projet->id > 0)	// Deprecated, for backward compatibility
+			if (is_object($object->project) && $object->project->id > 0)	// Deprecated, for backward compatibility
 			{
-				$substitutionarray['__PROJECT_ID__'] = (is_object($object->projet) ? $object->projet->id : '');
-				$substitutionarray['__PROJECT_REF__'] = (is_object($object->projet) ? $object->projet->ref : '');
-				$substitutionarray['__PROJECT_NAME__'] = (is_object($object->projet) ? $object->projet->title : '');
+				$substitutionarray['__PROJECT_ID__'] = (is_object($object->project) ? $object->project->id : '');
+				$substitutionarray['__PROJECT_REF__'] = (is_object($object->project) ? $object->project->ref : '');
+				$substitutionarray['__PROJECT_NAME__'] = (is_object($object->project) ? $object->project->title : '');
 			}
 
 			if (is_object($object) && $object->element == 'shipping')

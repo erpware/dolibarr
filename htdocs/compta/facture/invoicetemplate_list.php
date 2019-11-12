@@ -206,7 +206,7 @@ llxHeader('', $langs->trans("RepeatableInvoices"), 'ch-facture.html#s-fac-factur
 
 $form = new Form($db);
 $formother = new FormOther($db);
-if (! empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
+if (! empty($conf->project->enabled)) { $formproject = new FormProjects($db); }
 $companystatic = new Societe($db);
 $invoicerectmp = new FactureRec($db);
 

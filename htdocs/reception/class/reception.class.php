@@ -222,7 +222,7 @@ class Reception extends CommonObject
 		$sql.= ", date_reception";
 		$sql.= ", date_delivery";
 		$sql.= ", fk_soc";
-		$sql.= ", fk_projet";
+		$sql.= ", fk_project";
 		$sql.= ", fk_shipping_method";
 		$sql.= ", tracking_number";
 		$sql.= ", weight";

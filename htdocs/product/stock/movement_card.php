@@ -441,7 +441,7 @@ $userstatic = new User($db);
 $form = new Form($db);
 $formother = new FormOther($db);
 $formproduct = new FormProduct($db);
-if (!empty($conf->project->enabled)) $formproject = new FormProjets($db);
+if (!empty($conf->project->enabled)) $formproject = new FormProjects($db);
 
 $sql = "SELECT p.rowid, p.ref as product_ref, p.label as produit, p.tobatch, p.fk_product_type as type, p.entity,";
 $sql .= " e.ref as warehouse_ref, e.rowid as entrepot_id, e.lieu,";

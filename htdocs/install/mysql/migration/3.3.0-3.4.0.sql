@@ -292,23 +292,23 @@ ALTER TABLE llx_holiday CHANGE COLUMN note note_private text;
 ALTER TABLE llx_societe CHANGE COLUMN note note_private text;
 ALTER TABLE llx_socpeople CHANGE COLUMN note note_private text;
 
-create table llx_projet_extrafields
+create table llx_project_extrafields
 (
   rowid                     integer AUTO_INCREMENT PRIMARY KEY,
   tms                       timestamp,
   fk_object                 integer NOT NULL,
   import_key                varchar(14)                          		-- import key
 ) ENGINE=innodb;
-ALTER TABLE llx_projet_extrafields ADD INDEX idx_projet_extrafields (fk_object);
+ALTER TABLE llx_project_extrafields ADD INDEX idx_project_extrafields (fk_object);
 
-create table llx_projet_task_extrafields
+create table llx_project_task_extrafields
 (
   rowid                     integer AUTO_INCREMENT PRIMARY KEY,
   tms                       timestamp,
   fk_object                 integer NOT NULL,
   import_key                varchar(14)                          		-- import key
 ) ENGINE=innodb;
-ALTER TABLE llx_projet_task_extrafields ADD INDEX idx_projet_task_extrafields (fk_object);
+ALTER TABLE llx_project_task_extrafields ADD INDEX idx_project_task_extrafields (fk_object);
 
 
 CREATE TABLE llx_opensurvey_comments (

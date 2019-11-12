@@ -34,7 +34,7 @@ create table llx_contrat
   fin_validite				datetime,
   date_cloture				datetime,
   fk_soc					integer NOT NULL,
-  fk_projet					integer,
+  fk_project					integer,
   fk_commercial_signature	integer, -- obsolete
   fk_commercial_suivi 		integer, -- obsolete
   fk_user_author			integer NOT NULL default 0,

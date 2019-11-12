@@ -227,7 +227,7 @@ llxHeader("", $langs->trans("VariousPayment"));
 
 $form = new Form($db);
 if (! empty($conf->accounting->enabled)) $formaccounting = new FormAccounting($db);
-if (! empty($conf->project->enabled)) $formproject = new FormProjets($db);
+if (! empty($conf->project->enabled)) $formproject = new FormProjects($db);
 
 if ($id)
 {
@@ -327,7 +327,7 @@ if ($action == 'create')
     // Project
     if (! empty($conf->project->enabled))
     {
-        $formproject=new FormProjets($db);
+        $formproject=new FormProjects($db);
 
         // Associated project
         $langs->load("projects");

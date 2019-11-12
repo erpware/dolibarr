@@ -136,7 +136,7 @@ class PaymentSalary extends CommonObject
         $sql.= " datep='".$this->db->idate($this->datep)."',";
         $sql.= " datev='".$this->db->idate($this->datev)."',";
         $sql.= " amount=".price2num($this->amount).",";
-        $sql.= " fk_projet=".((int) $this->fk_project).",";
+        $sql.= " fk_project=".((int) $this->fk_project).",";
         $sql.= " fk_typepayment=".$this->fk_typepayment."',";
         $sql.= " num_payment='".$this->db->escape($this->num_payment)."',";
         $sql.= " label='".$this->db->escape($this->label)."',";
@@ -209,7 +209,7 @@ class PaymentSalary extends CommonObject
         $sql.= " s.datep,";
         $sql.= " s.datev,";
         $sql.= " s.amount,";
-        $sql.= " s.fk_projet as fk_project,";
+        $sql.= " s.fk_project as fk_project,";
         $sql.= " s.fk_typepayment,";
         $sql.= " s.num_payment,";
         $sql.= " s.label,";
@@ -398,7 +398,7 @@ class PaymentSalary extends CommonObject
         $sql.= ", datep";
         $sql.= ", datev";
         $sql.= ", amount";
-        $sql.= ", fk_projet";
+        $sql.= ", fk_project";
         $sql.= ", salary";
         $sql.= ", fk_typepayment";
         $sql.= ", num_payment";

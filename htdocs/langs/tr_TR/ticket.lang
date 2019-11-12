@@ -34,7 +34,7 @@ TicketTypeShortBUGSOFT=Yazılım arızası
 TicketTypeShortBUGHARD=Donanım arızası
 TicketTypeShortCOM=Ticari soru
 TicketTypeShortINCIDENT=Yardım talebi
-TicketTypeShortPROJET=Proje
+TicketTypeShortPROJECT=Proje
 TicketTypeShortOTHER=Diğer
 
 TicketSeverityShortLOW=Düşük

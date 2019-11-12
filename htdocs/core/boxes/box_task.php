@@ -18,7 +18,7 @@
 
 /**
  *  \file       htdocs/core/boxes/box_task.php
- *  \ingroup    Projet
+ *  \ingroup    Project
  *  \brief      Module to Task activity of the current year
  */
 
@@ -31,7 +31,7 @@ require_once DOL_DOCUMENT_ROOT."/core/lib/date.lib.php";
  */
 class box_task extends ModeleBoxes
 {
-    public $boxcode="projettask";
+    public $boxcode="projecttask";
     public $boximg="object_projecttask";
     public $boxlabel;
     public $depends = array("project");
@@ -64,7 +64,7 @@ class box_task extends ModeleBoxes
         $this->boxlabel="Tasks";
         $this->db = $db;
 
-        $this->hidden = ! ($user->rights->projet->lire);
+        $this->hidden = ! ($user->rights->project->lire);
     }
 
 	/**
@@ -117,7 +117,7 @@ class box_task extends ModeleBoxes
         );
 
 		// list the summary of the orders
-		if ($user->rights->projet->lire) {
+		if ($user->rights->project->lire) {
             $boxcontent.= '<div id="ancor-idfilter'.$this->boxcode.'" style="display: block; position: absolute; margin-top: -100px"></div>'."\n";
             $boxcontent.= '<div id="idfilter'.$this->boxcode.'" class="center" >'."\n";
             $boxcontent.= '<form class="flat " method="POST" action="'.$_SERVER["PHP_SELF"].'#ancor-idfilter'.$this->boxcode.'">'."\n";
@@ -143,11 +143,11 @@ class box_task extends ModeleBoxes
             );
 
 
-            $sql = "SELECT pt.rowid, pt.ref, pt.fk_projet, pt.fk_task_parent, pt.datec, pt.dateo, pt.datee, pt.datev, pt.label, pt.description, pt.duration_effective, pt.planned_workload, pt.progress";
+            $sql = "SELECT pt.rowid, pt.ref, pt.fk_project, pt.fk_task_parent, pt.datec, pt.dateo, pt.datee, pt.datev, pt.label, pt.description, pt.duration_effective, pt.planned_workload, pt.progress";
 			$sql.= ", p.rowid project_id, p.ref project_ref, p.title project_title";
 
-			$sql.= " FROM ".MAIN_DB_PREFIX."projet_task as pt";
-			$sql.= " JOIN ".MAIN_DB_PREFIX."project as p ON (pt.fk_projet = p.rowid)";
+			$sql.= " FROM ".MAIN_DB_PREFIX."project_task as pt";
+			$sql.= " JOIN ".MAIN_DB_PREFIX."project as p ON (pt.fk_project = p.rowid)";
 
             if($filterValue === 'im_task_contact') {
                 $sql .= " JOIN " . MAIN_DB_PREFIX . "element_contact as ec ON (ec.element_id = pt.rowid AND ec.fk_socpeople = '" . $user->id . "' )";

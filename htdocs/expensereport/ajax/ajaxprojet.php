@@ -19,7 +19,7 @@
  */
 
 /**
- *       \file       htdocs/expensereport/ajax/ajaxprojet.php
+ *       \file       htdocs/expensereport/ajax/ajaxproject.php
  *       \ingroup    expensereport
  *       \brief      File to return Ajax response on third parties request
  */
@@ -51,15 +51,15 @@ top_httphead();
 dol_syslog(join(',', $_GET));
 
 
-// Generation liste des projets
-if (GETPOST('fk_projet') != '')
+// Generation liste des projects
+if (GETPOST('fk_project') != '')
 {
 	$return_arr = array();
 
 	$sql = "SELECT p.rowid, p.ref, p.title, s.nom";
 	$sql.= " FROM ".MAIN_DB_PREFIX."project as p";
 	$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s ON p.fk_soc = s.rowid";
-	if (! empty($_GET["fk_projet"])) $sql.= " WHERE p.ref LIKE '%".$db->escape($_GET["fk_projet"])."%' OR p.title LIKE '%".$db->escape($_GET["fk_projet"])."%' OR s.nom LIKE '%".$db->escape($_GET["fk_projet"])."%'"; // Add other filters
+	if (! empty($_GET["fk_project"])) $sql.= " WHERE p.ref LIKE '%".$db->escape($_GET["fk_project"])."%' OR p.title LIKE '%".$db->escape($_GET["fk_project"])."%' OR s.nom LIKE '%".$db->escape($_GET["fk_project"])."%'"; // Add other filters
 	$sql.= " ORDER BY p.ref ASC";
 
 	$resql=$db->query($sql);

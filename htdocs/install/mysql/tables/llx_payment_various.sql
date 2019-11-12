@@ -31,7 +31,7 @@ create table llx_payment_various
   fk_typepayment        integer NOT NULL,
   accountancy_code      varchar(32),
   subledger_account     varchar(32),
-  fk_projet             integer DEFAULT NULL,
+  fk_project             integer DEFAULT NULL,
   entity                integer DEFAULT 1 NOT NULL,	-- multi company id
   note                  text,
   fk_bank               integer,

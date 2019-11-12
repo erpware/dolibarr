@@ -299,7 +299,7 @@ if ($action == 'confirm_clone' && $confirm == 'yes' && ($user->rights->tax->char
 $form = new Form($db);
 $formsocialcontrib = new FormSocialContrib($db);
 $bankaccountstatic = new Account($db);
-if (!empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
+if (!empty($conf->project->enabled)) { $formproject = new FormProjects($db); }
 
 $title = $langs->trans("SocialContribution").' - '.$langs->trans("Card");
 $help_url = 'EN:Module_Taxes_and_social_contributions|FR:Module Taxes et dividendes|ES:M&oacute;dulo Impuestos y cargas sociales (IVA, impuestos)';
@@ -368,7 +368,7 @@ if ($action == 'create')
 	// Project
 	if (!empty($conf->project->enabled))
 	{
-		$formproject = new FormProjets($db);
+		$formproject = new FormProjects($db);
 
 		// Associated project
 		$langs->load("projects");

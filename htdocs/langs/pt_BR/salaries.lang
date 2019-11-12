@@ -5,5 +5,5 @@ SalaryPayment=Pagamento de salário
 SalariesPayments=Pagamentos de salários
 THM=Taxa média horária
 TJM=Taxa média diária
-THMDescription=Este valor pode ser usado para calcular o custo do tempo consumido em um projeto inserido por usuários se o módulo de projetos é utilizado
+THMDescription=Este valor pode ser usado para calcular o custo do tempo consumido em um projecto inserido por usuários se o módulo de projectos é utilizado
 TJMDescription=Este valor é atualmente apenas como informação e não é utilizado para o cálculo

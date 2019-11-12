@@ -34,7 +34,7 @@ TicketTypeShortBUGSOFT=Софтуерна неизправност
 TicketTypeShortBUGHARD=Хардуерна неизправност
 TicketTypeShortCOM=Търговски въпрос
 TicketTypeShortINCIDENT=Молба за съдействие
-TicketTypeShortPROJET=Проект
+TicketTypeShortPROJECT=Проект
 TicketTypeShortOTHER=Друго
 
 TicketSeverityShortLOW=Нисък

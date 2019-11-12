@@ -294,7 +294,7 @@ if (is_array($extrafields->attributes[$object->table_element]['label']) && count
 if (!$search_all) $sql .= ' LEFT JOIN '.MAIN_DB_PREFIX.'paiementfourn_facturefourn as pf ON pf.fk_facturefourn = f.rowid';
 if ($search_all || $search_product_category > 0) $sql .= ' LEFT JOIN '.MAIN_DB_PREFIX.'facture_fourn_det as pd ON f.rowid=pd.fk_facture_fourn';
 if ($search_product_category > 0) $sql .= ' LEFT JOIN '.MAIN_DB_PREFIX.'categorie_product as cp ON cp.fk_product=pd.fk_product';
-$sql .= " LEFT JOIN ".MAIN_DB_PREFIX."project as p ON p.rowid = f.fk_projet";
+$sql .= " LEFT JOIN ".MAIN_DB_PREFIX."project as p ON p.rowid = f.fk_project";
 // We'll need this table joined to the select in order to filter by sale
 if ($search_sale > 0 || (!$user->rights->societe->client->voir && !$socid)) $sql .= ", ".MAIN_DB_PREFIX."societe_commerciaux as sc";
 if ($search_user > 0)

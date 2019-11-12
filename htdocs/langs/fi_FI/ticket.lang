@@ -34,7 +34,7 @@ TicketTypeShortBUGSOFT=Dysfonctionnement logiciel
 TicketTypeShortBUGHARD=Dysfonctionnement matériel
 TicketTypeShortCOM=Kaupallinen kysymys
 TicketTypeShortINCIDENT=Pyyntö avulle
-TicketTypeShortPROJET=Hanke
+TicketTypeShortPROJECT=Hanke
 TicketTypeShortOTHER=Muu
 
 TicketSeverityShortLOW=Matala

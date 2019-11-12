@@ -262,7 +262,7 @@ class CommandeFournisseur extends CommonOrder
         $sql.= " c.localtax1, c.localtax2, ";
         $sql.= " c.date_creation, c.date_valid, c.date_approve, c.date_approve2,";
         $sql.= " c.fk_user_author, c.fk_user_valid, c.fk_user_approve, c.fk_user_approve2,";
-        $sql.= " c.date_commande as date_commande, c.date_livraison as date_livraison, c.fk_cond_reglement, c.fk_mode_reglement, c.fk_projet as fk_project, c.remise_percent, c.source, c.fk_input_method,";
+        $sql.= " c.date_commande as date_commande, c.date_livraison as date_livraison, c.fk_cond_reglement, c.fk_mode_reglement, c.fk_project as fk_project, c.remise_percent, c.source, c.fk_input_method,";
         $sql.= " c.fk_account,";
         $sql.= " c.note_private, c.note_public, c.model_pdf, c.extraparams, c.billed,";
         $sql.= " c.fk_multicurrency, c.multicurrency_code, c.multicurrency_tx, c.multicurrency_total_ht, c.multicurrency_total_tva, c.multicurrency_total_ttc,";
@@ -1223,7 +1223,7 @@ class CommandeFournisseur extends CommonOrder
         $sql.= ", note_public";
         $sql.= ", entity";
         $sql.= ", fk_soc";
-        $sql.= ", fk_projet";
+        $sql.= ", fk_project";
         $sql.= ", date_creation";
 		$sql.= ", date_livraison";
         $sql.= ", fk_user_author";
@@ -2291,11 +2291,11 @@ class CommandeFournisseur extends CommonOrder
      *	Set the id project
      *
      *	@param      User			$user        		Objet utilisateur qui modifie
-     *	@param      int				$id_projet    	 	Date de livraison
+     *	@param      int				$id_project    	 	Date de livraison
      *  @param     	int				$notrigger			1=Does not execute triggers, 0= execute triggers
      *	@return     int         						<0 si ko, >0 si ok
      */
-    public function set_id_projet($user, $id_projet, $notrigger = 0)
+    public function set_id_project($user, $id_project, $notrigger = 0)
     {
         // phpcs:enable
         if ($user->rights->fournisseur->commande->creer)
@@ -2305,7 +2305,7 @@ class CommandeFournisseur extends CommonOrder
         	$this->db->begin();
 
             $sql = "UPDATE ".MAIN_DB_PREFIX."commande_fournisseur";
-            $sql.= " SET fk_projet = ".($id_projet > 0 ? (int) $id_projet : 'null');
+            $sql.= " SET fk_project = ".($id_project > 0 ? (int) $id_project : 'null');
             $sql.= " WHERE rowid = ".$this->id;
 
             dol_syslog(__METHOD__, LOG_DEBUG);
@@ -2319,8 +2319,8 @@ class CommandeFournisseur extends CommonOrder
             if (! $error)
             {
             	$this->oldcopy= clone $this;
-            	$this->fk_projet = $id_projet;
-            	$this->fk_project = $id_projet;
+            	$this->fk_project = $id_project;
+            	$this->fk_project = $id_project;
             }
 
             if (! $notrigger && empty($error))

@@ -19,5 +19,5 @@ TypeHelpDevForm=Ajuda + Desenvolvimento + Treinamento
 BackToHelpCenter=Caso contrário, <a href="%s"> volte para a página inicial da Central de Ajuda </a>.
 LinkToGoldMember=Você pode chamar um dos treinadores pré-selecionados pelo Dolibarr para o seu idioma (%s) clicando no Widget (status e preço máximo atualizados automaticamente):
 PossibleLanguages=Idiomas suportados
-SubscribeToFoundation=Ajude o projeto Dolibarr, assine a fundação
+SubscribeToFoundation=Ajude o projecto Dolibarr, assine a fundação
 SeeOfficalSupport=Para obter suporte oficial do Dolibarr no seu idioma: <br><b><a href="%s" target="_blank">%s</a></b>

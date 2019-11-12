@@ -854,7 +854,7 @@ class Commande extends CommonOrder
 		$this->db->begin();
 
 		$sql = "INSERT INTO ".MAIN_DB_PREFIX."commande (";
-		$sql.= " ref, fk_soc, date_creation, fk_user_author, fk_projet, date_commande, source, note_private, note_public, ref_ext, ref_client, ref_int";
+		$sql.= " ref, fk_soc, date_creation, fk_user_author, fk_project, date_commande, source, note_private, note_public, ref_ext, ref_client, ref_int";
 		$sql.= ", model_pdf, fk_cond_reglement, fk_mode_reglement, fk_account, fk_availability, fk_input_reason, date_livraison, fk_delivery_address";
 		$sql.= ", fk_shipping_method";
 		$sql.= ", fk_warehouse";
@@ -1701,7 +1701,7 @@ class Commande extends CommonOrder
 		$sql.= ', c.date_livraison';
 		$sql.= ', c.fk_shipping_method';
 		$sql.= ', c.fk_warehouse';
-		$sql.= ', c.fk_projet as fk_project, c.remise_percent, c.remise, c.remise_absolue, c.source, c.facture as billed';
+		$sql.= ', c.fk_project as fk_project, c.remise_percent, c.remise, c.remise_absolue, c.source, c.facture as billed';
 		$sql.= ', c.note_private, c.note_public, c.ref_client, c.ref_ext, c.ref_int, c.model_pdf, c.last_main_doc, c.fk_delivery_address, c.extraparams';
 		$sql.= ', c.fk_incoterms, c.location_incoterms';
 		$sql.= ", c.fk_multicurrency, c.multicurrency_code, c.multicurrency_tx, c.multicurrency_total_ht, c.multicurrency_total_tva, c.multicurrency_total_ttc";
@@ -3217,7 +3217,7 @@ class Commande extends CommonOrder
 		$sql.= " fk_statut=".(isset($this->statut)?$this->statut:"null").",";
 		$sql.= " fk_user_author=".(isset($this->user_author_id)?$this->user_author_id:"null").",";
 		$sql.= " fk_user_valid=".(isset($this->user_valid)?$this->user_valid:"null").",";
-		$sql.= " fk_projet=".(isset($this->fk_project)?$this->fk_project:"null").",";
+		$sql.= " fk_project=".(isset($this->fk_project)?$this->fk_project:"null").",";
 		$sql.= " fk_cond_reglement=".(isset($this->cond_reglement_id)?$this->cond_reglement_id:"null").",";
 		$sql.= " fk_mode_reglement=".(isset($this->mode_reglement_id)?$this->mode_reglement_id:"null").",";
 		$sql.= " fk_account=".($this->fk_account>0?$this->fk_account:"null").",";

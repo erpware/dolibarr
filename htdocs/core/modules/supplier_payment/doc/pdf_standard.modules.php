@@ -695,7 +695,7 @@ class pdf_standard extends ModelePDFSuppliersPayments
 
 		if (! empty($conf->global->PDF_SHOW_PROJECT))
 		{
-			$object->fetch_projet();
+			$object->fetch_project();
 			if (! empty($object->project->ref))
 			{
         		$posy+=4;

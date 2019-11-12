@@ -47,12 +47,12 @@ class Project extends CommonObject
     /**
 	 * @var int    Name of subtable line
 	 */
-	public $table_element_line = 'projet_task';
+	public $table_element_line = 'project_task';
 
     /**
 	 * @var int Field with ID of parent key if this field has a parent
 	 */
-	public $fk_element = 'fk_projet';
+	public $fk_element = 'fk_project';
 
 	/**
 	 * 0=No test on entity, 1=Test with field entity, 2=Test with link by societe
@@ -412,10 +412,10 @@ class Project extends CommonObject
                 if (! $error && (is_object($this->oldcopy) && $this->oldcopy->ref !== $this->ref))
                 {
                 	// We remove directory
-                	if ($conf->projet->dir_output)
+                	if ($conf->project->dir_output)
                 	{
-                		$olddir = $conf->projet->dir_output . "/" . dol_sanitizeFileName($this->oldcopy->ref);
-                		$newdir = $conf->projet->dir_output . "/" . dol_sanitizeFileName($this->ref);
+                		$olddir = $conf->project->dir_output . "/" . dol_sanitizeFileName($this->oldcopy->ref);
+                		$newdir = $conf->project->dir_output . "/" . dol_sanitizeFileName($this->ref);
                 		if (file_exists($olddir))
                 		{
 							include_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
@@ -561,10 +561,10 @@ class Project extends CommonObject
      * 	@param		string		$datefieldname	name of date field for filter
      *  @param		int			$dates			Start date
      *  @param		int			$datee			End date
-	 *	@param		string		$projectkey		Equivalent key  to fk_projet for actual type
+	 *	@param		string		$projectkey		Equivalent key  to fk_project for actual type
      * 	@return		mixed						Array list of object ids linked to project, < 0 or string if error
      */
-    public function get_element_list($type, $tablename, $datefieldname = '', $dates = '', $datee = '', $projectkey = 'fk_projet')
+    public function get_element_list($type, $tablename, $datefieldname = '', $dates = '', $datee = '', $projectkey = 'fk_project')
     {
         // phpcs:enable
         $elements = array();
@@ -579,15 +579,15 @@ class Project extends CommonObject
         }
         elseif ($type == 'expensereport')
 		{
-            $sql = "SELECT ed.rowid FROM " . MAIN_DB_PREFIX . "expensereport as e, " . MAIN_DB_PREFIX . "expensereport_det as ed WHERE e.rowid = ed.fk_expensereport AND e.entity IN (".getEntity('expensereport').") AND ed.fk_projet IN (". $ids .")";
+            $sql = "SELECT ed.rowid FROM " . MAIN_DB_PREFIX . "expensereport as e, " . MAIN_DB_PREFIX . "expensereport_det as ed WHERE e.rowid = ed.fk_expensereport AND e.entity IN (".getEntity('expensereport').") AND ed.fk_project IN (". $ids .")";
 		}
         elseif ($type == 'project_task')
 		{
-			$sql = "SELECT DISTINCT pt.rowid FROM " . MAIN_DB_PREFIX . "projet_task as pt WHERE pt.fk_projet IN (". $ids .")";
+			$sql = "SELECT DISTINCT pt.rowid FROM " . MAIN_DB_PREFIX . "project_task as pt WHERE pt.fk_project IN (". $ids .")";
 		}
 		elseif ($type == 'project_task_time')	// Case we want to duplicate line foreach user
 		{
-			$sql = "SELECT DISTINCT pt.rowid, ptt.fk_user FROM " . MAIN_DB_PREFIX . "projet_task as pt, " . MAIN_DB_PREFIX . "projet_task_time as ptt WHERE pt.rowid = ptt.fk_task AND pt.fk_projet IN (". $ids .")";
+			$sql = "SELECT DISTINCT pt.rowid, ptt.fk_user FROM " . MAIN_DB_PREFIX . "project_task as pt, " . MAIN_DB_PREFIX . "project_task_time as ptt WHERE pt.rowid = ptt.fk_task AND pt.fk_project IN (". $ids .")";
 		}
 		elseif ($type == 'stock_mouvement')
 		{
@@ -670,11 +670,11 @@ class Project extends CommonObject
             }
         }
 
-        // Set fk_projet into elements to null
+        // Set fk_project into elements to null
         $listoftables=array(
-        		'propal'=>'fk_projet', 'commande'=>'fk_projet', 'facture'=>'fk_projet',
-        		'supplier_proposal'=>'fk_projet', 'commande_fournisseur'=>'fk_projet', 'facture_fourn'=>'fk_projet',
-        		'expensereport_det'=>'fk_projet', 'contrat'=>'fk_projet', 'fichinter'=>'fk_projet', 'don'=>'fk_projet',
+        		'propal'=>'fk_project', 'commande'=>'fk_project', 'facture'=>'fk_project',
+        		'supplier_proposal'=>'fk_project', 'commande_fournisseur'=>'fk_project', 'facture_fourn'=>'fk_project',
+        		'expensereport_det'=>'fk_project', 'contrat'=>'fk_project', 'fichinter'=>'fk_project', 'don'=>'fk_project',
         		'actioncomm'=>'fk_project'
         		);
         foreach($listoftables as $key => $value)
@@ -745,7 +745,7 @@ class Project extends CommonObject
 
         if (! $error)
         {
-	        $sql = "DELETE FROM " . MAIN_DB_PREFIX . "projet_extrafields";
+	        $sql = "DELETE FROM " . MAIN_DB_PREFIX . "project_extrafields";
 	        $sql.= " WHERE fk_object=" . $this->id;
 
 	        $resql = $this->db->query($sql);
@@ -759,8 +759,8 @@ class Project extends CommonObject
         if (empty($error)) {
             // We remove directory
             $projectref = dol_sanitizeFileName($this->ref);
-            if ($conf->projet->dir_output) {
-                $dir = $conf->projet->dir_output . "/" . $projectref;
+            if ($conf->project->dir_output) {
+                $dir = $conf->project->dir_output . "/" . $projectref;
                 if (file_exists($dir)) {
                     $res = @dol_delete_dir_recursive($dir);
                     if (!$res) {
@@ -1052,7 +1052,7 @@ class Project extends CommonObject
         }
 
         $linkclose='';
-        if (empty($notooltip) && $user->rights->projet->lire)
+        if (empty($notooltip) && $user->rights->project->lire)
         {
             if (! empty($conf->global->MAIN_OPTIMIZEFORTEXTBROWSER))
             {
@@ -1154,11 +1154,11 @@ class Project extends CommonObject
     {
         // To verify role of users
         $userAccess = 0;
-        if (($mode == 'read' && ! empty($user->rights->projet->all->lire)) || ($mode == 'write' && ! empty($user->rights->projet->all->creer)) || ($mode == 'delete' && ! empty($user->rights->projet->all->supprimer)))
+        if (($mode == 'read' && ! empty($user->rights->project->all->lire)) || ($mode == 'write' && ! empty($user->rights->project->all->creer)) || ($mode == 'delete' && ! empty($user->rights->project->all->supprimer)))
         {
             $userAccess = 1;
         }
-        elseif ($this->public && (($mode == 'read' && ! empty($user->rights->projet->lire)) || ($mode == 'write' && ! empty($user->rights->projet->creer)) || ($mode == 'delete' && ! empty($user->rights->projet->supprimer))))
+        elseif ($this->public && (($mode == 'read' && ! empty($user->rights->project->lire)) || ($mode == 'write' && ! empty($user->rights->project->creer)) || ($mode == 'delete' && ! empty($user->rights->project->supprimer))))
         {
             $userAccess = 1;
         }
@@ -1174,9 +1174,9 @@ class Project extends CommonObject
                 {
                     if ($source == 'internal' && preg_match('/^PROJECT/', $userRole[$nblinks]['code']) && $user->id == $userRole[$nblinks]['id'])
                     {
-                        if ($mode == 'read'   && $user->rights->projet->lire)      $userAccess++;
-                        if ($mode == 'write'  && $user->rights->projet->creer)     $userAccess++;
-                        if ($mode == 'delete' && $user->rights->projet->supprimer) $userAccess++;
+                        if ($mode == 'read'   && $user->rights->project->lire)      $userAccess++;
+                        if ($mode == 'write'  && $user->rights->project->creer)     $userAccess++;
+                        if ($mode == 'delete' && $user->rights->project->supprimer) $userAccess++;
                     }
                     $nblinks++;
                 }
@@ -1455,8 +1455,8 @@ class Project extends CommonObject
 			{
 				require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 
-				$clone_project_dir = $conf->projet->dir_output . "/" . dol_sanitizeFileName($defaultref);
-				$ori_project_dir = $conf->projet->dir_output . "/" . dol_sanitizeFileName($orign_project_ref);
+				$clone_project_dir = $conf->project->dir_output . "/" . dol_sanitizeFileName($defaultref);
+				$ori_project_dir = $conf->project->dir_output . "/" . dol_sanitizeFileName($orign_project_ref);
 
 				if (dol_mkdir($clone_project_dir) >= 0)
 				{
@@ -1639,7 +1639,7 @@ class Project extends CommonObject
 		}
 		else
 		{
-			$sql.= " SET fk_projet=".$this->id;
+			$sql.= " SET fk_project=".$this->id;
 			$sql.= " WHERE rowid=".$elementSelectId;
 		}
 
@@ -1663,7 +1663,7 @@ class Project extends CommonObject
      *
 	 *    @return	int							1 if OK or < 0 if KO
 	 */
-	public function remove_element($tableName, $elementSelectId, $projectfield = 'fk_projet')
+	public function remove_element($tableName, $elementSelectId, $projectfield = 'fk_project')
 	{
         // phpcs:enable
 		$sql="UPDATE ".MAIN_DB_PREFIX.$tableName;
@@ -1739,9 +1739,9 @@ class Project extends CommonObject
         if (empty($datestart)) dol_print_error('', 'Error datestart parameter is empty');
 
         $sql = "SELECT ptt.rowid as taskid, ptt.task_duration, ptt.task_date, ptt.task_datehour, ptt.fk_task";
-        $sql.= " FROM ".MAIN_DB_PREFIX."projet_task_time AS ptt, ".MAIN_DB_PREFIX."projet_task as pt";
+        $sql.= " FROM ".MAIN_DB_PREFIX."project_task_time AS ptt, ".MAIN_DB_PREFIX."project_task as pt";
         $sql.= " WHERE ptt.fk_task = pt.rowid";
-        $sql.= " AND pt.fk_projet = ".$this->id;
+        $sql.= " AND pt.fk_project = ".$this->id;
         $sql.= " AND (ptt.task_date >= '".$this->db->idate($datestart)."' ";
         $sql.= " AND ptt.task_date <= '".$this->db->idate(dol_time_plus_duree($datestart, 1, 'w') - 1)."')";
         if ($taskid) $sql.= " AND ptt.fk_task=".$taskid;
@@ -1801,7 +1801,7 @@ class Project extends CommonObject
         //$socid=$user->socid;
 
 		$projectsListId = null;
-        if (! $user->rights->projet->all->lire) $projectsListId = $this->getProjectsAuthorizedForUser($user, 0, 1);
+        if (! $user->rights->project->all->lire) $projectsListId = $this->getProjectsAuthorizedForUser($user, 0, 1);
 
         $sql = "SELECT p.rowid, p.fk_statut as status, p.fk_opp_status, p.datee as datee";
         $sql.= " FROM (".MAIN_DB_PREFIX."project as p";
@@ -1824,10 +1824,10 @@ class Project extends CommonObject
             $project_static = new Project($this->db);
 
             $response = new WorkboardResponse();
-            $response->warning_delay = $conf->projet->warning_delay/60/60/24;
+            $response->warning_delay = $conf->project->warning_delay/60/60/24;
             $response->label = $langs->trans("OpenedProjects");
             $response->labelShort = $langs->trans("Opened");
-            if ($user->rights->projet->all->lire) $response->url = DOL_URL_ROOT.'/project/list.php?search_status=1&mainmenu=project';
+            if ($user->rights->project->all->lire) $response->url = DOL_URL_ROOT.'/project/list.php?search_status=1&mainmenu=project';
             else $response->url = DOL_URL_ROOT.'/project/list.php?search_project_user=-1&search_status=1&mainmenu=project';
             $response->img = img_object('', "projectpub");
 
@@ -1890,7 +1890,7 @@ class Project extends CommonObject
 	    $sql.= " FROM ".MAIN_DB_PREFIX."project as p";
 	    $sql.= " WHERE";
 	    $sql.= " p.entity IN (".getEntity('project').")";
-		if (! $user->rights->projet->all->lire)
+		if (! $user->rights->project->all->lire)
 		{
 			$projectsListId = $this->getProjectsAuthorizedForUser($user, 0, 1);
 			$sql .= "AND p.rowid IN (".$projectsListId.")";
@@ -1929,7 +1929,7 @@ class Project extends CommonObject
 
         $now = dol_now();
 
-        return ($this->datee ? $this->datee : $this->date_end) < ($now - $conf->projet->warning_delay);
+        return ($this->datee ? $this->datee : $this->date_end) < ($now - $conf->project->warning_delay);
 	}
 
 

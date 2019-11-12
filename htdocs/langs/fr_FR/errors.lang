@@ -243,4 +243,4 @@ WarningYourLoginWasModifiedPleaseLogin=Votre identifiant a été modifié. Par s
 WarningAnEntryAlreadyExistForTransKey=Une donnée identique existe déjà pour la traduction du code dans cette langue
 WarningNumberOfRecipientIsRestrictedInMassAction=Attention, le nombre de destinataires différents est limité à <b>%s</b> lorsque vous utilisez les actions en masse sur les listes
 WarningDateOfLineMustBeInExpenseReportRange=Attention, la date de la ligne n'est pas dans la plage de la note de frais
-WarningProjectClosed=Le projet est fermé. Vous devez d'abord le rouvrir.
+WarningProjectClosed=Le project est fermé. Vous devez d'abord le rouvrir.

@@ -108,8 +108,8 @@ ALTER TABLE llx_fichinter ADD COLUMN datet date  after duree;
 ALTER TABLE llx_fichinter ADD COLUMN datee date  after duree;
 ALTER TABLE llx_fichinter ADD COLUMN dateo date  after duree;
 
-ALTER TABLE llx_projet ADD COLUMN opp_percent double(5,2) after fk_opp_status;
-UPDATE llx_projet as p set opp_percent = (SELECT percent from llx_c_lead_status as cls where cls.rowid = p.fk_opp_status) where opp_percent IS NULL;
+ALTER TABLE llx_project ADD COLUMN opp_percent double(5,2) after fk_opp_status;
+UPDATE llx_project as p set opp_percent = (SELECT percent from llx_c_lead_status as cls where cls.rowid = p.fk_opp_status) where opp_percent IS NULL;
 
 ALTER TABLE llx_overwrite_trans ADD UNIQUE INDEX uk_overwrite_trans(lang, transkey);
 
@@ -120,7 +120,7 @@ ALTER TABLE llx_facture ADD INDEX idx_facture_fk_statut (fk_statut);
 
 ALTER TABLE llx_facture ADD COLUMN date_pointoftax date DEFAULT NULL;
 
-UPDATE llx_projet as p set p.opp_percent = (SELECT percent FROM llx_c_lead_status as cls WHERE cls.rowid = p.fk_opp_status)  WHERE p.opp_percent IS NULL AND p.fk_opp_status IS NOT NULL;
+UPDATE llx_project as p set p.opp_percent = (SELECT percent FROM llx_c_lead_status as cls WHERE cls.rowid = p.fk_opp_status)  WHERE p.opp_percent IS NULL AND p.fk_opp_status IS NOT NULL;
  
 ALTER TABLE llx_facturedet ADD COLUMN fk_contract_line  integer NULL AFTER rang;
 ALTER TABLE llx_facturedet_rec ADD COLUMN import_key varchar(14);
@@ -495,7 +495,7 @@ update llx_stock_mouvement set batch = '000000' where batch = 'Undefined';
 ALTER TABLE llx_import_model MODIFY COLUMN type varchar(50);
 
 
-UPDATE llx_projet set fk_opp_status = NULL where fk_opp_status = -1;
+UPDATE llx_project set fk_opp_status = NULL where fk_opp_status = -1;
 UPDATE llx_c_lead_status set code = 'WON' where code = 'WIN';
 UPDATE llx_c_lead_status set percent = 100 where code = 'WON';
 

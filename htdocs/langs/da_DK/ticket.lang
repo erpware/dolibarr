@@ -34,7 +34,7 @@ TicketTypeShortBUGSOFT=Dysfonctionnement logiciel
 TicketTypeShortBUGHARD=Dysfonctionnement matériel
 TicketTypeShortCOM=Kommercielt spørgsmål
 TicketTypeShortINCIDENT=Anmodning om assistance
-TicketTypeShortPROJET=Projekt
+TicketTypeShortPROJECT=Projekt
 TicketTypeShortOTHER=Andre
 
 TicketSeverityShortLOW=Lav

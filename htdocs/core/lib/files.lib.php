@@ -1332,7 +1332,7 @@ function dol_delete_preview($object)
 
 	if ($object->element == 'order_supplier')		$dir = $conf->fournisseur->commande->dir_output;
 	elseif ($object->element == 'invoice_supplier')	$dir = $conf->fournisseur->facture->dir_output;
-	elseif ($object->element == 'project')			$dir = $conf->projet->dir_output;
+	elseif ($object->element == 'project')			$dir = $conf->project->dir_output;
 	elseif ($object->element == 'shipping')			$dir = $conf->expedition->dir_output.'/sending';
 	elseif ($object->element == 'delivery')			$dir = $conf->expedition->dir_output.'/receipt';
 	elseif ($object->element == 'fichinter')		$dir = $conf->ficheinter->dir_output;
@@ -1413,7 +1413,7 @@ function dol_meta_create($object)
 
 	if ($object->element == 'order_supplier')		$dir = $conf->fournisseur->dir_output.'/commande';
 	elseif ($object->element == 'invoice_supplier')	$dir = $conf->fournisseur->dir_output.'/facture';
-	elseif ($object->element == 'project')			$dir = $conf->projet->dir_output;
+	elseif ($object->element == 'project')			$dir = $conf->project->dir_output;
 	elseif ($object->element == 'shipping')			$dir = $conf->expedition->dir_output.'/sending';
 	elseif ($object->element == 'delivery')			$dir = $conf->expedition->dir_output.'/receipt';
 	elseif ($object->element == 'fichinter')		$dir = $conf->ficheinter->dir_output;
@@ -2638,23 +2638,23 @@ function dol_check_secure_access_document($modulepart, $original_file, $entity, 
 		$sqlprotectagainstexternals = "SELECT fk_soc as fk_soc FROM ".MAIN_DB_PREFIX."commande WHERE ref='".$db->escape($refname)."' AND entity=".$conf->entity;
 	}
 
-	// Wrapping pour les projets
-	elseif ($modulepart == 'project' && !empty($conf->projet->dir_output))
+	// Wrapping pour les projects
+	elseif ($modulepart == 'project' && !empty($conf->project->dir_output))
 	{
-		if ($fuser->rights->projet->{$lire} || preg_match('/^specimen/i', $original_file))
+		if ($fuser->rights->project->{$lire} || preg_match('/^specimen/i', $original_file))
 		{
 			$accessallowed=1;
 		}
-		$original_file=$conf->projet->dir_output.'/'.$original_file;
+		$original_file=$conf->project->dir_output.'/'.$original_file;
 		$sqlprotectagainstexternals = "SELECT fk_soc as fk_soc FROM ".MAIN_DB_PREFIX."project WHERE ref='".$db->escape($refname)."' AND entity IN (".getEntity('project').")";
 	}
-	elseif ($modulepart == 'project_task' && !empty($conf->projet->dir_output))
+	elseif ($modulepart == 'project_task' && !empty($conf->project->dir_output))
 	{
-		if ($fuser->rights->projet->{$lire} || preg_match('/^specimen/i', $original_file))
+		if ($fuser->rights->project->{$lire} || preg_match('/^specimen/i', $original_file))
 		{
 			$accessallowed=1;
 		}
-		$original_file=$conf->projet->dir_output.'/'.$original_file;
+		$original_file=$conf->project->dir_output.'/'.$original_file;
 		$sqlprotectagainstexternals = "SELECT fk_soc as fk_soc FROM ".MAIN_DB_PREFIX."project WHERE ref='".$db->escape($refname)."' AND entity IN (".getEntity('project').")";
 	}
 

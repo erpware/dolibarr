@@ -30,7 +30,7 @@ create table llx_fichinter_rec
 	
 	fk_contrat			integer DEFAULT 0,          -- contrat auquel est rattache la fiche
 	fk_user_author		integer,             -- createur
-	fk_projet			integer,             -- project auquel est associe la facture
+	fk_project			integer,             -- project auquel est associe la facture
 	duree				real,                       -- duree totale de l'intervention
 	description			text,
 	modelpdf			varchar(50),

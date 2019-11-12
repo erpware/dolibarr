@@ -61,7 +61,7 @@ $helpurl = "";
 llxHeader('', $title, $helpurl);
 
 $form = new Form($db);
-if (! empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
+if (! empty($conf->project->enabled)) { $formproject = new FormProjects($db); }
 
 $object->info($id);
 

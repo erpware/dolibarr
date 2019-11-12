@@ -236,7 +236,7 @@ class Fichinter extends CommonObject
 		$sql.= ", fk_user_modif";
 		$sql.= ", description";
 		$sql.= ", model_pdf";
-		$sql.= ", fk_projet";
+		$sql.= ", fk_project";
 		$sql.= ", fk_contrat";
 		$sql.= ", fk_statut";
 		$sql.= ", note_private";
@@ -343,7 +343,7 @@ class Fichinter extends CommonObject
 		$sql = "UPDATE ".MAIN_DB_PREFIX."fichinter SET ";
 		$sql.= "description  = '".$this->db->escape($this->description)."'";
 		$sql.= ", duree = ".$this->duration;
-		$sql.= ", fk_projet = ".$this->fk_project;
+		$sql.= ", fk_project = ".$this->fk_project;
 		$sql.= ", note_private = ".($this->note_private?"'".$this->db->escape($this->note_private)."'":"null");
 		$sql.= ", note_public = ".($this->note_public?"'".$this->db->escape($this->note_public)."'":"null");
 		$sql.= ", fk_user_modif = ".$user->id;
@@ -393,7 +393,7 @@ class Fichinter extends CommonObject
 		$sql.= " f.datec, f.dateo, f.datee, f.datet, f.fk_user_author,";
 		$sql.= " f.date_valid as datev,";
 		$sql.= " f.tms as datem,";
-		$sql.= " f.duree, f.fk_projet as fk_project, f.note_public, f.note_private, f.model_pdf, f.extraparams, fk_contrat";
+		$sql.= " f.duree, f.fk_project as fk_project, f.note_public, f.note_private, f.model_pdf, f.extraparams, fk_contrat";
 		$sql.= " FROM ".MAIN_DB_PREFIX."fichinter as f";
 		if ($ref) {
 			$sql.= " WHERE f.entity IN (".getEntity('intervention').")";

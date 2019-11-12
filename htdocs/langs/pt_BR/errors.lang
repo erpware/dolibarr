@@ -159,4 +159,4 @@ WarningPaymentDateLowerThanInvoiceDate=A data de pagamento (%s) é anterior a da
 WarningTooManyDataPleaseUseMoreFilters=Dados em demasia (mais de %s linhas). Por favor, utilize mais filtros ou defina a constante %s para um limite maior.
 WarningSomeLinesWithNullHourlyRate=Algumas vezes foram registrados por alguns usuários enquanto sua taxa por hora não foi definida. Um valor de 0 %s por hora foi usado, mas isto pode resultar em uma valoração errada do tempo gasto.
 WarningYourLoginWasModifiedPleaseLogin=O seu login foi modificado. Por questões de segurança, você terá de autenticar-se com o seu novo login antes da próxima ação.
-WarningProjectClosed=O projeto está fechado. Você deve reabri-lo primeiro.
+WarningProjectClosed=O projecto está fechado. Você deve reabri-lo primeiro.

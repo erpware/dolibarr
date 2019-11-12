@@ -117,7 +117,7 @@ class DolibarrApi
         unset($object->ref_next);
         unset($object->ref_int);
 
-        unset($object->projet);     // Should be fk_project
+        unset($object->project);     // Should be fk_project
         unset($object->project);    // Should be fk_project
         unset($object->author);     // Should be fk_user_author
         unset($object->timespent_old_duration);
@@ -184,7 +184,7 @@ class DolibarrApi
                 unset($object->lines[$i]->cond_reglement_code);
                 unset($object->lines[$i]->cond_reglement);
                 unset($object->lines[$i]->fk_delivery_address);
-                unset($object->lines[$i]->fk_projet);
+                unset($object->lines[$i]->fk_project);
                 unset($object->lines[$i]->fk_project);
                 unset($object->lines[$i]->thirdparty);
                 unset($object->lines[$i]->user);

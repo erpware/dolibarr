@@ -83,7 +83,7 @@ $socid = 0;
 //if ($user->socid > 0) $socid = $user->socid;    // For external user, no check is done on company because readability is managed by public status of project and assignement.
 $result = restrictedArea($user, 'project', $id, 'project&project');
 
-$diroutputmassaction = $conf->projet->dir_output.'/tasks/temp/massgeneration/'.$user->id;
+$diroutputmassaction = $conf->project->dir_output.'/tasks/temp/massgeneration/'.$user->id;
 
 // Initialize technical object to manage hooks of page. Note that conf->hooks_modules contains array of hook context
 $hookmanager->initHooks(array('projecttaskscard', 'globalcard'));
@@ -163,9 +163,9 @@ if (empty($reshook))
 	// Mass actions
 	$objectclass = 'Task';
 	$objectlabel = 'Tasks';
-	$permissiontoread = $user->rights->projet->lire;
-	$permissiontodelete = $user->rights->projet->supprimer;
-	$uploaddir = $conf->projet->dir_output.'/tasks';
+	$permissiontoread = $user->rights->project->lire;
+	$permissiontodelete = $user->rights->project->supprimer;
+	$uploaddir = $conf->project->dir_output.'/tasks';
 	include DOL_DOCUMENT_ROOT.'/core/actions_massactions.inc.php';
 }
 
@@ -209,7 +209,7 @@ if (count($morewherefilterarray) > 0) {
 	$morewherefilter = ' AND '.implode(' AND ', $morewherefilterarray);
 }
 
-if ($action == 'createtask' && $user->rights->projet->creer)
+if ($action == 'createtask' && $user->rights->project->creer)
 {
 	$error = 0;
 
@@ -336,7 +336,7 @@ $selectedfields = $form->multiSelectArrayWithCheckbox('selectedfields', $arrayfi
 
 $title = $langs->trans("Project").' - '.$langs->trans("Tasks").' - '.$object->ref.' '.$object->name;
 if (!empty($conf->global->MAIN_HTML_TITLE) && preg_match('/projectnameonly/', $conf->global->MAIN_HTML_TITLE) && $object->name) $title = $object->ref.' '.$object->name.' - '.$langs->trans("Tasks");
-$help_url = "EN:Module_Projects|FR:Module_Projets|ES:M&oacute;dulo_Proyectos";
+$help_url = "EN:Module_Projects|FR:Module_Projects|ES:M&oacute;dulo_Proyectos";
 llxHeader("", $title, $help_url);
 
 if ($id > 0 || !empty($ref))
@@ -376,7 +376,7 @@ if ($id > 0 || !empty($ref))
     $morehtmlref .= '</div>';
 
     // Define a complementary filter for search of next/prev ref.
-    if (!$user->rights->projet->all->lire)
+    if (!$user->rights->project->all->lire)
     {
         $objectsListId = $object->getProjectsAuthorizedForUser($user, 0, 0);
         $object->next_prev_filter = " rowid in (".(count($objectsListId) ?join(',', array_keys($objectsListId)) : '0').")";
@@ -504,7 +504,7 @@ if ($id > 0 || !empty($ref))
 }
 
 
-if ($action == 'create' && $user->rights->projet->creer && (empty($object->thirdparty->id) || $userWrite > 0))
+if ($action == 'create' && $user->rights->project->creer && (empty($object->thirdparty->id) || $userWrite > 0))
 {
 	if ($id > 0 || !empty($ref)) print '<br>';
 
@@ -626,7 +626,7 @@ if ($action == 'create' && $user->rights->projet->creer && (empty($object->third
 elseif ($id > 0 || !empty($ref))
 {
 	/*
-	 * Projet card in view mode
+	 * Project card in view mode
 	 */
 
 	// Definition of fields for list
@@ -651,7 +651,7 @@ elseif ($id > 0 || !empty($ref))
 	// Link to create task
     $linktocreatetaskParam = array();
     $linktocreatetaskUserRight = false;
-    if ($user->rights->projet->all->creer || $user->rights->projet->creer) {
+    if ($user->rights->project->all->creer || $user->rights->project->creer) {
         if ($object->public || $userWrite > 0) {
             $linktocreatetaskUserRight = true;
         } else {
@@ -818,14 +818,14 @@ elseif ($id > 0 || !empty($ref))
 
 	// Test if database is clean. If not we clean it.
 	//print 'mode='.$_REQUEST["mode"].' $nboftaskshown='.$nboftaskshown.' count($tasksarray)='.count($tasksarray).' count($tasksrole)='.count($tasksrole).'<br>';
-	if (!empty($user->rights->projet->all->lire))	// We make test to clean only if user has permission to see all (test may report false positive otherwise)
+	if (!empty($user->rights->project->all->lire))	// We make test to clean only if user has permission to see all (test may report false positive otherwise)
 	{
 		if ($search_user_id == $user->id)
 		{
 			if ($nboftaskshown < count($tasksrole))
 			{
 				include_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
-				cleanCorruptedTree($db, 'projet_task', 'fk_task_parent');
+				cleanCorruptedTree($db, 'project_task', 'fk_task_parent');
 			}
 		}
 		else
@@ -833,7 +833,7 @@ elseif ($id > 0 || !empty($ref))
 			if ($nboftaskshown < count($tasksarray) && !GETPOST('search_user_id', 'int'))
 			{
 				include_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
-				cleanCorruptedTree($db, 'projet_task', 'fk_task_parent');
+				cleanCorruptedTree($db, 'project_task', 'fk_task_parent');
 			}
 		}
 	}

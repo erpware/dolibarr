@@ -50,7 +50,7 @@ if ($modulepart == 'produit' || $modulepart == 'product' || $modulepart == 'serv
 elseif ($modulepart == 'project')
 {
     $result=restrictedArea($user, 'project', $id);
-	if (! $user->rights->projet->lire) accessforbidden();
+	if (! $user->rights->project->lire) accessforbidden();
 	$accessallowed=1;
 }
 elseif ($modulepart == 'bom')
@@ -119,7 +119,7 @@ elseif ($modulepart == 'project')
     {
         $result = $object->fetch($id);
         if ($result <= 0) dol_print_error($db, 'Failed to load object');
-        $dir=$conf->projet->dir_output;	// By default
+        $dir=$conf->project->dir_output;	// By default
     }
 }
 elseif ($modulepart == 'holiday')

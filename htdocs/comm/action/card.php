@@ -767,7 +767,7 @@ if (empty($reshook)) {
  */
 
 $form=new Form($db);
-$formproject=new FormProjets($db);
+$formproject=new FormProjects($db);
 
 $help_url='EN:Module_Agenda_En|FR:Module_Agenda|ES:M&omodulodulo_Agenda';
 llxHeader('', $langs->trans("Agenda"), $help_url);
@@ -1043,7 +1043,7 @@ if ($action == 'create')
 	// Project
 	if (! empty($conf->project->enabled))
 	{
-		// Projet associe
+		// Project associe
 		$langs->load("projects");
 
 		$projectid = GETPOST('projectid', 'int');
@@ -1145,7 +1145,7 @@ if ($id > 0)
 	}
 
 	$result2=$object->fetch_thirdparty();
-	$result2=$object->fetch_projet();
+	$result2=$object->fetch_project();
 	$result3=$object->fetch_contact();
 	$result4=$object->fetch_userassigned();
 	$result5=$object->fetch_optionals();
@@ -1449,8 +1449,8 @@ if ($id > 0)
 			$langs->load("projects");
 
 			print '<tr><td class="titlefieldcreate">'.$langs->trans("Project").'</td><td>';
-			$numprojet=$formproject->select_projects(($object->socid  > 0 ? $object->socid : -1), $object->fk_project, 'projectid', 0, 0, 1, 0, 0, 0, 0, '', 0);
-			if ($numprojet==0)
+			$numproject=$formproject->select_projects(($object->socid  > 0 ? $object->socid : -1), $object->fk_project, 'projectid', 0, 0, 1, 0, 0, 0, 0, '', 0);
+			if ($numproject==0)
 			{
 				print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid='.$object->socid.'&action=create&backtopage='.urlencode($_SERVER["PHP_SELF"].'?id='.$object->id.'&action=edit').'"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle paddingleft"></span></a>';
 			}

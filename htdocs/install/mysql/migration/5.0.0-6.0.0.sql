@@ -116,7 +116,7 @@ ALTER TABLE llx_ecm_files ADD UNIQUE INDEX uk_ecm_files (filepath, filename, ent
 ALTER TABLE llx_ecm_files ADD INDEX idx_ecm_files_label (label);
 
 
-ALTER TABLE llx_expedition ADD COLUMN fk_projet integer DEFAULT NULL after fk_soc;
+ALTER TABLE llx_expedition ADD COLUMN fk_project integer DEFAULT NULL after fk_soc;
 
 
 ALTER TABLE llx_holiday ADD COLUMN import_key				varchar(14);
@@ -153,14 +153,14 @@ INSERT INTO llx_c_action_trigger (code,label,description,elementtype,rang) VALUE
 
 ALTER TABLE llx_c_email_templates ADD COLUMN content_lines text;
 
-ALTER TABLE llx_loan ADD COLUMN fk_projet integer DEFAULT NULL;
+ALTER TABLE llx_loan ADD COLUMN fk_project integer DEFAULT NULL;
 
 ALTER TABLE llx_holiday ADD COLUMN fk_user_modif integer;
-ALTER TABLE llx_projet ADD COLUMN fk_user_modif integer;
-ALTER TABLE llx_projet_task ADD COLUMN fk_user_modif integer;
+ALTER TABLE llx_project ADD COLUMN fk_user_modif integer;
+ALTER TABLE llx_project_task ADD COLUMN fk_user_modif integer;
 
-ALTER TABLE llx_projet_task_time ADD COLUMN datec date;
-ALTER TABLE llx_projet_task_time ADD COLUMN tms timestamp;
+ALTER TABLE llx_project_task_time ADD COLUMN datec date;
+ALTER TABLE llx_project_task_time ADD COLUMN tms timestamp;
 
 ALTER TABLE llx_product_price ADD COLUMN fk_multicurrency integer;
 ALTER TABLE llx_product_price ADD COLUMN multicurrency_code	varchar(255);
@@ -360,7 +360,7 @@ INSERT INTO llx_const (name, entity, value, type, visible, note) VALUES (__ENCRY
 INSERT INTO llx_const (name, entity, value, type, visible, note) VALUES (__ENCRYPT('MAIN_ENABLE_OVERWRITE_TRANSLATION')__, 1, __ENCRYPT('1')__, 'chaine', 0, 'Enable overwrote of translation');
 
 ALTER TABLE llx_chargesociales ADD COLUMN ref varchar(16);
-ALTER TABLE llx_chargesociales ADD COLUMN fk_projet integer DEFAULT NULL;
+ALTER TABLE llx_chargesociales ADD COLUMN fk_project integer DEFAULT NULL;
 
 ALTER TABLE llx_cronjob ADD COLUMN processing integer NOT NULL DEFAULT 0;
 
@@ -495,7 +495,7 @@ DELETE FROM llx_categorie_project WHERE fk_categorie NOT IN (SELECT rowid FROM l
 
 ALTER TABLE llx_inventory ADD COLUMN ref varchar(48);
 
--- VPGSQL8.2 ALTER TABLE llx_projet_task ALTER COLUMN planned_workload DROP NOT NULL;
+-- VPGSQL8.2 ALTER TABLE llx_project_task ALTER COLUMN planned_workload DROP NOT NULL;
 
 CREATE TABLE llx_loan_schedule
 (

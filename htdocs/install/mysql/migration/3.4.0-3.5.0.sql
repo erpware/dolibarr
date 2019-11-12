@@ -36,7 +36,7 @@ alter table llx_societe  MODIFY COLUMN town varchar(50);
 alter table llx_societe_address MODIFY COLUMN town varchar(50);
 
 
-ALTER TABLE llx_projet_task ADD COLUMN planned_workload	real DEFAULT 0 NOT NULL AFTER duration_effective;
+ALTER TABLE llx_project_task ADD COLUMN planned_workload	real DEFAULT 0 NOT NULL AFTER duration_effective;
 
 ALTER TABLE llx_socpeople ADD COLUMN statut tinyint DEFAULT 1 NOT NULL AFTER import_key;
 
@@ -130,9 +130,9 @@ insert into llx_const (name, value, type, note, visible, entity) values ('PROJEC
 insert into llx_const (name, value, type, note, visible, entity) values ('PROJECT_TASK_ADDON','mod_task_simple','chaine','Name of Numbering Rule task manager class',0,1);
 insert into llx_const (name, value, type, note, visible, entity) values ('PROJECT_TASK_ADDON_PDF_ODT_PATH','DOL_DATA_ROOT/doctemplates/tasks','chaine','',0,1);
 
-ALTER TABLE llx_projet_task ADD COLUMN ref varchar(50) AFTER rowid;
-UPDATE llx_projet_task SET ref=rowid;
-ALTER TABLE llx_projet_task ADD COLUMN  model_pdf varchar(255);
+ALTER TABLE llx_project_task ADD COLUMN ref varchar(50) AFTER rowid;
+UPDATE llx_project_task SET ref=rowid;
+ALTER TABLE llx_project_task ADD COLUMN  model_pdf varchar(255);
 
 INSERT INTO  llx_c_regions (rowid, fk_pays, code_region, cheflieu, tncc, nom, active) VALUES(1301, 13, 1301, '', 0, 'Algerie', 1);
 

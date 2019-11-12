@@ -66,7 +66,7 @@ class Projects extends DolibarrApi
      */
     public function get($id)
     {
-        if(! DolibarrApiAccess::$user->rights->projet->lire) {
+        if(! DolibarrApiAccess::$user->rights->project->lire) {
             throw new RestException(401);
         }
 
@@ -182,7 +182,7 @@ class Projects extends DolibarrApi
      */
     public function post($request_data = null)
     {
-        if(! DolibarrApiAccess::$user->rights->projet->creer) {
+        if(! DolibarrApiAccess::$user->rights->project->creer) {
             throw new RestException(401, "Insuffisant rights");
         }
         // Check mandatory fields
@@ -217,7 +217,7 @@ class Projects extends DolibarrApi
      */
     public function getLines($id, $includetimespent = 0)
     {
-        if (! DolibarrApiAccess::$user->rights->projet->lire) {
+        if (! DolibarrApiAccess::$user->rights->project->lire) {
             throw new RestException(401);
         }
 
@@ -262,7 +262,7 @@ class Projects extends DolibarrApi
     {
         global $db;
 
-        if (! DolibarrApiAccess::$user->rights->projet->lire) {
+        if (! DolibarrApiAccess::$user->rights->project->lire) {
             throw new RestException(401);
         }
 
@@ -425,7 +425,7 @@ class Projects extends DolibarrApi
      */
     public function put($id, $request_data = null)
     {
-        if (! DolibarrApiAccess::$user->rights->projet->creer) {
+        if (! DolibarrApiAccess::$user->rights->project->creer) {
             throw new RestException(401);
         }
 
@@ -461,7 +461,7 @@ class Projects extends DolibarrApi
      */
     public function delete($id)
     {
-        if (! DolibarrApiAccess::$user->rights->projet->supprimer) {
+        if (! DolibarrApiAccess::$user->rights->project->supprimer) {
             throw new RestException(401);
         }
         $result = $this->project->fetch($id);
@@ -505,7 +505,7 @@ class Projects extends DolibarrApi
      */
     public function validate($id, $notrigger = 0)
     {
-        if(! DolibarrApiAccess::$user->rights->projet->creer) {
+        if(! DolibarrApiAccess::$user->rights->project->creer) {
             throw new RestException(401);
         }
         $result = $this->project->fetch($id);

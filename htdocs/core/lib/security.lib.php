@@ -245,7 +245,7 @@ function restrictedArea($user, $features, $objectid = 0, $tableandshare = '', $f
 		}
 		elseif ($feature == 'project')
 		{
-			if (! $user->rights->projet->lire && ! $user->rights->projet->all->lire) { $readok=0; $nbko++; }
+			if (! $user->rights->project->lire && ! $user->rights->project->all->lire) { $readok=0; $nbko++; }
 		}
 		elseif (! empty($feature2))														// This is for permissions on 2 levels
 		{
@@ -458,13 +458,13 @@ function checkUserAccessToObject($user, $featuresarray, $objectid = 0, $tableand
 		// For backward compatibility
 		if ($feature == 'member')  $feature='adherent';
 		if ($feature == 'project') $feature='project';
-		if ($feature == 'task')    $feature='projet_task';
+		if ($feature == 'task')    $feature='project_task';
 
 		$check = array('adherent','banque','bom','don','user','usergroup','product','produit','service','produit|service','categorie','resource','expensereport','holiday'); // Test on entity only (Objects with no link to company)
 		$checksoc = array('societe');	 // Test for societe object
 		$checkother = array('contact','agenda');	 // Test on entity and link to third party. Allowed if link is empty (Ex: contacts...).
 		$checkproject = array('project','project'); // Test for project object
-		$checktask = array('projet_task');
+		$checktask = array('project_task');
 		$nocheck = array('barcode','stock');	// No test
 		//$checkdefault = 'all other not already defined'; // Test on entity and link to third party. Not allowed if link is empty (Ex: invoice, orders...).
 
@@ -567,7 +567,7 @@ function checkUserAccessToObject($user, $featuresarray, $objectid = 0, $tableand
 		}
 		elseif (in_array($feature, $checkproject))
 		{
-			if (! empty($conf->project->enabled) && empty($user->rights->projet->all->lire))
+			if (! empty($conf->project->enabled) && empty($user->rights->project->all->lire))
 			{
 				include_once DOL_DOCUMENT_ROOT.'/project/class/project.class.php';
 				$projectstatic=new Project($db);
@@ -585,7 +585,7 @@ function checkUserAccessToObject($user, $featuresarray, $objectid = 0, $tableand
 		}
 		elseif (in_array($feature, $checktask))
 		{
-			if (! empty($conf->project->enabled) && empty($user->rights->projet->all->lire))
+			if (! empty($conf->project->enabled) && empty($user->rights->project->all->lire))
 			{
 				$task = new Task($db);
 				$task->fetch($objectid);

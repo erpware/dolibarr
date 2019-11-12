@@ -50,7 +50,7 @@ $contextpage = GETPOST('contextpage', 'aZ') ?GETPOST('contextpage', 'aZ') : 'int
 $search_ref = GETPOST('search_ref') ?GETPOST('search_ref', 'alpha') : GETPOST('search_inter', 'alpha');
 $search_company = GETPOST('search_company', 'alpha');
 $search_desc = GETPOST('search_desc', 'alpha');
-$search_projet_ref = GETPOST('search_projet_ref', 'alpha');
+$search_project_ref = GETPOST('search_project_ref', 'alpha');
 $search_contrat_ref = GETPOST('search_contrat_ref', 'alpha');
 $search_status = GETPOST('search_status', 'alpha');
 $sall = trim((GETPOST('search_all', 'alphanohtml') != '') ?GETPOST('search_all', 'alphanohtml') : GETPOST('sall', 'alphanohtml'));
@@ -149,7 +149,7 @@ if (empty($reshook))
 	{
 		$search_ref = "";
 		$search_company = "";
-		$search_projet_ref = "";
+		$search_project_ref = "";
 		$search_contrat_ref = "";
 		$search_desc = "";
 		$search_status = "";
@@ -179,7 +179,7 @@ $formfile = new FormFile($db);
 $objectstatic = new Fichinter($db);
 $companystatic = new Societe($db);
 if (!empty($conf->project->enabled)) {
-    $projetstatic = new Project($db);
+    $projectstatic = new Project($db);
 }
 if (!empty($conf->contrat->enabled)) {
     $contratstatic = new Contrat($db);
@@ -206,7 +206,7 @@ $sql .= " f.ref, f.rowid, f.fk_statut, f.description, f.datec as date_creation, 
 if (empty($conf->global->FICHINTER_DISABLE_DETAILS) && $atleastonefieldinlines) $sql .= "fd.rowid as lineid, fd.description as descriptiondetail, fd.date as dp, fd.duree,";
 $sql .= " s.nom as name, s.rowid as socid, s.client";
 if (!empty($conf->project->enabled)) {
-    $sql .= ", pr.rowid as projet_id, pr.ref as projet_ref, pr.title as projet_title";
+    $sql .= ", pr.rowid as project_id, pr.ref as project_ref, pr.title as project_title";
 }
 if (!empty($conf->contrat->enabled)) {
     $sql .= ", c.rowid as contrat_id, c.ref as contrat_ref, c.ref_customer as contrat_ref_supplier, c.ref_supplier as contrat_ref_supplier";
@@ -221,7 +221,7 @@ $reshook = $hookmanager->executeHooks('printFieldListSelect', $parameters); // N
 $sql .= $hookmanager->resPrint;
 $sql .= " FROM ".MAIN_DB_PREFIX."fichinter as f";
 if (!empty($conf->project->enabled)) {
-    $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."project as pr on f.fk_projet = pr.rowid";
+    $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."project as pr on f.fk_project = pr.rowid";
 }
 if (!empty($conf->contrat->enabled)) {
     $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."contrat as c on f.fk_contrat = c.rowid";
@@ -238,8 +238,8 @@ if ($search_ref) {
 if ($search_company) {
 	$sql .= natural_search('s.nom', $search_company);
 }
-if ($search_projet_ref) {
-    $sql .= natural_search('pr.ref', $search_projet_ref);
+if ($search_project_ref) {
+    $sql .= natural_search('pr.ref', $search_project_ref);
 }
 if ($search_contrat_ref) {
     $sql .= natural_search('c.ref', $search_contrat_ref);
@@ -383,7 +383,7 @@ if ($resql)
     if (!empty($arrayfields['pr.ref']['checked']))
     {
         print '<td class="liste_titre">';
-        print '<input type="text" class="flat" name="search_projet_ref" value="'.$search_projet_ref.'" size="8">';
+        print '<input type="text" class="flat" name="search_project_ref" value="'.$search_project_ref.'" size="8">';
         print '</td>';
     }
     if (!empty($arrayfields['c.ref']['checked']))
@@ -531,11 +531,11 @@ if ($resql)
         if (! empty($arrayfields['pr.ref']['checked']))
         {
             print '<td>';
-            $projetstatic->id=$obj->projet_id;
-            $projetstatic->ref=$obj->projet_ref;
-            $projetstatic->title=$obj->projet_title;
-            if ($projetstatic->id > 0) {
-                print $projetstatic->getNomUrl(1, '');
+            $projectstatic->id=$obj->project_id;
+            $projectstatic->ref=$obj->project_ref;
+            $projectstatic->title=$obj->project_title;
+            if ($projectstatic->id > 0) {
+                print $projectstatic->getNomUrl(1, '');
             }
             print '</td>';
             if (! $i) $totalarray['nbfield']++;

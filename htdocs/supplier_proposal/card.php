@@ -1062,7 +1062,7 @@ $formother = new FormOther($db);
 $formfile = new FormFile($db);
 $formmargin = new FormMargin($db);
 $companystatic = new Societe($db);
-if (!empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
+if (!empty($conf->project->enabled)) { $formproject = new FormProjects($db); }
 
 $now = dol_now();
 
@@ -1220,14 +1220,14 @@ if ($action == 'create')
 	{
 		$langs->load("projects");
 
-		$formproject = new FormProjets($db);
+		$formproject = new FormProjects($db);
 
 		if ($origin == 'project') $projectid = ($originid ? $originid : 0);
 
 		print '<tr>';
 		print '<td>'.$langs->trans("Project").'</td><td colspan="2">';
 
-		$numprojet = $formproject->select_projects(($soc->id > 0 ? $soc->id : -1), $projectid, 'projectid', 0, 0, 1, 1);
+		$numproject = $formproject->select_projects(($soc->id > 0 ? $soc->id : -1), $projectid, 'projectid', 0, 0, 1, 1);
 		print ' &nbsp; <a href="'.DOL_URL_ROOT.'/project/card.php?socid='.$soc->id.'&action=create&status=1&backtopage='.urlencode($_SERVER["PHP_SELF"].'?action=create&socid='.$soc->id).'"><span class="valignmiddle text-plus-circle">'.$langs->trans("AddProject").'</span><span class="fa fa-plus-circle valignmiddle"></span></a>';
 
 		print '</td>';

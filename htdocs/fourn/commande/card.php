@@ -1149,7 +1149,7 @@ if (empty($reshook))
 						if ($result > 0)
 						{
 							$object->set_date_livraison($user, $srcobject->date_livraison);
-							$object->set_id_projet($user, $srcobject->fk_project);
+							$object->set_id_project($user, $srcobject->fk_project);
 
 							$lines = $srcobject->lines;
 							if (empty($lines) && method_exists($srcobject, 'fetch_lines'))
@@ -1442,7 +1442,7 @@ $form = new	Form($db);
 $formfile = new FormFile($db);
 $formorder = new FormOrder($db);
 $productstatic = new Product($db);
-if (!empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
+if (!empty($conf->project->enabled)) { $formproject = new FormProjects($db); }
 
 $help_url = 'EN:Module_Suppliers_Orders|FR:CommandeFournisseur|ES:Módulo_Pedidos_a_proveedores';
 llxHeader('', $langs->trans("Order"), $help_url);
@@ -1644,7 +1644,7 @@ if ($action == 'create')
 	// Project
 	if (!empty($conf->project->enabled))
 	{
-		$formproject = new FormProjets($db);
+		$formproject = new FormProjects($db);
 
 		$langs->load('projects');
 		print '<tr><td>'.$langs->trans('Project').'</td><td colspan="2">';

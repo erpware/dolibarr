@@ -2738,7 +2738,7 @@ function migrate_restore_missing_links($db, $langs, $conf)
 }
 
 /**
- * Migration du champ fk_user_resp de llx_projet vers llx_element_contact
+ * Migration du champ fk_user_resp de llx_project vers llx_element_contact
  *
  * @param	DoliDB		$db		Database handler
  * @param	Translate	$langs	Object langs
@@ -2835,7 +2835,7 @@ function migrate_project_user_resp($db, $langs, $conf)
 }
 
 /**
- * Migration de la table llx_projet_task_actors vers llx_element_contact
+ * Migration de la table llx_project_task_actors vers llx_element_contact
  *
  * @param	DoliDB		$db		Database handler
  * @param	Translate	$langs	Object langs
@@ -2851,13 +2851,13 @@ function migrate_project_task_actors($db, $langs, $conf)
     print '<br>';
     print '<b>'.$langs->trans('MigrationProjectTaskActors')."</b><br>\n";
 
-    if ($db->DDLInfoTable(MAIN_DB_PREFIX."projet_task_actors"))
+    if ($db->DDLInfoTable(MAIN_DB_PREFIX."project_task_actors"))
     {
         $error = 0;
 
         $db->begin();
 
-        $sql = "SELECT fk_projet_task as fk_project_task, fk_user FROM ".MAIN_DB_PREFIX."projet_task_actors";
+        $sql = "SELECT fk_project_task as fk_project_task, fk_user FROM ".MAIN_DB_PREFIX."project_task_actors";
         $resql = $db->query($sql);
         if ($resql)
         {
@@ -2898,7 +2898,7 @@ function migrate_project_task_actors($db, $langs, $conf)
 
             if ($error == 0)
             {
-                $sqlDrop = "DROP TABLE ".MAIN_DB_PREFIX."projet_task_actors";
+                $sqlDrop = "DROP TABLE ".MAIN_DB_PREFIX."project_task_actors";
                 if ($db->query($sqlDrop))
                 {
                     $db->commit();
@@ -3049,7 +3049,7 @@ function migrate_project_task_time($db, $langs, $conf)
     $db->begin();
 
     $sql = "SELECT rowid, fk_task, task_duration";
-    $sql.= " FROM ".MAIN_DB_PREFIX."projet_task_time";
+    $sql.= " FROM ".MAIN_DB_PREFIX."project_task_time";
     $resql = $db->query($sql);
     if ($resql)
     {
@@ -3074,7 +3074,7 @@ function migrate_project_task_time($db, $langs, $conf)
                     $min = ($min/100)*60*60;
                     $newtime = $hour+$min;
 
-                    $sql2 = "UPDATE ".MAIN_DB_PREFIX."projet_task_time SET";
+                    $sql2 = "UPDATE ".MAIN_DB_PREFIX."project_task_time SET";
                     $sql2.= " task_duration = ".$newtime;
                     $sql2.= " WHERE rowid = ".$obj->rowid;
 
@@ -3104,7 +3104,7 @@ function migrate_project_task_time($db, $langs, $conf)
                 {
                     foreach($totaltime as $taskid => $total_duration)
                     {
-                        $sql = "UPDATE ".MAIN_DB_PREFIX."projet_task SET";
+                        $sql = "UPDATE ".MAIN_DB_PREFIX."project_task SET";
                         $sql.= " duration_effective = ".$total_duration;
                         $sql.= " WHERE rowid = ".$taskid;
 

@@ -47,7 +47,7 @@ create table llx_loan
   accountancy_account_insurance	varchar(32),
   accountancy_account_interest	varchar(32),
   
-  fk_projet						integer DEFAULT NULL,
+  fk_project						integer DEFAULT NULL,
   
   fk_user_author				integer DEFAULT NULL,
   fk_user_modif					integer DEFAULT NULL, 

@@ -49,7 +49,7 @@ $planned_workload=((GETPOST('planned_workloadhour', 'int')!='' || GETPOST('plann
 // Security check
 $socid=0;
 //if ($user->socid > 0) $socid = $user->socid;    // For external user, no check is done on company because readability is managed by public status of project and assignement.
-if (! $user->rights->projet->lire) accessforbidden();
+if (! $user->rights->project->lire) accessforbidden();
 
 // Initialize technical object to manage hooks of page. Note that conf->hooks_modules contains array of hook context
 $hookmanager->initHooks(array('projecttaskcard','globalcard'));
@@ -69,7 +69,7 @@ if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'e
  * Actions
  */
 
-if ($action == 'update' && ! $_POST["cancel"] && $user->rights->projet->creer)
+if ($action == 'update' && ! $_POST["cancel"] && $user->rights->project->creer)
 {
 	$error=0;
 
@@ -120,7 +120,7 @@ if ($action == 'update' && ! $_POST["cancel"] && $user->rights->projet->creer)
 	}
 }
 
-if ($action == 'confirm_delete' && $confirm == "yes" && $user->rights->projet->supprimer)
+if ($action == 'confirm_delete' && $confirm == "yes" && $user->rights->project->supprimer)
 {
 	if ($object->fetch($id, $ref) >= 0)
 	{
@@ -140,7 +140,7 @@ if ($action == 'confirm_delete' && $confirm == "yes" && $user->rights->projet->s
 	}
 }
 
-// Retreive First Task ID of Project if withprojet is on to allow project prev next to work
+// Retreive First Task ID of Project if withproject is on to allow project prev next to work
 if (! empty($project_ref) && ! empty($withproject))
 {
 	if ($projectstatic->fetch('', $project_ref) > 0)
@@ -158,7 +158,7 @@ if (! empty($project_ref) && ! empty($withproject))
 }
 
 // Build doc
-if ($action == 'builddoc' && $user->rights->projet->creer)
+if ($action == 'builddoc' && $user->rights->project->creer)
 {
 	$object->fetch($id, $ref);
 
@@ -180,14 +180,14 @@ if ($action == 'builddoc' && $user->rights->projet->creer)
 }
 
 // Delete file in doc form
-if ($action == 'remove_file' && $user->rights->projet->creer)
+if ($action == 'remove_file' && $user->rights->project->creer)
 {
 	require_once DOL_DOCUMENT_ROOT.'/core/lib/files.lib.php';
 
 	if ($object->fetch($id, $ref) >= 0 )
 	{
 		$langs->load("other");
-		$upload_dir =	$conf->projet->dir_output;
+		$upload_dir =	$conf->project->dir_output;
 		$file =	$upload_dir	. '/' .	GETPOST('file');
 
 		$ret=dol_delete_file($file);
@@ -246,7 +246,7 @@ if ($id > 0 || ! empty($ref))
             $morehtmlref.='</div>';
 
             // Define a complementary filter for search of next/prev ref.
-            if (! $user->rights->projet->all->lire)
+            if (! $user->rights->project->all->lire)
             {
                 $objectsListId = $projectstatic->getProjectsAuthorizedForUser($user, 0, 0);
                 $projectstatic->next_prev_filter=" rowid in (".(count($objectsListId)?join(',', array_keys($objectsListId)):'0').")";
@@ -378,7 +378,7 @@ if ($id > 0 || ! empty($ref))
 
 		$head=task_prepare_head($object);
 
-		if ($action == 'edit' && $user->rights->projet->creer)
+		if ($action == 'edit' && $user->rights->project->creer)
 		{
 			print '<form method="POST" action="'.$_SERVER["PHP_SELF"].'">';
 			print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
@@ -481,9 +481,9 @@ if ($id > 0 || ! empty($ref))
 			if (! GETPOST('withproject') || empty($projectstatic->id))
 			{
 			    $projectsListId = $projectstatic->getProjectsAuthorizedForUser($user, 0, 1);
-			    $object->next_prev_filter=" fk_projet in (".$projectsListId.")";
+			    $object->next_prev_filter=" fk_project in (".$projectsListId.")";
 			}
-			else $object->next_prev_filter=" fk_projet = ".$projectstatic->id;
+			else $object->next_prev_filter=" fk_project = ".$projectstatic->id;
 
 			$morehtmlref='';
 
@@ -602,7 +602,7 @@ if ($id > 0 || ! empty($ref))
 		    if (empty($reshook))
 		    {
 				// Modify
-				if ($user->rights->projet->creer)
+				if ($user->rights->project->creer)
 				{
 					print '<a class="butAction" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&amp;action=edit&amp;withproject='.$withproject.'">'.$langs->trans('Modify').'</a>';
 				}
@@ -612,7 +612,7 @@ if ($id > 0 || ! empty($ref))
 				}
 
 				// Delete
-				if ($user->rights->projet->supprimer)
+				if ($user->rights->project->supprimer)
 				{
 				    if (! $object->hasChildren() && ! $object->hasTimeSpent())
 				    {
@@ -638,10 +638,10 @@ if ($id > 0 || ! empty($ref))
 			 * Documents generes
 			 */
 			$filename=dol_sanitizeFileName($projectstatic->ref). "/". dol_sanitizeFileName($object->ref);
-			$filedir=$conf->projet->dir_output . "/" . dol_sanitizeFileName($projectstatic->ref). "/" .dol_sanitizeFileName($object->ref);
+			$filedir=$conf->project->dir_output . "/" . dol_sanitizeFileName($projectstatic->ref). "/" .dol_sanitizeFileName($object->ref);
 			$urlsource=$_SERVER["PHP_SELF"]."?id=".$object->id;
-			$genallowed=($user->rights->projet->lire);
-			$delallowed=($user->rights->projet->creer);
+			$genallowed=($user->rights->project->lire);
+			$delallowed=($user->rights->project->creer);
 
 			print $formfile->showdocuments('project_task', $filename, $filedir, $urlsource, $genallowed, $delallowed, $object->modelpdf);
 

@@ -110,7 +110,7 @@ $form = new Form($db);
 $formcompany = new FormCompany($db);
 $contactstatic=new Contact($db);
 $userstatic=new User($db);
-$formproject=new FormProjets($db);
+$formproject=new FormProjects($db);
 
 llxHeader('', $langs->trans("Intervention"));
 

@@ -22,7 +22,7 @@ CREATE TABLE llx_supplier_proposal (
   ref_ext varchar(255) DEFAULT NULL,
   ref_int varchar(255) DEFAULT NULL,
   fk_soc integer DEFAULT NULL,
-  fk_projet integer DEFAULT NULL,
+  fk_project integer DEFAULT NULL,
   tms timestamp,
   datec datetime DEFAULT NULL,
   date_valid datetime DEFAULT NULL,

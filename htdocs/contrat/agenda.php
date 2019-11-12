@@ -104,7 +104,7 @@ if (empty($reshook))
 
 $form = new Form($db);
 $formfile = new FormFile($db);
-if (! empty($conf->project->enabled)) $formproject = new FormProjets($db);
+if (! empty($conf->project->enabled)) $formproject = new FormProjects($db);
 
 if ($id > 0)
 {

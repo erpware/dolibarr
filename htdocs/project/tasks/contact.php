@@ -43,8 +43,8 @@ $project_ref=GETPOST('project_ref', 'alpha');
 // Security check
 $socid=0;
 //if ($user->socid > 0) $socid = $user->socid;    // For external user, no check is done on company because readability is managed by public status of project and assignement.
-//$result = restrictedArea($user, 'project', $id, 'projet_task');
-if (! $user->rights->projet->lire) accessforbidden();
+//$result = restrictedArea($user, 'project', $id, 'project_task');
+if (! $user->rights->project->lire) accessforbidden();
 
 $object = new Task($db);
 $projectstatic = new Project($db);
@@ -55,7 +55,7 @@ $projectstatic = new Project($db);
  */
 
 // Add new contact
-if ($action == 'addcontact' && $user->rights->projet->creer)
+if ($action == 'addcontact' && $user->rights->project->creer)
 {
 	$result = $object->fetch($id, $ref);
 
@@ -104,7 +104,7 @@ if ($action == 'addcontact' && $user->rights->projet->creer)
 }
 
 // bascule du statut d'un contact
-if ($action == 'swapstatut' && $user->rights->projet->creer)
+if ($action == 'swapstatut' && $user->rights->project->creer)
 {
 	if ($object->fetch($id, $ref))
 	{
@@ -117,7 +117,7 @@ if ($action == 'swapstatut' && $user->rights->projet->creer)
 }
 
 // Efface un contact
-if ($action == 'deleteline' && $user->rights->projet->creer)
+if ($action == 'deleteline' && $user->rights->project->creer)
 {
 	$object->fetch($id, $ref);
 	$result = $object->delete_contact($_GET["lineid"]);
@@ -133,7 +133,7 @@ if ($action == 'deleteline' && $user->rights->projet->creer)
 	}
 }
 
-// Retreive First Task ID of Project if withprojet is on to allow project prev next to work
+// Retreive First Task ID of Project if withproject is on to allow project prev next to work
 if (! empty($project_ref) && ! empty($withproject))
 {
 	if ($projectstatic->fetch(0, $project_ref) > 0)
@@ -208,7 +208,7 @@ if ($id > 0 || ! empty($ref))
             $morehtmlref.='</div>';
 
             // Define a complementary filter for search of next/prev ref.
-            if (! $user->rights->projet->all->lire)
+            if (! $user->rights->project->all->lire)
             {
                 $objectsListId = $projectstatic->getProjectsAuthorizedForUser($user, 0, 0);
                 $projectstatic->next_prev_filter=" rowid in (".(count($objectsListId)?join(',', array_keys($objectsListId)):'0').")";
@@ -324,9 +324,9 @@ if ($id > 0 || ! empty($ref))
 		if (! GETPOST('withproject') || empty($projectstatic->id))
 		{
 		    $projectsListId = $projectstatic->getProjectsAuthorizedForUser($user, 0, 1);
-		    $object->next_prev_filter=" fk_projet in (".$projectsListId.")";
+		    $object->next_prev_filter=" fk_project in (".$projectsListId.")";
 		}
-		else $object->next_prev_filter=" fk_projet = ".$projectstatic->id;
+		else $object->next_prev_filter=" fk_project = ".$projectstatic->id;
 
 		$morehtmlref='';
 
@@ -371,7 +371,7 @@ if ($id > 0 || ! empty($ref))
 		 */
 		print '<table class="noborder centpercent">';
 
-		if ($action != 'editline' && $user->rights->projet->creer)
+		if ($action != 'editline' && $user->rights->project->creer)
 		{
 			print '<tr class="liste_titre">';
 			print '<td>'.$langs->trans("Nature").'</td>';
@@ -530,7 +530,7 @@ if ($id > 0 || ! empty($ref))
 
 				// Icon update et delete
 				print '<td class="center nowrap">';
-				if ($user->rights->projet->creer)
+				if ($user->rights->project->creer)
 				{
 					print '&nbsp;';
 					print '<a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&action=deleteline&lineid='.$tab[$i]['rowid'].($withproject?'&withproject=1':'').'">';

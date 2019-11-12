@@ -50,7 +50,7 @@ $planned_workload=((GETPOST('planned_workloadhour', 'int')!='' || GETPOST('plann
 // Security check
 $socid=0;
 //if ($user->socid > 0) $socid = $user->socid;    // For external user, no check is done on company because readability is managed by public status of project and assignement.
-if (! $user->rights->projet->lire) accessforbidden();
+if (! $user->rights->project->lire) accessforbidden();
 
 // Initialize technical object to manage hooks of page. Note that conf->hooks_modules contains array of hook context
 $hookmanager->initHooks(array('projectcard','globalcard'));
@@ -107,7 +107,7 @@ if ($object->thirdparty->id > 0) {
 $morehtmlref .= '</div>';
 
 // Define a complementary filter for search of next/prev ref.
-if (! $user->rights->projet->all->lire) {
+if (! $user->rights->project->all->lire) {
 	$objectsListId = $object->getProjectsAuthorizedForUser($user, 0, 0);
 	$object->next_prev_filter = " rowid in (" . (count($objectsListId) ? join(',', array_keys($objectsListId)) : '0') . ")";
 }

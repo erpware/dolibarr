@@ -34,7 +34,7 @@ TicketTypeShortBUGSOFT=Disfunció de la lògica
 TicketTypeShortBUGHARD=Disfunció de matèries
 TicketTypeShortCOM=Qüestió comercial
 TicketTypeShortINCIDENT=Sol·licitud d'assistència
-TicketTypeShortPROJET=Projecte
+TicketTypeShortPROJECT=Projecte
 TicketTypeShortOTHER=Altres
 
 TicketSeverityShortLOW=Baix

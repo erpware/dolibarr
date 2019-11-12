@@ -138,7 +138,7 @@ class Deplacement extends CommonObject
 		$sql.= ", type";
 		$sql.= ", note_private";
 		$sql.= ", note_public";
-		$sql.= ", fk_projet";
+		$sql.= ", fk_project";
 		$sql.= ", fk_soc";
 		$sql.= ") VALUES (";
 		$sql.= " '".$this->db->idate($now)."'";
@@ -231,7 +231,7 @@ class Deplacement extends CommonObject
 		$sql .= " , fk_soc = ".($this->socid > 0?$this->socid:'null');
 		$sql .= " , note_private = ".($this->note_private?"'".$this->db->escape($this->note_private)."'":"null");
 		$sql .= " , note_public = ".($this->note_public?"'".$this->db->escape($this->note_public)."'":"null");
-		$sql .= " , fk_projet = ".($this->fk_project>0?$this->fk_project:0);
+		$sql .= " , fk_project = ".($this->fk_project>0?$this->fk_project:0);
 		$sql .= " WHERE rowid = ".$this->id;
 
 		dol_syslog(get_class($this)."::update", LOG_DEBUG);
@@ -258,7 +258,7 @@ class Deplacement extends CommonObject
 	 */
 	public function fetch($id, $ref = '')
 	{
-		$sql = "SELECT rowid, fk_user, type, fk_statut, km, fk_soc, dated, note_private, note_public, fk_projet as fk_project, extraparams";
+		$sql = "SELECT rowid, fk_user, type, fk_statut, km, fk_soc, dated, note_private, note_public, fk_project as fk_project, extraparams";
 		$sql.= " FROM ".MAIN_DB_PREFIX."deplacement";
 		$sql.= " WHERE entity IN (".getEntity('deplacement').")";
 		if ($ref) $sql.= " AND ref ='".$this->db->escape($ref)."'";

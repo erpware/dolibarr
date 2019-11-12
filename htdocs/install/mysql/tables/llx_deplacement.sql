@@ -33,7 +33,7 @@ create table llx_deplacement
   fk_statut         integer DEFAULT 1 NOT NULL,
   km				real,
   fk_soc			integer,
-  fk_projet         integer DEFAULT 0,
+  fk_project         integer DEFAULT 0,
   note_private	    text,
   note_public       text,
   extraparams		varchar(255)					-- for stock other parameters with json format

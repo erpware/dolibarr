@@ -90,7 +90,7 @@ if ($action == 'classin' && $user->rights->don->creer)
  */
 
 $form = new Form($db);
-if (! empty($conf->project->enabled)) { $formproject = new FormProjets($db); }
+if (! empty($conf->project->enabled)) { $formproject = new FormProjects($db); }
 
 $title = $langs->trans('Donation') . " - " . $langs->trans('Documents');
 $helpurl = "";

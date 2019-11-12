@@ -61,7 +61,7 @@ $listofreferent=array(
     'expensereport' => 'expensereport_det',
     'donation' => 'don',
     'agenda' => 'actioncomm',
-    'project_task' => 'projet_task',
+    'project_task' => 'project_task',
 );
 
 // Create the soap Object
@@ -258,7 +258,7 @@ function createProject($authentication, $project)
     {
         $fuser->getrights();
 
-        if ($fuser->rights->projet->creer)
+        if ($fuser->rights->project->creer)
         {
             $newobject=new Project($db);
             $newobject->ref=$project['ref'];
@@ -363,7 +363,7 @@ function getProject($authentication, $id = '', $ref = '')
     {
         $fuser->getrights();
 
-        if ($fuser->rights->projet->lire)
+        if ($fuser->rights->project->lire)
         {
             $project=new Project($db);
             $result=$project->fetch($id, $ref);

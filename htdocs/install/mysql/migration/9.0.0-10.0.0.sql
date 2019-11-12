@@ -336,7 +336,7 @@ create table llx_reception
   ref                   varchar(30)        NOT NULL,
   entity                integer  DEFAULT 1 NOT NULL,	-- multi company id
   fk_soc                integer            NOT NULL,
-  fk_projet  		integer  DEFAULT NULL,
+  fk_project  		integer  DEFAULT NULL,
 
   ref_ext               varchar(30),					-- reference into an external system (not used by dolibarr)
   ref_int				varchar(30),					-- reference into an internal system (used by dolibarr to store extern id like paypal info)
@@ -387,7 +387,7 @@ create table llx_reception_extrafields
 
 ALTER TABLE llx_reception_extrafields ADD INDEX idx_reception_extrafields (fk_object);
 
-ALTER TABLE llx_commande_fournisseur_dispatch ADD COLUMN fk_projet integer DEFAULT NULL;
+ALTER TABLE llx_commande_fournisseur_dispatch ADD COLUMN fk_project integer DEFAULT NULL;
 ALTER TABLE llx_commande_fournisseur_dispatch ADD COLUMN fk_reception integer DEFAULT NULL;
 
 ALTER TABLE llx_accounting_bookkeeping ADD COLUMN date_export datetime DEFAULT NULL after date_validated;

@@ -28,7 +28,7 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/project.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/project/class/taskstats.class.php';
 
 // Security check
-if (! $user->rights->projet->lire)
+if (! $user->rights->project->lire)
 	accessforbidden();
 
 
@@ -65,7 +65,7 @@ $includeuserlist=array();
 llxHeader('', $langs->trans('Tasks'));
 
 $title=$langs->trans("TasksStatistics");
-$dir=$conf->projet->dir_output.'/temp';
+$dir=$conf->project->dir_output.'/temp';
 
 print load_fiche_titre($title, '', 'project');
 

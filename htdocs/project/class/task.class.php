@@ -40,7 +40,7 @@ class Task extends CommonObject
 	/**
 	 * @var string Name of table without prefix where object is stored
 	 */
-	public $table_element='projet_task';
+	public $table_element='project_task';
 
 	/**
 	 * @var int Field with ID of parent key if this field has a parent
@@ -55,7 +55,7 @@ class Task extends CommonObject
 	/**
 	 * @var array	List of child tables. To test if we can delete object.
 	 */
-	protected $childtables=array('projet_task_time');
+	protected $childtables=array('project_task_time');
 
 	/**
      * @var int ID parent task
@@ -153,8 +153,8 @@ class Task extends CommonObject
 		// Put here code to add control on parameters values
 
 		// Insert request
-		$sql = "INSERT INTO ".MAIN_DB_PREFIX."projet_task (";
-		$sql.= "fk_projet";
+		$sql = "INSERT INTO ".MAIN_DB_PREFIX."project_task (";
+		$sql.= "fk_project";
 		$sql.= ", ref";
 		$sql.= ", fk_task_parent";
 		$sql.= ", label";
@@ -187,7 +187,7 @@ class Task extends CommonObject
 
 		if (! $error)
 		{
-			$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX."projet_task");
+			$this->id = $this->db->last_insert_id(MAIN_DB_PREFIX."project_task");
 
 			if (! $notrigger)
 			{
@@ -245,7 +245,7 @@ class Task extends CommonObject
 		$sql = "SELECT";
 		$sql.= " t.rowid,";
 		$sql.= " t.ref,";
-		$sql.= " t.fk_projet as fk_project,";
+		$sql.= " t.fk_project as fk_project,";
 		$sql.= " t.fk_task_parent,";
 		$sql.= " t.label,";
 		$sql.= " t.description,";
@@ -267,8 +267,8 @@ class Task extends CommonObject
 			$sql.=", t2.ref as task_parent_ref";
 			$sql.=", t2.rang as task_parent_position";
 		}
-		$sql.= " FROM ".MAIN_DB_PREFIX."projet_task as t";
-		if (! empty($loadparentdata)) $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."projet_task as t2 ON t.fk_task_parent = t2.rowid";
+		$sql.= " FROM ".MAIN_DB_PREFIX."project_task as t";
+		if (! empty($loadparentdata)) $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."project_task as t2 ON t.fk_task_parent = t2.rowid";
 		$sql.= " WHERE ";
 		if (!empty($ref)) {
 			$sql.="t.ref = '".$this->db->escape($ref)."'";
@@ -358,8 +358,8 @@ class Task extends CommonObject
 		// Put here code to add control on parameters values
 
 		// Update request
-		$sql = "UPDATE ".MAIN_DB_PREFIX."projet_task SET";
-		$sql.= " fk_projet=".(isset($this->fk_project)?$this->fk_project:"null").",";
+		$sql = "UPDATE ".MAIN_DB_PREFIX."project_task SET";
+		$sql.= " fk_project=".(isset($this->fk_project)?$this->fk_project:"null").",";
 		$sql.= " ref=".(isset($this->ref)?"'".$this->db->escape($this->ref)."'":"'".$this->db->escape($this->id)."'").",";
 		$sql.= " fk_task_parent=".(isset($this->fk_task_parent)?$this->fk_task_parent:"null").",";
 		$sql.= " label=".(isset($this->label)?"'".$this->db->escape($this->label)."'":"null").",";
@@ -404,13 +404,13 @@ class Task extends CommonObject
 		if (! $error && (is_object($this->oldcopy) && $this->oldcopy->ref !== $this->ref))
 		{
 			// We remove directory
-			if ($conf->projet->dir_output)
+			if ($conf->project->dir_output)
 			{
 				$project = new Project($this->db);
 				$project->fetch($this->fk_project);
 
-				$olddir = $conf->projet->dir_output.'/'.dol_sanitizeFileName($project->ref).'/'.dol_sanitizeFileName($this->oldcopy->ref);
-				$newdir = $conf->projet->dir_output.'/'.dol_sanitizeFileName($project->ref).'/'.dol_sanitizeFileName($this->ref);
+				$olddir = $conf->project->dir_output.'/'.dol_sanitizeFileName($project->ref).'/'.dol_sanitizeFileName($this->oldcopy->ref);
+				$newdir = $conf->project->dir_output.'/'.dol_sanitizeFileName($project->ref).'/'.dol_sanitizeFileName($this->ref);
 				if (file_exists($olddir))
 				{
 					include_once DOL_DOCUMENT_ROOT . '/core/lib/files.lib.php';
@@ -493,7 +493,7 @@ class Task extends CommonObject
 
 		if (! $error)
 		{
-			$sql = "DELETE FROM ".MAIN_DB_PREFIX."projet_task_time";
+			$sql = "DELETE FROM ".MAIN_DB_PREFIX."project_task_time";
 			$sql.= " WHERE fk_task=".$this->id;
 
 			$resql = $this->db->query($sql);
@@ -502,7 +502,7 @@ class Task extends CommonObject
 
 		if (! $error)
 		{
-			$sql = "DELETE FROM ".MAIN_DB_PREFIX."projet_task_extrafields";
+			$sql = "DELETE FROM ".MAIN_DB_PREFIX."project_task_extrafields";
 			$sql.= " WHERE fk_object=".$this->id;
 
 			$resql = $this->db->query($sql);
@@ -511,7 +511,7 @@ class Task extends CommonObject
 
 		if (! $error)
 		{
-			$sql = "DELETE FROM ".MAIN_DB_PREFIX."projet_task";
+			$sql = "DELETE FROM ".MAIN_DB_PREFIX."project_task";
 			$sql.= " WHERE rowid=".$this->id;
 
 			$resql = $this->db->query($sql);
@@ -543,12 +543,12 @@ class Task extends CommonObject
 		else
 		{
 			//Delete associated link file
-			if ($conf->projet->dir_output)
+			if ($conf->project->dir_output)
 			{
 				$projectstatic=new Project($this->db);
 				$projectstatic->fetch($this->fk_project);
 
-				$dir = $conf->projet->dir_output . "/" . dol_sanitizeFileName($projectstatic->ref) . '/' . dol_sanitizeFileName($this->id);
+				$dir = $conf->project->dir_output . "/" . dol_sanitizeFileName($projectstatic->ref) . '/' . dol_sanitizeFileName($this->id);
 				dol_syslog(get_class($this)."::delete dir=".$dir, LOG_DEBUG);
 				if (file_exists($dir))
 				{
@@ -580,7 +580,7 @@ class Task extends CommonObject
 		$ret=0;
 
 		$sql = "SELECT COUNT(*) as nb";
-		$sql.= " FROM ".MAIN_DB_PREFIX."projet_task";
+		$sql.= " FROM ".MAIN_DB_PREFIX."project_task";
 		$sql.= " WHERE fk_task_parent=".$this->id;
 
 		dol_syslog(get_class($this)."::hasChildren", LOG_DEBUG);
@@ -614,7 +614,7 @@ class Task extends CommonObject
 		$ret=0;
 
 		$sql = "SELECT COUNT(*) as nb";
-		$sql.= " FROM ".MAIN_DB_PREFIX."projet_task_time";
+		$sql.= " FROM ".MAIN_DB_PREFIX."project_task_time";
 		$sql.= " WHERE fk_task=".$this->id;
 
 		dol_syslog(get_class($this)."::hasTimeSpent", LOG_DEBUG);
@@ -760,9 +760,9 @@ class Task extends CommonObject
 		{
 			foreach ($extrafields->attributes['project']['label'] as $key => $val) $sql.=($extrafields->attributes['project']['type'][$key] != 'separate' ? ",efp.".$key.' as options_'.$key : '');
 		}
-		if (!empty($extrafields->attributes['projet_task']['label']))
+		if (!empty($extrafields->attributes['project_task']['label']))
 		{
-			foreach ($extrafields->attributes['projet_task']['label'] as $key => $val) $sql.=($extrafields->attributes['projet_task']['type'][$key] != 'separate' ? ",efpt.".$key.' as options_'.$key : '');
+			foreach ($extrafields->attributes['project_task']['label'] as $key => $val) $sql.=($extrafields->attributes['project_task']['type'][$key] != 'separate' ? ",efpt.".$key.' as options_'.$key : '');
 		}
 		if ($includebilltime)
 		{
@@ -771,7 +771,7 @@ class Task extends CommonObject
 
 		$sql.= " FROM ".MAIN_DB_PREFIX."project as p";
 		$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s ON p.fk_soc = s.rowid";
-		$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."projet_extrafields as efp ON (p.rowid = efp.fk_object)";
+		$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."project_extrafields as efp ON (p.rowid = efp.fk_object)";
 
 		if ($mode == 0)
 		{
@@ -780,19 +780,19 @@ class Task extends CommonObject
 				$sql.= ", ".MAIN_DB_PREFIX."element_contact as ec";
 				$sql.= ", ".MAIN_DB_PREFIX."c_type_contact as ctc";
 			}
-			$sql.= ", ".MAIN_DB_PREFIX."projet_task as t";
+			$sql.= ", ".MAIN_DB_PREFIX."project_task as t";
 			if ($includebilltime)
 			{
-                $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."projet_task_time as tt ON tt.fk_task = t.rowid";
+                $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."project_task_time as tt ON tt.fk_task = t.rowid";
 			}
 			if ($filterontaskuser > 0)
 			{
 				$sql.= ", ".MAIN_DB_PREFIX."element_contact as ec2";
 				$sql.= ", ".MAIN_DB_PREFIX."c_type_contact as ctc2";
 			}
-            $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."projet_task_extrafields as efpt ON (t.rowid = efpt.fk_object)";
+            $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."project_task_extrafields as efpt ON (t.rowid = efpt.fk_object)";
             $sql.= " WHERE p.entity IN (".getEntity('project').")";
-			$sql.= " AND t.fk_projet = p.rowid";
+			$sql.= " AND t.fk_project = p.rowid";
 		}
 		elseif ($mode == 1)
 		{
@@ -803,23 +803,23 @@ class Task extends CommonObject
 			}
 			if ($filterontaskuser > 0)
 			{
-				$sql.= ", ".MAIN_DB_PREFIX."projet_task as t";
+				$sql.= ", ".MAIN_DB_PREFIX."project_task as t";
 				if ($includebilltime)
 				{
-				    $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."projet_task_time as tt ON tt.fk_task = t.rowid";
+				    $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."project_task_time as tt ON tt.fk_task = t.rowid";
 				}
 				$sql.= ", ".MAIN_DB_PREFIX."element_contact as ec2";
 				$sql.= ", ".MAIN_DB_PREFIX."c_type_contact as ctc2";
 			}
 			else
 			{
-				$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."projet_task as t on t.fk_projet = p.rowid";
+				$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."project_task as t on t.fk_project = p.rowid";
 				if ($includebilltime)
 				{
-				    $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."projet_task_time as tt ON tt.fk_task = t.rowid";
+				    $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."project_task_time as tt ON tt.fk_task = t.rowid";
 				}
 			}
-            $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."projet_task_extrafields as efpt ON (t.rowid = efpt.fk_object)";
+            $sql.= " LEFT JOIN ".MAIN_DB_PREFIX."project_task_extrafields as efpt ON (t.rowid = efpt.fk_object)";
             $sql.= " WHERE p.entity IN (".getEntity('project').")";
 		}
 		else return 'BadValueForParameterMode';
@@ -835,7 +835,7 @@ class Task extends CommonObject
 		}
 		if ($filterontaskuser > 0)
 		{
-			$sql.= " AND t.fk_projet = p.rowid";
+			$sql.= " AND t.fk_project = p.rowid";
 			$sql.= " AND p.rowid = ec2.element_id";
 			$sql.= " AND ctc2.rowid = ec2.fk_c_type_contact";
 			$sql.= " AND ctc2.element = 'project_task'";
@@ -860,9 +860,9 @@ class Task extends CommonObject
 			{
 				foreach ($extrafields->attributes['project']['label'] as $key => $val) $sql.=($extrafields->attributes['project']['type'][$key] != 'separate' ? ",efp.".$key : '');
 			}
-			if (!empty($extrafields->attributes['projet_task']['label']))
+			if (!empty($extrafields->attributes['project_task']['label']))
 			{
-				foreach ($extrafields->attributes['projet_task']['label'] as $key => $val) $sql.=($extrafields->attributes['projet_task']['type'][$key] != 'separate' ? ",efpt.".$key : '');
+				foreach ($extrafields->attributes['project_task']['label'] as $key => $val) $sql.=($extrafields->attributes['project_task']['type'][$key] != 'separate' ? ",efpt.".$key : '');
 			}
 		}
 
@@ -945,11 +945,11 @@ class Task extends CommonObject
                         }
                     }
 
-                    if (!empty($extrafields->attributes['projet_task']['label']))
+                    if (!empty($extrafields->attributes['project_task']['label']))
                     {
-                        foreach ($extrafields->attributes['projet_task']['label'] as $key => $val)
+                        foreach ($extrafields->attributes['project_task']['label'] as $key => $val)
                         {
-                            if ($extrafields->attributes['projet_task']['type'][$key] != 'separate')
+                            if ($extrafields->attributes['project_task']['type'][$key] != 'separate')
                                 $tasks[$i]->{'options_'.$key} = $obj->{'options_'.$key};
                         }
                     }
@@ -995,16 +995,16 @@ class Task extends CommonObject
 			return -1;
 		}
 
-		/* Liste des taches et role sur les projets ou taches */
+		/* Liste des taches et role sur les projects ou taches */
 		$sql = "SELECT pt.rowid as pid, ec.element_id, ctc.code, ctc.source";
 		if ($userp) $sql.= " FROM ".MAIN_DB_PREFIX."project as pt";
-		if ($usert && $filteronprojstatus > -1) $sql.= " FROM ".MAIN_DB_PREFIX."project as p, ".MAIN_DB_PREFIX."projet_task as pt";
-		if ($usert && $filteronprojstatus <= -1) $sql.= " FROM ".MAIN_DB_PREFIX."projet_task as pt";
+		if ($usert && $filteronprojstatus > -1) $sql.= " FROM ".MAIN_DB_PREFIX."project as p, ".MAIN_DB_PREFIX."project_task as pt";
+		if ($usert && $filteronprojstatus <= -1) $sql.= " FROM ".MAIN_DB_PREFIX."project_task as pt";
 		$sql.= ", ".MAIN_DB_PREFIX."element_contact as ec";
 		$sql.= ", ".MAIN_DB_PREFIX."c_type_contact as ctc";
 		$sql.= " WHERE pt.rowid = ec.element_id";
 		if ($userp && $filteronprojstatus > -1) $sql.= " AND pt.fk_statut = ".$filteronprojstatus;
-		if ($usert && $filteronprojstatus > -1) $sql.= " AND pt.fk_projet = p.rowid AND p.fk_statut = ".$filteronprojstatus;
+		if ($usert && $filteronprojstatus > -1) $sql.= " AND pt.fk_project = p.rowid AND p.fk_statut = ".$filteronprojstatus;
 		if ($userp) $sql.= " AND ctc.element = 'project'";
 		if ($usert) $sql.= " AND ctc.element = 'project_task'";
 		$sql.= " AND ctc.rowid = ec.fk_c_type_contact";
@@ -1015,7 +1015,7 @@ class Task extends CommonObject
 		if ($projectid)
 		{
 			if ($userp) $sql.= " AND pt.rowid in (".$projectid.")";
-			if ($usert) $sql.= " AND pt.fk_projet in (".$projectid.")";
+			if ($usert) $sql.= " AND pt.fk_project in (".$projectid.")";
 		}
 		if ($taskid)
 		{
@@ -1099,7 +1099,7 @@ class Task extends CommonObject
 
 		$this->db->begin();
 
-		$sql = "INSERT INTO ".MAIN_DB_PREFIX."projet_task_time (";
+		$sql = "INSERT INTO ".MAIN_DB_PREFIX."project_task_time (";
 		$sql.= "fk_task";
 		$sql.= ", task_date";
 		$sql.= ", task_datehour";
@@ -1120,7 +1120,7 @@ class Task extends CommonObject
 		$resql=$this->db->query($sql);
 		if ($resql)
 		{
-			$tasktime_id = $this->db->last_insert_id(MAIN_DB_PREFIX."projet_task_time");
+			$tasktime_id = $this->db->last_insert_id(MAIN_DB_PREFIX."project_task_time");
 			$ret = $tasktime_id;
 			$this->timespent_id = $ret;
 
@@ -1141,8 +1141,8 @@ class Task extends CommonObject
 		if ($ret > 0)
 		{
 			// Recalculate amount of time spent for task and update denormalized field
-			$sql = "UPDATE ".MAIN_DB_PREFIX."projet_task";
-			$sql.= " SET duration_effective = (SELECT SUM(task_duration) FROM ".MAIN_DB_PREFIX."projet_task_time as ptt where ptt.fk_task = ".$this->id.")";
+			$sql = "UPDATE ".MAIN_DB_PREFIX."project_task";
+			$sql.= " SET duration_effective = (SELECT SUM(task_duration) FROM ".MAIN_DB_PREFIX."project_task_time as ptt where ptt.fk_task = ".$this->id.")";
 			if (isset($this->progress)) $sql.= ", progress = " . $this->progress;	// Do not overwrite value if not provided
 			$sql.= " WHERE rowid = ".$this->id;
 
@@ -1153,7 +1153,7 @@ class Task extends CommonObject
 				$ret = -2;
 			}
 
-			$sql = "UPDATE ".MAIN_DB_PREFIX."projet_task_time";
+			$sql = "UPDATE ".MAIN_DB_PREFIX."project_task_time";
 			$sql.= " SET thm = (SELECT thm FROM ".MAIN_DB_PREFIX."user WHERE rowid = ".$this->timespent_fk_user.")";	// set average hour rate of user
 			$sql.= " WHERE rowid = ".$tasktime_id;
 
@@ -1206,7 +1206,7 @@ class Task extends CommonObject
 		$sql.= " SUM(t.task_duration / 3600 * ".$this->db->ifsql("t.thm IS NULL", 0, "t.thm").") as total_amount,";
 		$sql.= " COUNT(t.rowid) as nblines,";
 		$sql.= " SUM(".$this->db->ifsql("t.thm IS NULL", 1, 0).") as nblinesnull";
-		$sql.= " FROM ".MAIN_DB_PREFIX."projet_task_time as t";
+		$sql.= " FROM ".MAIN_DB_PREFIX."project_task_time as t";
 		$sql.= " WHERE 1 = 1";
 		if ($morewherefilter) $sql.=$morewherefilter;
 		if ($id > 0) $sql.= " AND t.fk_task = ".$id;
@@ -1257,7 +1257,7 @@ class Task extends CommonObject
 		$sql = "SELECT";
 		$sql.= " SUM(t.task_duration) as nbseconds,";
 		$sql.= " SUM(t.task_duration / 3600 * ".$this->db->ifsql("t.thm IS NULL", 0, "t.thm").") as amount, SUM(".$this->db->ifsql("t.thm IS NULL", 1, 0).") as nblinesnull";
-		$sql.= " FROM ".MAIN_DB_PREFIX."projet_task_time as t";
+		$sql.= " FROM ".MAIN_DB_PREFIX."project_task_time as t";
 		$sql.= " WHERE t.fk_task = ".$id;
 		if (is_object($fuser) && $fuser->id > 0)
 		{
@@ -1315,7 +1315,7 @@ class Task extends CommonObject
 		$sql.= " t.fk_user,";
 		$sql.= " t.thm,";
 		$sql.= " t.note";
-		$sql.= " FROM ".MAIN_DB_PREFIX."projet_task_time as t";
+		$sql.= " FROM ".MAIN_DB_PREFIX."project_task_time as t";
 		$sql.= " WHERE t.rowid = ".$id;
 
 		dol_syslog(get_class($this)."::fetchTimeSpent", LOG_DEBUG);
@@ -1380,9 +1380,9 @@ class Task extends CommonObject
 		$sql.= " p.ref as project_ref,";
 		$sql.= " p.title as project_label,";
 		$sql.= " p.public as public";
-		$sql.= " FROM ".MAIN_DB_PREFIX."projet_task_time as ptt, ".MAIN_DB_PREFIX."projet_task as pt, ".MAIN_DB_PREFIX."project as p";
+		$sql.= " FROM ".MAIN_DB_PREFIX."project_task_time as ptt, ".MAIN_DB_PREFIX."project_task as pt, ".MAIN_DB_PREFIX."project as p";
 		$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s ON p.fk_soc = s.rowid";
-		$sql.= " WHERE ptt.fk_task = pt.rowid AND pt.fk_projet = p.rowid";
+		$sql.= " WHERE ptt.fk_task = pt.rowid AND pt.fk_project = p.rowid";
 		$sql.= " AND ptt.fk_user = ".$userobj->id;
 		$sql.= " AND pt.entity IN (".getEntity('project').")";
 		if ($morewherefilter) $sql.=$morewherefilter;
@@ -1469,7 +1469,7 @@ class Task extends CommonObject
 
 		$this->db->begin();
 
-		$sql = "UPDATE ".MAIN_DB_PREFIX."projet_task_time SET";
+		$sql = "UPDATE ".MAIN_DB_PREFIX."project_task_time SET";
 		$sql.= " task_date = '".$this->db->idate($this->timespent_date)."',";
 		$sql.= " task_datehour = '".$this->db->idate($this->timespent_datehour)."',";
 		$sql.= " task_date_withhour = ".(empty($this->timespent_withhour)?0:1).",";
@@ -1506,8 +1506,8 @@ class Task extends CommonObject
 		{
 			$newDuration = $this->timespent_duration - $this->timespent_old_duration;
 
-			$sql = "UPDATE ".MAIN_DB_PREFIX."projet_task";
-			$sql.= " SET duration_effective = (SELECT SUM(task_duration) FROM ".MAIN_DB_PREFIX."projet_task_time as ptt where ptt.fk_task = ".$this->db->escape($this->id).")";
+			$sql = "UPDATE ".MAIN_DB_PREFIX."project_task";
+			$sql.= " SET duration_effective = (SELECT SUM(task_duration) FROM ".MAIN_DB_PREFIX."project_task_time as ptt where ptt.fk_task = ".$this->db->escape($this->id).")";
 			$sql.= " WHERE rowid = ".$this->id;
 
 			dol_syslog(get_class($this)."::updateTimeSpent", LOG_DEBUG);
@@ -1538,7 +1538,7 @@ class Task extends CommonObject
 
 		$this->db->begin();
 
-		$sql = "DELETE FROM ".MAIN_DB_PREFIX."projet_task_time";
+		$sql = "DELETE FROM ".MAIN_DB_PREFIX."project_task_time";
 		$sql.= " WHERE rowid = ".$this->timespent_id;
 
 		dol_syslog(get_class($this)."::delTimeSpent", LOG_DEBUG);
@@ -1558,7 +1558,7 @@ class Task extends CommonObject
 
 		if (! $error)
 		{
-			$sql = "UPDATE ".MAIN_DB_PREFIX."projet_task";
+			$sql = "UPDATE ".MAIN_DB_PREFIX."project_task";
 			$sql.= " SET duration_effective = duration_effective - ".$this->db->escape($this->timespent_duration?$this->timespent_duration:0);
 			$sql.= " WHERE rowid = ".$this->id;
 
@@ -1748,8 +1748,8 @@ class Task extends CommonObject
 					$clone_project_ref=$ori_project_ref;
 				}
 
-				$clone_task_dir = $conf->projet->dir_output . "/" . dol_sanitizeFileName($clone_project_ref). "/" . dol_sanitizeFileName($clone_task_ref);
-				$ori_task_dir = $conf->projet->dir_output . "/" . dol_sanitizeFileName($ori_project_ref). "/" . dol_sanitizeFileName($fromid);
+				$clone_task_dir = $conf->project->dir_output . "/" . dol_sanitizeFileName($clone_project_ref). "/" . dol_sanitizeFileName($clone_task_ref);
+				$ori_task_dir = $conf->project->dir_output . "/" . dol_sanitizeFileName($ori_project_ref). "/" . dol_sanitizeFileName($fromid);
 
 				$filearray=dol_dir_list($ori_task_dir, "files", 0, '', '(\.meta|_preview.*\.png)$', '', SORT_ASC, 1);
 				foreach($filearray as $key => $file)
@@ -1981,12 +1981,12 @@ class Task extends CommonObject
 		$sql.= " FROM ".MAIN_DB_PREFIX."project as p";
 		$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s on p.fk_soc = s.rowid";
 		//if (! $user->rights->societe->client->voir && ! $socid) $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."societe_commerciaux as sc ON sc.fk_soc = s.rowid";
-		$sql.= ", ".MAIN_DB_PREFIX."projet_task as t";
+		$sql.= ", ".MAIN_DB_PREFIX."project_task as t";
 		$sql.= " WHERE p.entity IN (".getEntity('project', 0).')';
 		$sql.= " AND p.fk_statut = 1";
-		$sql.= " AND t.fk_projet = p.rowid";
+		$sql.= " AND t.fk_project = p.rowid";
 		$sql.= " AND t.progress < 100";         // tasks to do
-		if (! $user->rights->projet->all->lire) $sql.= " AND p.rowid IN (".$projectsListId.")";
+		if (! $user->rights->project->all->lire) $sql.= " AND p.rowid IN (".$projectsListId.")";
 		// No need to check company, as filtering of projects must be done by getProjectsAuthorizedForUser
 		//if ($socid || ! $user->rights->societe->client->voir)	$sql.= "  AND (p.fk_soc IS NULL OR p.fk_soc = 0 OR p.fk_soc = ".$socid.")";
 		if ($socid) $sql.= "  AND (p.fk_soc IS NULL OR p.fk_soc = 0 OR p.fk_soc = ".$socid.")";
@@ -2000,9 +2000,9 @@ class Task extends CommonObject
 			$task_static = new Task($this->db);
 
 			$response = new WorkboardResponse();
-			$response->warning_delay = $conf->projet->task->warning_delay/60/60/24;
+			$response->warning_delay = $conf->project->task->warning_delay/60/60/24;
 			$response->label = $langs->trans("OpenedTasks");
-			if ($user->rights->projet->all->lire) $response->url = DOL_URL_ROOT.'/project/tasks/list.php?mainmenu=project';
+			if ($user->rights->project->all->lire) $response->url = DOL_URL_ROOT.'/project/tasks/list.php?mainmenu=project';
 			else $response->url = DOL_URL_ROOT.'/project/tasks/list.php?mode=mine&amp;mainmenu=project';
 			$response->img = img_object('', "task");
 
@@ -2052,10 +2052,10 @@ class Task extends CommonObject
 		$sql.= " FROM ".MAIN_DB_PREFIX."project as p";
 		$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s on p.fk_soc = s.rowid";
 		if (! $user->rights->societe->client->voir && ! $socid) $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."societe_commerciaux as sc ON sc.fk_soc = s.rowid";
-		$sql.= ", ".MAIN_DB_PREFIX."projet_task as t";
+		$sql.= ", ".MAIN_DB_PREFIX."project_task as t";
 		$sql.= " WHERE p.entity IN (".getEntity('project', 0).')';
-		$sql.= " AND t.fk_projet = p.rowid";         // tasks to do
-		if ($mine || ! $user->rights->projet->all->lire) $sql.= " AND p.rowid IN (".$projectsListId.")";
+		$sql.= " AND t.fk_project = p.rowid";         // tasks to do
+		if ($mine || ! $user->rights->project->all->lire) $sql.= " AND p.rowid IN (".$projectsListId.")";
 		// No need to check company, as filtering of projects must be done by getProjectsAuthorizedForUser
 		//if ($socid || ! $user->rights->societe->client->voir)	$sql.= "  AND (p.fk_soc IS NULL OR p.fk_soc = 0 OR p.fk_soc = ".$socid.")";
 		if ($socid) $sql.= "  AND (p.fk_soc IS NULL OR p.fk_soc = 0 OR p.fk_soc = ".$socid.")";
@@ -2097,6 +2097,6 @@ class Task extends CommonObject
 
 		$datetouse = ($this->date_end > 0) ? $this->date_end : ($this->datee > 0 ? $this->datee : 0);
 
-		return ($datetouse > 0 && ($datetouse < ($now - $conf->projet->task->warning_delay)));
+		return ($datetouse > 0 && ($datetouse < ($now - $conf->project->task->warning_delay)));
 	}
 }

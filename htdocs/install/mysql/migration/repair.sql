@@ -106,16 +106,16 @@ update llx_deplacement set dated='2010-01-01' where dated < '2000-01-01';
 
 update llx_subscription set fk_bank = null where fk_bank not in (select rowid from llx_bank);
 
-update llx_propal set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_commande set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_facture set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_commande_fournisseur set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_contrat set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_deplacement set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_facture_fourn set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_facture_rec set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_fichinter set fk_projet = null where fk_projet not in (select rowid from llx_projet);
-update llx_projet_task set fk_projet = null where fk_projet not in (select rowid from llx_projet);
+update llx_propal set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_commande set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_facture set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_commande_fournisseur set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_contrat set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_deplacement set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_facture_fourn set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_facture_rec set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_fichinter set fk_project = null where fk_project not in (select rowid from llx_project);
+update llx_project_task set fk_project = null where fk_project not in (select rowid from llx_project);
 
 update llx_propal set fk_user_author = null where fk_user_author not in (select rowid from llx_user);
 update llx_propal set fk_user_valid = null where fk_user_valid not in (select rowid from llx_user);
@@ -292,17 +292,17 @@ delete from llx_accounting_account where (rowid) in (select max_rowid from tmp_a
 drop table tmp_accounting_account_double;
 
 
-UPDATE llx_projet_task SET fk_task_parent = 0 WHERE fk_task_parent = rowid;
+UPDATE llx_project_task SET fk_task_parent = 0 WHERE fk_task_parent = rowid;
 
 
 UPDATE llx_actioncomm set fk_user_action = fk_user_done where fk_user_done > 0 and (fk_user_action is null or fk_user_action = 0);
 UPDATE llx_actioncomm set fk_user_action = fk_user_author where fk_user_author > 0 and (fk_user_action is null or fk_user_action = 0);
 
 
-UPDATE llx_projet_task_time set task_datehour = task_date where task_datehour IS NULL and task_date IS NOT NULL;
+UPDATE llx_project_task_time set task_datehour = task_date where task_datehour IS NULL and task_date IS NOT NULL;
 
-UPDATE llx_projet set fk_opp_status = NULL where fk_opp_status = -1;
-UPDATE llx_projet set fk_opp_status = (SELECT rowid FROM llx_c_lead_status WHERE code='PROSP') where fk_opp_status IS NULL and opp_amount > 0;
+UPDATE llx_project set fk_opp_status = NULL where fk_opp_status = -1;
+UPDATE llx_project set fk_opp_status = (SELECT rowid FROM llx_c_lead_status WHERE code='PROSP') where fk_opp_status IS NULL and opp_amount > 0;
 UPDATE llx_c_lead_status set code = 'WON' where code = 'WIN';
 
 -- Requests to clean old tables or external modules tables
@@ -367,8 +367,8 @@ delete from llx_menu where menu_handler = 'smartphone';
 update llx_expedition set date_valid = date_creation where fk_statut = 1 and date_valid IS NULL;
 
 -- Detect bad consistency between duraction_effective of a task and sum of time of tasks
--- select pt.rowid, pt.duration_effective, SUM(ptt.task_duration) as y from llx_projet_task as pt, llx_projet_task_time as ptt where ptt.fk_task = pt.rowid group by pt.rowid, pt.duration_effective having pt.duration_effective <> y;
-update llx_projet_task as pt set pt.duration_effective = (select SUM(ptt.task_duration) as y from llx_projet_task_time as ptt where ptt.fk_task = pt.rowid) where pt.duration_effective <> (select SUM(ptt.task_duration) as y from llx_projet_task_time as ptt where ptt.fk_task = pt.rowid);
+-- select pt.rowid, pt.duration_effective, SUM(ptt.task_duration) as y from llx_project_task as pt, llx_project_task_time as ptt where ptt.fk_task = pt.rowid group by pt.rowid, pt.duration_effective having pt.duration_effective <> y;
+update llx_project_task as pt set pt.duration_effective = (select SUM(ptt.task_duration) as y from llx_project_task_time as ptt where ptt.fk_task = pt.rowid) where pt.duration_effective <> (select SUM(ptt.task_duration) as y from llx_project_task_time as ptt where ptt.fk_task = pt.rowid);
  
 
 -- Remove duplicate of shipment mode (keep the one with tracking defined)
@@ -395,7 +395,7 @@ ALTER TABLE llx_accounting_account DROP INDEX uk_accounting_account;
 ALTER TABLE llx_accounting_account ADD UNIQUE INDEX uk_accounting_account (account_number, entity, fk_pcg_version);
 
 
--- VMYSQL4.1 update llx_projet_task_time set task_datehour = task_date where task_datehour < task_date or task_datehour > DATE_ADD(task_date, interval 1 day);
+-- VMYSQL4.1 update llx_project_task_time set task_datehour = task_date where task_datehour < task_date or task_datehour > DATE_ADD(task_date, interval 1 day);
 
 
 -- Clean product prices
@@ -452,7 +452,7 @@ UPDATE llx_chargesociales SET date_creation = tms WHERE date_creation IS NULL;
 
 
 -- Backport a change of value into the hourly rate. 
--- update llx_projet_task_time as ptt set ptt.thm = (SELECT thm from llx_user as u where ptt.fk_user = u.rowid) where (ptt.thm is null)
+-- update llx_project_task_time as ptt set ptt.thm = (SELECT thm from llx_user as u where ptt.fk_user = u.rowid) where (ptt.thm is null)
 
 
 -- select * from llx_facturedet as fd, llx_product as p where fd.fk_product = p.rowid AND fd.product_type != p.fk_product_type;

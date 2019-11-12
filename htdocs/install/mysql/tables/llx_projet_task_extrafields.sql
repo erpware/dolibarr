@@ -16,7 +16,7 @@
 --
 -- ========================================================================
 
-create table llx_projet_task_extrafields
+create table llx_project_task_extrafields
 (
   rowid                     integer AUTO_INCREMENT PRIMARY KEY,
   tms                       timestamp,

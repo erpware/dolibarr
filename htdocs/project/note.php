@@ -46,7 +46,7 @@ $socid=0;
 //if ($user->socid > 0) $socid = $user->socid;    // For external user, no check is done on company because readability is managed by public status of project and assignement.
 $result = restrictedArea($user, 'project', $id, 'project&project');
 
-$permissionnote=$user->rights->projet->creer;	// Used by the include of actions_setnotes.inc.php
+$permissionnote=$user->rights->project->creer;	// Used by the include of actions_setnotes.inc.php
 
 
 /*
@@ -62,7 +62,7 @@ include DOL_DOCUMENT_ROOT.'/core/actions_setnotes.inc.php';	// Must be include, 
 
 $title=$langs->trans("Project").' - '.$langs->trans("Note").' - '.$object->ref.' '.$object->name;
 if (! empty($conf->global->MAIN_HTML_TITLE) && preg_match('/projectnameonly/', $conf->global->MAIN_HTML_TITLE) && $object->name) $title=$object->ref.' '.$object->name.' - '.$langs->trans("Note");
-$help_url="EN:Module_Projects|FR:Module_Projets|ES:M&oacute;dulo_Proyectos";
+$help_url="EN:Module_Projects|FR:Module_Projects|ES:M&oacute;dulo_Proyectos";
 llxHeader("", $title, $help_url);
 
 $form = new Form($db);
@@ -97,7 +97,7 @@ if ($id > 0 || ! empty($ref))
 	$morehtmlref.='</div>';
 
 	// Define a complementary filter for search of next/prev ref.
-	if (! $user->rights->projet->all->lire)
+	if (! $user->rights->project->all->lire)
 	{
 	    $objectsListId = $object->getProjectsAuthorizedForUser($user, 0, 0);
 	    $object->next_prev_filter=" rowid in (".(count($objectsListId)?join(',', array_keys($objectsListId)):'0').")";

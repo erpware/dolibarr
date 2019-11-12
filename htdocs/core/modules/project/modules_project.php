@@ -63,7 +63,7 @@ abstract class ModelePDFProjects extends CommonDocGenerator
 
 
 /**
- *  Classe mere des modeles de numerotation des references de projets
+ *  Classe mere des modeles de numerotation des references de projects
  */
 abstract class ModeleNumRefProjects
 {

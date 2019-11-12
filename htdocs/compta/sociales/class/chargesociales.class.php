@@ -128,7 +128,7 @@ class ChargeSociales extends CommonObject
     public function fetch($id, $ref = '')
     {
         $sql = "SELECT cs.rowid, cs.date_ech";
-        $sql.= ", cs.libelle as label, cs.fk_type, cs.amount, cs.fk_projet as fk_project, cs.paye, cs.periode, cs.import_key";
+        $sql.= ", cs.libelle as label, cs.fk_type, cs.amount, cs.fk_project as fk_project, cs.paye, cs.periode, cs.import_key";
         $sql.= ", cs.fk_account, cs.fk_mode_reglement";
         $sql.= ", c.libelle";
         $sql.= ', p.code as mode_reglement_code, p.libelle as mode_reglement_libelle';
@@ -222,7 +222,7 @@ class ChargeSociales extends CommonObject
 
         $this->db->begin();
 
-        $sql = "INSERT INTO ".MAIN_DB_PREFIX."chargesociales (fk_type, fk_account, fk_mode_reglement, libelle, date_ech, periode, amount, fk_projet, entity, fk_user_author, date_creation)";
+        $sql = "INSERT INTO ".MAIN_DB_PREFIX."chargesociales (fk_type, fk_account, fk_mode_reglement, libelle, date_ech, periode, amount, fk_project, entity, fk_user_author, date_creation)";
         $sql.= " VALUES (".$this->type;
         $sql.= ", ".($this->fk_account>0 ? $this->fk_account:'NULL');
         $sql.= ", ".($this->mode_reglement_id>0 ? $this->mode_reglement_id:"NULL");
@@ -350,7 +350,7 @@ class ChargeSociales extends CommonObject
         $sql.= ", date_ech='".$this->db->idate($this->date_ech)."'";
         $sql.= ", periode='".$this->db->idate($this->periode)."'";
         $sql.= ", amount='".price2num($this->amount, 'MT')."'";
-        $sql.= ", fk_projet=".($this->fk_project>0?$this->db->escape($this->fk_project):"NULL");
+        $sql.= ", fk_project=".($this->fk_project>0?$this->db->escape($this->fk_project):"NULL");
         $sql.= ", fk_user_modif=".$user->id;
         $sql.= " WHERE rowid=".$this->id;
 

@@ -34,7 +34,7 @@ TicketTypeShortBUGSOFT=Foutmelding
 TicketTypeShortBUGHARD=Storing hardware
 TicketTypeShortCOM=Commerciële vraag
 TicketTypeShortINCIDENT=Verzoek om hulp
-TicketTypeShortPROJET=Project
+TicketTypeShortPROJECT=Project
 TicketTypeShortOTHER=Overig
 
 TicketSeverityShortLOW=Laag

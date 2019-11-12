@@ -69,7 +69,7 @@ $search_valuebilled=GETPOST('search_valuebilled', 'int');
 // Security check
 $socid=0;
 //if ($user->socid > 0) $socid = $user->socid;    // For external user, no check is done on company because readability is managed by public status of project and assignement.
-if (!$user->rights->projet->lire) accessforbidden();
+if (!$user->rights->project->lire) accessforbidden();
 
 $limit = GETPOST('limit', 'int')?GETPOST('limit', 'int'):$conf->liste_limit;
 $sortfield = GETPOST("sortfield", 'alpha');
@@ -129,7 +129,7 @@ if (GETPOST('button_removefilter_x', 'alpha') || GETPOST('button_removefilter.x'
     $action='';
 }
 
-if ($action == 'addtimespent' && $user->rights->projet->lire)
+if ($action == 'addtimespent' && $user->rights->project->lire)
 {
 	$error=0;
 
@@ -169,7 +169,7 @@ if ($action == 'addtimespent' && $user->rights->projet->lire)
 
 		if (! $error)
 		{
-    		$object->fetch_projet();
+    		$object->fetch_project();
 
     		if (empty($object->project->statut))
     		{
@@ -213,7 +213,7 @@ if ($action == 'addtimespent' && $user->rights->projet->lire)
 	}
 }
 
-if (($action == 'updateline' || $action == 'updatesplitline') && ! $_POST["cancel"] && $user->rights->projet->lire)
+if (($action == 'updateline' || $action == 'updatesplitline') && ! $_POST["cancel"] && $user->rights->project->lire)
 {
 	$error=0;
 
@@ -261,7 +261,7 @@ if (($action == 'updateline' || $action == 'updatesplitline') && ! $_POST["cance
 	}
 }
 
-if ($action == 'confirm_delete' && $confirm == "yes" && $user->rights->projet->lire)
+if ($action == 'confirm_delete' && $confirm == "yes" && $user->rights->project->lire)
 {
 	$object->fetchTimeSpent(GETPOST('lineid', 'int'));
 	// TODO Check that ($task_time->fk_user == $user->id || in_array($task_time->fk_user, $childids))
@@ -280,7 +280,7 @@ if ($action == 'confirm_delete' && $confirm == "yes" && $user->rights->projet->l
 	}
 }
 
-// Retreive First Task ID of Project if withprojet is on to allow project prev next to work
+// Retreive First Task ID of Project if withproject is on to allow project prev next to work
 if (! empty($project_ref) && ! empty($withproject))
 {
 	if ($projectstatic->fetch(0, $project_ref) > 0)
@@ -402,7 +402,7 @@ if ($action == 'confirm_generateinvoice')
 				$lineid = $tmpinvoice->addline($langs->trans("TimeSpentForInvoice", $username).' : '.$qtyhourtext, $pu_ht, $qtyhour, $txtva, $localtax1, $localtax2, ($idprod > 0 ? $idprod : 0));
 
 				// Update lineid into line of timespent
-				$sql ='UPDATE '.MAIN_DB_PREFIX.'projet_task_time SET invoice_line_id = '.$lineid.', invoice_id = '.$tmpinvoice->id;
+				$sql ='UPDATE '.MAIN_DB_PREFIX.'project_task_time SET invoice_line_id = '.$lineid.', invoice_id = '.$tmpinvoice->id;
 				$sql.=' WHERE rowid in ('.join(',', $toselect).') AND fk_user = '.$userid;
 				$result = $db->query($sql);
 				if (! $result)
@@ -440,7 +440,7 @@ llxHeader("", $langs->trans("Task"));
 
 $form = new Form($db);
 $formother = new FormOther($db);
-$formproject = new FormProjets($db);
+$formproject = new FormProjects($db);
 $userstatic = new User($db);
 
 if (($id > 0 || ! empty($ref)) || $projectidforalltimes > 0)
@@ -495,7 +495,7 @@ if (($id > 0 || ! empty($ref)) || $projectidforalltimes > 0)
             $morehtmlref.='</div>';
 
             // Define a complementary filter for search of next/prev ref.
-            if (! $user->rights->projet->all->lire)
+            if (! $user->rights->project->all->lire)
             {
                 $objectsListId = $projectstatic->getProjectsAuthorizedForUser($user, 0, 0);
                 $projectstatic->next_prev_filter=" rowid in (".(count($objectsListId)?join(',', array_keys($objectsListId)):'0').")";
@@ -608,7 +608,7 @@ if (($id > 0 || ! empty($ref)) || $projectidforalltimes > 0)
         $linktocreatetimeBtnStatus = 0;
         $linktocreatetimeUrl = '';
         $linktocreatetimeHelpText = '';
-        if ($user->rights->projet->all->lire || $user->rights->projet->lire)	// To enter time, read permission is enough
+        if ($user->rights->project->all->lire || $user->rights->project->lire)	// To enter time, read permission is enough
 		{
 			if ($projectstatic->public || $userRead > 0)
 		    {
@@ -664,9 +664,9 @@ if (($id > 0 || ! empty($ref)) || $projectidforalltimes > 0)
 		if (! GETPOST('withproject') || empty($projectstatic->id))
 		{
 			$projectsListId = $projectstatic->getProjectsAuthorizedForUser($user, 0, 1);
-			$object->next_prev_filter=" fk_projet in (".$projectsListId.")";
+			$object->next_prev_filter=" fk_project in (".$projectsListId.")";
 		}
-		else $object->next_prev_filter=" fk_projet = ".$projectstatic->id;
+		else $object->next_prev_filter=" fk_project = ".$projectstatic->id;
 
 		$morehtmlref='';
 
@@ -809,7 +809,7 @@ if (($id > 0 || ! empty($ref)) || $projectidforalltimes > 0)
 	    print '<input type="hidden" name="formfilteraction" id="formfilteraction" value="list">';
 	    if ($action == 'editline') print '<input type="hidden" name="action" value="updateline">';
 	    elseif ($action == 'splitline') print '<input type="hidden" name="action" value="updatesplitline">';
-	    elseif ($action == 'createtime' && $user->rights->projet->lire) print '<input type="hidden" name="action" value="addtimespent">';
+	    elseif ($action == 'createtime' && $user->rights->project->lire) print '<input type="hidden" name="action" value="addtimespent">';
 	    elseif ($massaction == 'generateinvoice' && $user->rights->facture->lire) print '<input type="hidden" name="action" value="confirm_generateinvoice">';
 	    else print '<input type="hidden" name="action" value="list">';
 	    print '<input type="hidden" name="sortfield" value="'.$sortfield.'">';
@@ -884,13 +884,13 @@ if (($id > 0 || ! empty($ref)) || $projectidforalltimes > 0)
 		$sql .= " pt.ref, pt.label,";
 		$sql .= " u.lastname, u.firstname, u.login, u.photo, u.statut as user_status,";
 		$sql .= " il.fk_facture as invoice_id, inv.fk_statut";
-		$sql .= " FROM ".MAIN_DB_PREFIX."projet_task_time as t";
+		$sql .= " FROM ".MAIN_DB_PREFIX."project_task_time as t";
 		$sql .= " LEFT JOIN ".MAIN_DB_PREFIX."facturedet as il ON il.rowid = t.invoice_line_id";
 		$sql .= " LEFT JOIN ".MAIN_DB_PREFIX."facture as inv ON inv.rowid = il.fk_facture,";
-		$sql .= " ".MAIN_DB_PREFIX."projet_task as pt, ".MAIN_DB_PREFIX."user as u";
+		$sql .= " ".MAIN_DB_PREFIX."project_task as pt, ".MAIN_DB_PREFIX."user as u";
 		$sql .= " WHERE t.fk_user = u.rowid AND t.fk_task = pt.rowid";
 		if (empty($projectidforalltimes)) $sql .= " AND t.fk_task =".$object->id;
-		else $sql.= " AND pt.fk_projet IN (".$projectidforalltimes.")";
+		else $sql.= " AND pt.fk_project IN (".$projectidforalltimes.")";
 		if ($search_ref) $sql .= natural_search('c.ref', $search_ref);
 		if ($search_note) $sql .= natural_search('t.note', $search_note);
 		if ($search_task_ref) $sql .= natural_search('pt.ref', $search_task_ref);
@@ -968,7 +968,7 @@ if (($id > 0 || ! empty($ref)) || $projectidforalltimes > 0)
 		/*
 		 * Form to add time spent
 		 */
-		if ($action == 'createtime' && $user->rights->projet->lire)
+		if ($action == 'createtime' && $user->rights->project->lire)
 		{
 			print '<!-- table to add time spent -->'."\n";
             if (! empty($id)) print '<input type="hidden" name="taskid" value="'.$id.'">';
@@ -1353,9 +1353,9 @@ if (($id > 0 || ! empty($ref)) || $projectidforalltimes > 0)
 				print '<br>';
 				print '<input type="submit" class="button" name="cancel" value="'.$langs->trans('Cancel').'">';
 			}
-			elseif ($user->rights->projet->lire || $user->rights->projet->all->creer)    // Read project and enter time consumed on assigned tasks
+			elseif ($user->rights->project->lire || $user->rights->project->all->creer)    // Read project and enter time consumed on assigned tasks
 			{
-				if ($task_time->fk_user == $user->id || in_array($task_time->fk_user, $childids) || $user->rights->projet->all->creer)
+				if ($task_time->fk_user == $user->id || in_array($task_time->fk_user, $childids) || $user->rights->project->all->creer)
 				{
 				    if ($conf->MAIN_FEATURES_LEVEL >= 2)
 				    {

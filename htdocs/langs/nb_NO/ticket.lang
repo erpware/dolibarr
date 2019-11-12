@@ -34,7 +34,7 @@ TicketTypeShortBUGSOFT=Programvarefeil
 TicketTypeShortBUGHARD=Hardwarefeil
 TicketTypeShortCOM=Prisforespørsel
 TicketTypeShortINCIDENT=Be om hjelp
-TicketTypeShortPROJET=Prosjekt
+TicketTypeShortPROJECT=Prosjekt
 TicketTypeShortOTHER=Annet
 
 TicketSeverityShortLOW=Lav

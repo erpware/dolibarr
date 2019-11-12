@@ -50,7 +50,7 @@ $planned_workload=((GETPOST('planned_workloadhour', 'int')!='' || GETPOST('plann
 // Security check
 $socid=0;
 //if ($user->socid > 0) $socid = $user->socid;    // For external user, no check is done on company because readability is managed by public status of project and assignement.
-if (! $user->rights->projet->lire) accessforbidden();
+if (! $user->rights->project->lire) accessforbidden();
 
 // Initialize technical object to manage hooks of page. Note that conf->hooks_modules contains array of hook context
 $hookmanager->initHooks(array('projecttaskcommentcard','globalcard'));
@@ -65,7 +65,7 @@ $extrafields->fetch_name_optionals_label($object->table_element);
 // include comment actions
 include DOL_DOCUMENT_ROOT . '/core/actions_comments.inc.php';
 
-// Retreive First Task ID of Project if withprojet is on to allow project prev next to work
+// Retreive First Task ID of Project if withproject is on to allow project prev next to work
 if (! empty($project_ref) && ! empty($withproject))
 {
 	if ($projectstatic->fetch('', $project_ref) > 0)
@@ -136,7 +136,7 @@ if ($id > 0 || ! empty($ref))
             $morehtmlref.='</div>';
 
             // Define a complementary filter for search of next/prev ref.
-            if (! $user->rights->projet->all->lire)
+            if (! $user->rights->project->all->lire)
             {
                 $objectsListId = $projectstatic->getProjectsAuthorizedForUser($user, 0, 0);
                 $projectstatic->next_prev_filter=" rowid in (".(count($objectsListId)?join(',', array_keys($objectsListId)):'0').")";
@@ -279,9 +279,9 @@ if ($id > 0 || ! empty($ref))
 		if (! GETPOST('withproject') || empty($projectstatic->id))
 		{
 		    $projectsListId = $projectstatic->getProjectsAuthorizedForUser($user, 0, 1);
-		    $object->next_prev_filter=" fk_projet in (".$projectsListId.")";
+		    $object->next_prev_filter=" fk_project in (".$projectsListId.")";
 		}
-		else $object->next_prev_filter=" fk_projet = ".$projectstatic->id;
+		else $object->next_prev_filter=" fk_project = ".$projectstatic->id;
 
 		$morehtmlref='';
 

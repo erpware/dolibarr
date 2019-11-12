@@ -368,7 +368,7 @@ class MouvementStock extends CommonObject
 
 			$sql = "INSERT INTO ".MAIN_DB_PREFIX."stock_mouvement(";
 			$sql.= " datem, fk_product, batch, eatby, sellby,";
-			$sql.= " fk_entrepot, value, type_mouvement, fk_user_author, label, inventorycode, price, fk_origin, origintype, fk_projet";
+			$sql.= " fk_entrepot, value, type_mouvement, fk_user_author, label, inventorycode, price, fk_origin, origintype, fk_project";
 			$sql.= ")";
 			$sql.= " VALUES ('".$this->db->idate($now)."', ".$this->product_id.", ";
 			$sql.= " ".($batch?"'".$batch."'":"null").", ";
@@ -585,7 +585,7 @@ class MouvementStock extends CommonObject
 	    $sql .= " t.batch,";
 	    $sql .= " t.eatby,";
 	    $sql .= " t.sellby,";
-	    $sql .= " t.fk_projet as fk_project";
+	    $sql .= " t.fk_project as fk_project";
 	    $sql .= ' FROM ' . MAIN_DB_PREFIX . $this->table_element . ' as t';
 	    $sql.= ' WHERE 1 = 1';
 	    //if (null !== $ref) {

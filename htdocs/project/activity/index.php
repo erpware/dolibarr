@@ -38,7 +38,7 @@ if ($search_project_user == $user->id) $mine = 1;
 $socid=0;
 if ($user->socid > 0) $socid=$user->socid;
 //$result = restrictedArea($user, 'project', $projectid);
-if (!$user->rights->projet->lire) accessforbidden();
+if (!$user->rights->project->lire) accessforbidden();
 
 $hookmanager = new HookManager($db);
 
@@ -73,7 +73,7 @@ llxHeader("", $title);
 
 // Title for combo list see all projects
 $titleall=$langs->trans("AllAllowedProjects");
-if (! empty($user->rights->projet->all->lire) && ! $socid) $titleall=$langs->trans("AllProjects");
+if (! empty($user->rights->project->all->lire) && ! $socid) $titleall=$langs->trans("AllProjects");
 else $titleall=$langs->trans("AllAllowedProjects").'<br><br>';
 
 
@@ -91,7 +91,7 @@ print_barre_liste($title, 0, $_SERVER["PHP_SELF"], '', '', '', '', 0, -1, 'proje
 if ($mine) print $langs->trans("MyTasksDesc").'<br><br>';
 else
 {
-	if ($user->rights->projet->all->lire && ! $socid) print $langs->trans("TasksDesc").'<br><br>';
+	if ($user->rights->project->all->lire && ! $socid) print $langs->trans("TasksDesc").'<br><br>';
 	else print $langs->trans("TasksPublicDesc").'<br><br>';
 }
 
@@ -102,7 +102,7 @@ print '<div class="fichecenter"><div class="fichethirdleft">';
 if (! empty($conf->global->MAIN_SEARCH_FORM_ON_HOME_AREAS))     // This is useless due to the global search combo
 {
     // Search project
-    if (! empty($conf->project->enabled) && $user->rights->projet->lire)
+    if (! empty($conf->project->enabled) && $user->rights->project->lire)
     {
     	$listofsearchfields['search_task']=array('text'=>'Task');
     }
@@ -131,7 +131,7 @@ if (! empty($conf->global->MAIN_SEARCH_FORM_ON_HOME_AREAS))     // This is usele
 }
 
 
-/* Affichage de la liste des projets d'aujourd'hui */
+/* Affichage de la liste des projects d'aujourd'hui */
 print '<div class="div-table-responsive-no-min">';
 print '<table class="noborder centpercent">';
 print '<tr class="liste_titre">';
@@ -141,9 +141,9 @@ print "</tr>\n";
 
 $sql = "SELECT p.rowid, p.ref, p.title, p.public, SUM(tt.task_duration) as nb";
 $sql.= " FROM ".MAIN_DB_PREFIX."project as p";
-$sql.= ", ".MAIN_DB_PREFIX."projet_task as t";
-$sql.= ", ".MAIN_DB_PREFIX."projet_task_time as tt";
-$sql.= " WHERE t.fk_projet = p.rowid";
+$sql.= ", ".MAIN_DB_PREFIX."project_task as t";
+$sql.= ", ".MAIN_DB_PREFIX."project_task_time as tt";
+$sql.= " WHERE t.fk_project = p.rowid";
 $sql.= " AND p.entity = ".$conf->entity;
 $sql.= " AND tt.fk_task = t.rowid";
 $sql.= " AND tt.fk_user = ".$user->id;
@@ -188,7 +188,7 @@ print '</div>';
 print '</div><div class="fichetwothirdright"><div class="ficheaddleft">';
 
 
-/* Affichage de la liste des projets d'hier */
+/* Affichage de la liste des projects d'hier */
 print '<div class="div-table-responsive-no-min">';
 print '<table class="noborder centpercent">';
 print '<tr class="liste_titre">';
@@ -198,9 +198,9 @@ print "</tr>\n";
 
 $sql = "SELECT p.rowid, p.ref, p.title, p.public, SUM(tt.task_duration) as nb";
 $sql.= " FROM ".MAIN_DB_PREFIX."project as p";
-$sql.= ", ".MAIN_DB_PREFIX."projet_task as t";
-$sql.= ", ".MAIN_DB_PREFIX."projet_task_time as tt";
-$sql.= " WHERE t.fk_projet = p.rowid";
+$sql.= ", ".MAIN_DB_PREFIX."project_task as t";
+$sql.= ", ".MAIN_DB_PREFIX."project_task_time as tt";
+$sql.= " WHERE t.fk_project = p.rowid";
 $sql.= " AND p.entity = ".$conf->entity;
 $sql.= " AND tt.fk_task = t.rowid";
 $sql.= " AND tt.fk_user = ".$user->id;
@@ -248,7 +248,7 @@ if ($db->type != 'pgsql')
 {
     print '<br>';
 
-    // Affichage de la liste des projets de la semaine
+    // Affichage de la liste des projects de la semaine
     print '<div class="div-table-responsive-no-min">';
     print '<table class="noborder centpercent">';
     print '<tr class="liste_titre">';
@@ -258,9 +258,9 @@ if ($db->type != 'pgsql')
 
     $sql = "SELECT p.rowid, p.ref, p.title, p.public, SUM(tt.task_duration) as nb";
     $sql.= " FROM ".MAIN_DB_PREFIX."project as p";
-    $sql.= " , ".MAIN_DB_PREFIX."projet_task as t";
-    $sql.= " , ".MAIN_DB_PREFIX."projet_task_time as tt";
-    $sql.= " WHERE t.fk_projet = p.rowid";
+    $sql.= " , ".MAIN_DB_PREFIX."project_task as t";
+    $sql.= " , ".MAIN_DB_PREFIX."project_task_time as tt";
+    $sql.= " WHERE t.fk_project = p.rowid";
     $sql.= " AND p.entity = ".$conf->entity;
     $sql.= " AND tt.fk_task = t.rowid";
     $sql.= " AND tt.fk_user = ".$user->id;
@@ -303,7 +303,7 @@ if ($db->type != 'pgsql')
 }
 */
 
-/* Affichage de la liste des projets du mois */
+/* Affichage de la liste des projects du mois */
 if (! empty($conf->global->PROJECT_TASK_TIME_MONTH))
 {
     print '<div class="div-table-responsive-no-min">';
@@ -315,9 +315,9 @@ if (! empty($conf->global->PROJECT_TASK_TIME_MONTH))
 
     $sql = "SELECT p.rowid, p.ref, p.title, p.public, SUM(tt.task_duration) as nb";
     $sql.= " FROM ".MAIN_DB_PREFIX."project as p";
-    $sql.= ", ".MAIN_DB_PREFIX."projet_task as t";
-    $sql.= ", ".MAIN_DB_PREFIX."projet_task_time as tt";
-    $sql.= " WHERE t.fk_projet = p.rowid";
+    $sql.= ", ".MAIN_DB_PREFIX."project_task as t";
+    $sql.= ", ".MAIN_DB_PREFIX."project_task_time as tt";
+    $sql.= " WHERE t.fk_project = p.rowid";
     $sql.= " AND p.entity = ".$conf->entity;
     $sql.= " AND tt.fk_task = t.rowid";
     $sql.= " AND tt.fk_user = ".$user->id;
@@ -354,7 +354,7 @@ if (! empty($conf->global->PROJECT_TASK_TIME_MONTH))
     print '</div>';
 }
 
-/* Affichage de la liste des projets de l'annee */
+/* Affichage de la liste des projects de l'annee */
 if (! empty($conf->global->PROJECT_TASK_TIME_YEAR))
 {
     print '<div class="div-table-responsive-no-min">';
@@ -366,9 +366,9 @@ if (! empty($conf->global->PROJECT_TASK_TIME_YEAR))
 
 	$sql = "SELECT p.rowid, p.ref, p.title, p.public, SUM(tt.task_duration) as nb";
 	$sql.= " FROM ".MAIN_DB_PREFIX."project as p";
-	$sql.= ", ".MAIN_DB_PREFIX."projet_task as t";
-	$sql.= ", ".MAIN_DB_PREFIX."projet_task_time as tt";
-	$sql.= " WHERE t.fk_projet = p.rowid";
+	$sql.= ", ".MAIN_DB_PREFIX."project_task as t";
+	$sql.= ", ".MAIN_DB_PREFIX."project_task_time as tt";
+	$sql.= " WHERE t.fk_project = p.rowid";
 	$sql.= " AND p.entity = ".$conf->entity;
 	$sql.= " AND tt.fk_task = t.rowid";
 	$sql.= " AND tt.fk_user = ".$user->id;
@@ -450,15 +450,15 @@ if (empty($conf->global->PROJECT_HIDE_TASKS) && ! empty($conf->global->PROJECT_S
 	$sql.= " t.label, t.rowid as taskid, t.planned_workload, t.duration_effective, t.progress, t.dateo, t.datee, SUM(tasktime.task_duration) as timespent";
 	$sql.= " FROM ".MAIN_DB_PREFIX."project as p";
 	$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s on p.fk_soc = s.rowid";
-	$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."projet_task as t on t.fk_projet = p.rowid";
-	$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."projet_task_time as tasktime on tasktime.fk_task = t.rowid";
+	$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."project_task as t on t.fk_project = p.rowid";
+	$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."project_task_time as tasktime on tasktime.fk_task = t.rowid";
 	$sql.= " LEFT JOIN ".MAIN_DB_PREFIX."user as u on tasktime.fk_user = u.rowid";
 	if ($mine)
 	{
 	    $sql.= ", " . MAIN_DB_PREFIX . "element_contact as ect";
 	}
 	$sql.= " WHERE p.entity IN (".getEntity('project').")";
-	if ($mine || empty($user->rights->projet->all->lire)) $sql.= " AND p.rowid IN (".$projectsListId.")";  // project i have permission on
+	if ($mine || empty($user->rights->project->all->lire)) $sql.= " AND p.rowid IN (".$projectsListId.")";  // project i have permission on
 	if ($mine)     // this may duplicate record if we are contact twice
 	{
         $sql.= " AND ect.fk_c_type_contact IN (".join(',', array_keys($listoftaskcontacttype)).") AND ect.element_id = t.rowid AND ect.fk_socpeople = ".$user->id;

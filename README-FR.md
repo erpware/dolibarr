@@ -84,7 +84,7 @@ Voir fichier ChangeLog.
 - Gestion des virements bancaires SEPA
 - Gestion des comptes bancaires
 - Calendrier/Agenda partagé (avec export ical, vcal) 
-- Suivi des opportunités et/ou projets (suivi de rentabilité incluant les factures, notes de frais, temps consommé valorisé, ...)
+- Suivi des opportunités et/ou projects (suivi de rentabilité incluant les factures, notes de frais, temps consommé valorisé, ...)
 - Gestion de contrats de services
 - Gestion de stock
 - Gestion des expéditions
@@ -144,7 +144,7 @@ Dolibarr peut aussi être étendu à volonté avec l'ajout de module/application
 
 Voici un liste de fonctionnalités pas encore gérées par Dolibarr:
 - Dolibarr ne contient pas de module de Gestion de la paie.
-- Les tâches du module de gestion de projets n'ont pas de dépendances entre elle.
+- Les tâches du module de gestion de projects n'ont pas de dépendances entre elle.
 - Dolibarr n'embarque pas de Webmail intégré nativement.
 - Dolibarr ne fait pas le café (pas encore). 
 
@@ -156,7 +156,7 @@ La documentation utilisateur, développeur et traducteur est disponible sous for
 
 ## CONTRIBUER
 
-Ce projet existe grâce à ses nombreux contributeurs [[Contribuer](https://github.com/Dolibarr/dolibarr/blob/develop/.github/CONTRIBUTING.md)].
+Ce project existe grâce à ses nombreux contributeurs [[Contribuer](https://github.com/Dolibarr/dolibarr/blob/develop/.github/CONTRIBUTING.md)].
 <a href="https://github.com/Dolibarr/dolibarr/graphs/contributors"><img src="https://opencollective.com/dolibarr/contributors.svg?width=890&button=false" /></a>
 
 
@@ -169,7 +169,7 @@ Voir le fichier [COPYRIGHT](https://github.com/Dolibarr/dolibarr/blob/develop/CO
 
 ## ACTUALITES ET RESEAUX SOCIAUX
 
-Suivez le projet Dolibarr project sur les réseaux francophones
+Suivez le project Dolibarr project sur les réseaux francophones
 
 - Facebook: <https://www.facebook.com/dolibarr.fr>
 - Google+: <https://plus.google.com/+DolibarrFrance>

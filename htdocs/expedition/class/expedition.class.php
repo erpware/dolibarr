@@ -295,7 +295,7 @@ class Expedition extends CommonObject
 		$sql.= ", date_expedition";
 		$sql.= ", date_delivery";
 		$sql.= ", fk_soc";
-		$sql.= ", fk_projet";
+		$sql.= ", fk_project";
 		$sql.= ", fk_address";
 		$sql.= ", fk_shipping_method";
 		$sql.= ", tracking_number";
@@ -533,7 +533,7 @@ class Expedition extends CommonObject
 		// Check parameters
 		if (empty($id) && empty($ref) && empty($ref_ext) && empty($ref_int)) return -1;
 
-		$sql = "SELECT e.rowid, e.ref, e.fk_soc as socid, e.date_creation, e.ref_customer, e.ref_ext, e.ref_int, e.fk_user_author, e.fk_statut, e.fk_projet as fk_project, e.billed";
+		$sql = "SELECT e.rowid, e.ref, e.fk_soc as socid, e.date_creation, e.ref_customer, e.ref_ext, e.ref_int, e.fk_user_author, e.fk_statut, e.fk_project as fk_project, e.billed";
         $sql.= ", e.date_valid";
 		$sql.= ", e.weight, e.weight_units, e.size, e.size_units, e.width, e.height";
 		$sql.= ", e.date_expedition as date_expedition, e.model_pdf, e.fk_address, e.date_delivery";
@@ -1108,7 +1108,7 @@ class Expedition extends CommonObject
 		$sql.= " fk_shipping_method=".((isset($this->shipping_method_id) && $this->shipping_method_id > 0)?$this->shipping_method_id:"null").",";
 		$sql.= " tracking_number=".(isset($this->tracking_number)?"'".$this->db->escape($this->tracking_number)."'":"null").",";
 		$sql.= " fk_statut=".(isset($this->statut)?$this->statut:"null").",";
-		$sql.= " fk_projet=".(isset($this->fk_project)?$this->fk_project:"null").",";
+		$sql.= " fk_project=".(isset($this->fk_project)?$this->fk_project:"null").",";
 		$sql.= " height=".(($this->trueHeight != '')?$this->trueHeight:"null").",";
 		$sql.= " width=".(($this->trueWidth != '')?$this->trueWidth:"null").",";
 		$sql.= " size_units=".(isset($this->size_units)?$this->size_units:"null").",";

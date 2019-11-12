@@ -211,7 +211,7 @@ if ($action == 'delete')
 llxHeader("", $langs->trans("SalaryPayment"));
 
 $form = new Form($db);
-if (! empty($conf->project->enabled)) $formproject = new FormProjets($db);
+if (! empty($conf->project->enabled)) $formproject = new FormProjects($db);
 
 if ($id)
 {
@@ -306,7 +306,7 @@ if ($action == 'create')
 	// Project
 	if (! empty($conf->project->enabled))
 	{
-		$formproject=new FormProjets($db);
+		$formproject=new FormProjects($db);
 
 		print '<tr><td>'.$langs->trans("Project").'</td><td>';
 

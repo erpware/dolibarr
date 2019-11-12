@@ -66,7 +66,7 @@ Notify_MEMBER_MODIFY=Adhérent modifié
 Notify_MEMBER_SUBSCRIPTION=Adhésion
 Notify_MEMBER_RESILIATE=Résiliation adhérent
 Notify_MEMBER_DELETE=Suppression adhérent
-Notify_PROJECT_CREATE=Création de projet
+Notify_PROJECT_CREATE=Création de project
 Notify_TASK_CREATE=Tâche créée
 Notify_TASK_MODIFY=Tâche modifiée
 Notify_TASK_DELETE=Tâche supprimée
@@ -250,7 +250,7 @@ SMSSentTo=SMS envoyé à %s
 MissingIds=Identifiants manquants
 ThirdPartyCreatedByEmailCollector=Tiers créé par le collecteur de courrier électronique à partir du courrier électronique MSGID %s
 ContactCreatedByEmailCollector=Contact/adresse créé par le collecteur de courrier électronique à partir du courrier électronique MSGID %s
-ProjectCreatedByEmailCollector=Projet créé par le collecteur de courrier électronique à partir du courrier électronique MSGID %s
+ProjectCreatedByEmailCollector=Project créé par le collecteur de courrier électronique à partir du courrier électronique MSGID %s
 TicketCreatedByEmailCollector=Ticket créé par le collecteur de courrier électronique à partir du courrier électronique MSGID %s
 
 ##### Export #####

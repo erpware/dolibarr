@@ -227,7 +227,7 @@ if ($ok && GETPOST('standard', 'alpha'))
 				'socpeople'=>'socpeople', 'commande'=>'commande', 'facture'=>'facture',
 				'supplier_proposal'=>'supplier_proposal', 'commande_fournisseur'=>'commande_fournisseur', 'facture_fourn'=>'facture_fourn',
 				'actioncomm'=>'actioncomm',
-				'adherent_type'=>'adherent_type','user'=>'user','project'=>'project', 'projet_task'=>'projet_task');
+				'adherent_type'=>'adherent_type','user'=>'user','project'=>'project', 'project_task'=>'project_task');
 	print '<tr><td colspan="2"><br>*** Check fields into extra table structure match table of definition. If not add column into table</td></tr>';
 	foreach($listofmodulesextra as $tablename => $elementtype)
 	{
@@ -1106,7 +1106,7 @@ if ($ok && GETPOST('set_empty_time_spent_amount', 'alpha'))
     print '<tr><td colspan="2"><br>*** Set value of time spent without amount</td></tr>';
 
     $sql ="SELECT COUNT(ptt.rowid) as nb, u.rowid as user_id, u.login, u.thm as user_thm";
-    $sql.=" FROM ".MAIN_DB_PREFIX."projet_task_time as ptt, ".MAIN_DB_PREFIX."user as u";
+    $sql.=" FROM ".MAIN_DB_PREFIX."project_task_time as ptt, ".MAIN_DB_PREFIX."user as u";
     $sql.=" WHERE ptt.fk_user = u.rowid";
     $sql.=" AND ptt.thm IS NULL and u.thm > 0";
     $sql.=" GROUP BY u.rowid, u.login, u.thm";
@@ -1128,7 +1128,7 @@ if ($ok && GETPOST('set_empty_time_spent_amount', 'alpha'))
 
                 if (GETPOST('set_empty_time_spent_amount') == 'confirmed')
                 {
-                    $sql2 ="UPDATE ".MAIN_DB_PREFIX."projet_task_time";
+                    $sql2 ="UPDATE ".MAIN_DB_PREFIX."project_task_time";
                     $sql2.=" SET thm = ".$obj->user_thm." WHERE thm IS NULL AND fk_user = ".$obj->user_id;
                     $resql2=$db->query($sql2);
                     if (! $resql2)

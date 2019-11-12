@@ -203,7 +203,7 @@ if ($type == 'directory')
     // Auto area for suppliers invoices
     elseif ($module == 'tax') $upload_dir = $conf->tax->dir_output;
     // Auto area for projects
-    elseif ($module == 'project') $upload_dir = $conf->projet->dir_output;
+    elseif ($module == 'project') $upload_dir = $conf->project->dir_output;
     // Auto area for interventions
     elseif ($module == 'fichinter') $upload_dir = $conf->ficheinter->dir_output;
     // Auto area for users

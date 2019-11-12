@@ -113,7 +113,7 @@ $arrayfields=array(
     'origin'=>array('label'=>$langs->trans("Origin"), 'checked'=>1),
 	'm.value'=>array('label'=>$langs->trans("Qty"), 'checked'=>1),
 	'm.price'=>array('label'=>$langs->trans("UnitPurchaseValue"), 'checked'=>0),
-	'm.fk_projet'=>array('label'=>$langs->trans('Project'), 'checked'=>0)
+	'm.fk_project'=>array('label'=>$langs->trans('Project'), 'checked'=>0)
 		//'m.datec'=>array('label'=>$langs->trans("DateCreation"), 'checked'=>0, 'position'=>500),
     //'m.tms'=>array('label'=>$langs->trans("DateModificationShort"), 'checked'=>0, 'position'=>500)
 );
@@ -422,14 +422,14 @@ $userstatic=new User($db);
 $form=new Form($db);
 $formother=new FormOther($db);
 $formproduct=new FormProduct($db);
-if (!empty($conf->project->enabled)) $formproject=new FormProjets($db);
+if (!empty($conf->project->enabled)) $formproject=new FormProjects($db);
 
 $sql = "SELECT p.rowid, p.ref as product_ref, p.label as produit, p.tobatch, p.fk_product_type as type, p.entity,";
 $sql.= " e.ref as warehouse_ref, e.rowid as entrepot_id, e.lieu, e.fk_parent, e.statut,";
 $sql.= " m.rowid as mid, m.value as qty, m.datem, m.fk_user_author, m.label, m.inventorycode, m.fk_origin, m.origintype,";
 $sql.= " m.batch, m.price,";
 $sql.= " m.type_mouvement,";
-$sql.= " m.fk_projet as fk_project,";
+$sql.= " m.fk_project as fk_project,";
 $sql.= " pl.rowid as lotid, pl.eatby, pl.sellby,";
 $sql.= " u.login, u.photo, u.lastname, u.firstname";
 // Add fields from extrafields
@@ -857,7 +857,7 @@ if ($resql)
     	print '&nbsp; ';
     	print '</td>';
     }
-    if (! empty($arrayfields['m.fk_projet']['checked']))
+    if (! empty($arrayfields['m.fk_project']['checked']))
     {
     	// fk_project
     	print '<td class="liste_titre" align="left">';
@@ -939,8 +939,8 @@ if ($resql)
     if (! empty($arrayfields['m.price']['checked'])) {
         print_liste_field_titre($arrayfields['m.price']['label'], $_SERVER["PHP_SELF"], "m.price", "", $param, '', $sortfield, $sortorder, 'right ');
     }
-    if (! empty($arrayfields['m.fk_projet']['checked'])) {
-        print_liste_field_titre($arrayfields['m.fk_projet']['label'], $_SERVER["PHP_SELF"], "m.fk_projet", "", $param, 'align="right"', $sortfield, $sortorder);
+    if (! empty($arrayfields['m.fk_project']['checked'])) {
+        print_liste_field_titre($arrayfields['m.fk_project']['label'], $_SERVER["PHP_SELF"], "m.fk_project", "", $param, 'align="right"', $sortfield, $sortorder);
     }
 
     // Extra fields
@@ -1113,7 +1113,7 @@ if ($resql)
         	if ($objp->price != 0) print price($objp->price);
         	print '</td>';
         }
-        if (! empty($arrayfields['m.fk_projet']['checked']))
+        if (! empty($arrayfields['m.fk_project']['checked']))
         {
         	// fk_project
         	print '<td align="right">';
