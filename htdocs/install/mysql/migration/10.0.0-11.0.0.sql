@@ -157,6 +157,11 @@ ALTER TABLE llx_adherent_type ADD COLUMN duration varchar(6) DEFAULT NULL after 
 ALTER TABLE llx_mailing ADD COLUMN tms timestamp;
 ALTER TABLE llx_mailing_cibles ADD COLUMN tms timestamp;
 
+ALTER TABLE llx_projet RENAME TO llx_project;
+ALTER TABLE llx_projet_extrafields  RENAME TO llx_project_extrafields;
+ALTER TABLE llx_projet_task  RENAME TO llx_project_task;
+ALTER TABLE llx_projet_task_time  RENAME TO llx_project_task_time;
+
 ALTER TABLE llx_project ADD COLUMN usage_opportunity integer DEFAULT 0;
 ALTER TABLE llx_project ADD COLUMN usage_task integer DEFAULT 1;
 ALTER TABLE llx_project CHANGE COLUMN bill_time usage_bill_time integer DEFAULT 0;		-- rename existing field
@@ -164,6 +169,33 @@ ALTER TABLE llx_project ADD COLUMN usage_organize_event integer DEFAULT 0;
 
 UPDATE llx_project set usage_opportunity = 1 WHERE fk_opp_status > 0;
 
+ALTER TABLE llx_chargesociales CHANGE COLUMN fk_projet fk_project int(11) DEFAULT NULL;
+ALTER TABLE llx_commande CHANGE COLUMN fk_projet fk_project int(11) DEFAULT NULL;
+ALTER TABLE llx_commande_fournisseur CHANGE COLUMN fk_projet fk_project int(11) DEFAULT 0;
+//NULL
+llx_commande_fournisseur_dispatch
+llx_contrat
+llx_don
+llx_expedition
+llx_expensereport_det
+llx_facture
+llx_facture_fourn
+llx_facture_rec
+llx_loan
+llx_payment_salary
+llx_payment_various
+llx_projet_task
+llx_propal
+llx_reception
+llx_supplier_proposal
+// 0
+llx_deplacement
+llx_fichinter
+llx_stock_mouvement
+
+llx_const  name = MAIN_MODULE_PROJET WHERE MAIN_MODULE_PROJET
+llx_c_type_contact  libelle =
+llx_rights_def module = projet
 create table llx_societe_contacts
 (
     rowid           integer AUTO_INCREMENT PRIMARY KEY,
