@@ -1,6 +1,6 @@
 <?php
 /* Copyright (C) 2011-2019  Alexandre Spangaro      <aspangaro@open-dsi.fr>
- * Copyright (C) 2014       Laurent Destailleur     <eldy@users.sourceforge.net>
+ * Copyright (C) 2014-2020  Laurent Destailleur     <eldy@users.sourceforge.net>
  * Copyright (C) 2015       Jean-François Ferry     <jfefe@aternatik.fr>
  * Copyright (C) 2015       Charlie BENKE           <charlie@patas-monkey.com>
  * Copyright (C) 2018       Frédéric France         <frederic.france@netlogic.fr>
@@ -26,29 +26,35 @@
  */
 
 require '../main.inc.php';
-require_once DOL_DOCUMENT_ROOT . '/core/lib/date.lib.php';
-require_once DOL_DOCUMENT_ROOT . '/salaries/class/paymentsalary.class.php';
-require_once DOL_DOCUMENT_ROOT . '/compta/bank/class/account.class.php';
-require_once DOL_DOCUMENT_ROOT . '/core/lib/salaries.lib.php';
-require_once DOL_DOCUMENT_ROOT . '/core/class/extrafields.class.php';
-if (! empty($conf->projet->enabled))
+require_once DOL_DOCUMENT_ROOT.'/core/lib/date.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/salaries/class/paymentsalary.class.php';
+require_once DOL_DOCUMENT_ROOT.'/compta/bank/class/account.class.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/salaries.lib.php';
+require_once DOL_DOCUMENT_ROOT.'/core/class/extrafields.class.php';
+if (!empty($conf->projet->enabled))
 {
-	require_once DOL_DOCUMENT_ROOT . '/projet/class/project.class.php';
-	require_once DOL_DOCUMENT_ROOT . '/core/class/html.formprojet.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/projet/class/project.class.php';
+	require_once DOL_DOCUMENT_ROOT.'/core/class/html.formprojet.class.php';
 }
 
 // Load translation files required by the page
-$langs->loadLangs(array("compta","banks","bills","users","salaries","hrm"));
-if (! empty($conf->projet->enabled))	$langs->load("projects");
+$langs->loadLangs(array("compta", "banks", "bills", "users", "salaries", "hrm"));
+if (!empty($conf->projet->enabled))	$langs->load("projects");
 
-$id=GETPOST("id", 'int');
-$action=GETPOST('action', 'aZ09');
-$cancel= GETPOST('cancel', 'aZ09');
+$id = GETPOST("id", 'int');
+$action = GETPOST('action', 'aZ09');
+$cancel = GETPOST('cancel', 'aZ09');
+$accountid = GETPOST('accountid', 'int') > 0 ? GETPOST('accountid', 'int') : 0;
 $projectid = (GETPOST('projectid', 'int') ? GETPOST('projectid', 'int') : GETPOST('fk_project', 'int'));
+
+$datep = dol_mktime(12, 0, 0, GETPOST("datepmonth", 'int'), GETPOST("datepday", 'int'), GETPOST("datepyear", 'int'));
+$datev = dol_mktime(12, 0, 0, GETPOST("datevmonth", 'int'), GETPOST("datevday", 'int'), GETPOST("datevyear", 'int'));
+$datesp = dol_mktime(12, 0, 0, GETPOST("datespmonth", 'int'), GETPOST("datespday", 'int'), GETPOST("datespyear", 'int'));
+$dateep = dol_mktime(12, 0, 0, GETPOST("dateepmonth", 'int'), GETPOST("dateepday", 'int'), GETPOST("dateepyear", 'int'));
 
 // Security check
 $socid = GETPOST("socid", "int");
-if ($user->socid) $socid=$user->socid;
+if ($user->socid) $socid = $user->socid;
 $result = restrictedArea($user, 'salaries', '', '', '');
 
 $object = new PaymentSalary($db);
@@ -59,6 +65,7 @@ $extrafields->fetch_name_optionals_label($object->table_element);
 
 // Initialize technical object to manage hooks of page. Note that conf->hooks_modules contains array of hook context
 $hookmanager->initHooks(array('salarycard', 'globalcard'));
+
 
 /**
  * Actions
@@ -74,43 +81,39 @@ if ($cancel)
 if ($action == 'classin' && $user->rights->banque->modifier)
 {
 	$object->fetch($id);
-	$object->setProject(GETPOST('projectid'));
+	$object->setProject($projectid);
 }
 
 if ($action == 'add' && empty($cancel))
 {
 	$error = 0;
 
-	$datep = dol_mktime(12, 0, 0, GETPOST("datepmonth", 'int'), GETPOST("datepday", 'int'), GETPOST("datepyear", 'int'));
-	$datev = dol_mktime(12, 0, 0, GETPOST("datevmonth", 'int'), GETPOST("datevday", 'int'), GETPOST("datevyear", 'int'));
-	$datesp = dol_mktime(12, 0, 0, GETPOST("datespmonth", 'int'), GETPOST("datespday", 'int'), GETPOST("datespyear", 'int'));
-	$dateep = dol_mktime(12, 0, 0, GETPOST("dateepmonth", 'int'), GETPOST("dateepday", 'int'), GETPOST("dateepyear", 'int'));
 	if (empty($datev)) $datev = $datep;
 
 	$type_payment = dol_getIdFromCode($db, GETPOST("paymenttype", 'alpha'), 'c_paiement', 'code', 'id', 1);
 
-	$object->accountid = GETPOST("accountid") > 0 ? GETPOST("accountid", "int") : 0;
-	$object->fk_user = GETPOST("fk_user") > 0 ? GETPOST("fk_user", "int") : 0;
+	$object->accountid = GETPOST("accountid", 'int') > 0 ? GETPOST("accountid", "int") : 0;
+	$object->fk_user = GETPOST("fk_user", 'int') > 0 ? GETPOST("fk_user", "int") : 0;
 	$object->datev = $datev;
 	$object->datep = $datep;
-	$object->amount = price2num(GETPOST("amount"));
-	$object->label = GETPOST("label");
+	$object->amount = price2num(GETPOST("amount", 'alpha'));
+	$object->label = GETPOST("label", 'alphanohtml');
 	$object->datesp = $datesp;
 	$object->dateep = $dateep;
-	$object->note = GETPOST("note");
+	$object->note = GETPOST("note", 'restricthtml');
 	$object->type_payment = ($type_payment > 0 ? $type_payment : 0);
-	$object->num_payment = GETPOST("num_payment");
+	$object->num_payment = GETPOST("num_payment", 'alphanohtml');
 	$object->fk_user_author = $user->id;
-	$object->fk_project = GETPOST('fk_project', 'int');
+	$object->fk_project = $projectid;
 
 	// Set user current salary as ref salary for the payment
 	$fuser = new User($db);
 	$fuser->fetch(GETPOST("fk_user", "int"));
 	$object->salary = $fuser->salary;
 
-    // Fill array 'array_options' with data from add form
-    $ret = $extrafields->setOptionalsFromPost(null, $object);
-    if ($ret < 0) $error++;
+	// Fill array 'array_options' with data from add form
+	$ret = $extrafields->setOptionalsFromPost(null, $object);
+	if ($ret < 0) $error++;
 
 	if (empty($datep) || empty($datev) || empty($datesp) || empty($dateep))
 	{
@@ -146,11 +149,16 @@ if ($action == 'add' && empty($cancel))
 		if ($ret > 0)
 		{
 			$db->commit();
-			header("Location: list.php");
-			exit;
-		}
-		else
-		{
+
+			if (GETPOST('saveandnew', 'alpha')) {
+				setEventMessages($langs->trans("RecordSaved"), '', 'mesgs');
+				header("Location: card.php?action=create&fk_project=".urlencode($projectid)."&accountid=".urlencode($accountid).'&paymenttype='.urlencode(GETPOST('paymenttype', 'az09')).'&datepday='.GETPOST("datepday", 'int').'&datepmonth='.GETPOST("datepmonth", 'int').'&datepyear='.GETPOST("datepyear", 'int'));
+				exit;
+			} else {
+				header("Location: list.php");
+				exit;
+			}
+		} else {
 			$db->rollback();
 			setEventMessages($object->error, $object->errors, 'errors');
 			$action = "create";
@@ -183,22 +191,16 @@ if ($action == 'delete')
 				$db->commit();
 				header("Location: ".DOL_URL_ROOT.'/salaries/list.php');
 				exit;
-			}
-			else
-			{
+			} else {
 				$object->error = $accountline->error;
 				$db->rollback();
 				setEventMessages($object->error, $object->errors, 'errors');
 			}
-		}
-		else
-		{
+		} else {
 			$db->rollback();
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
-	}
-	else
-	{
+	} else {
 		setEventMessages('Error try do delete a line linked to a conciliated bank transaction', null, 'errors');
 	}
 }
@@ -251,19 +253,19 @@ if ($action == 'create')
 	}
 
 	print '<form name="salary" action="'.$_SERVER["PHP_SELF"].'" method="post">';
-	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+	print '<input type="hidden" name="token" value="'.newToken().'">';
 	print '<input type="hidden" name="action" value="add">';
 
-	print load_fiche_titre($langs->trans("NewSalaryPayment"), '', 'title_accountancy.png');
+	print load_fiche_titre($langs->trans("NewSalaryPayment"), '', 'salary');
 
-	dol_fiche_head('', '');
+	print dol_get_fiche_head('', '');
 
 	print '<table class="border centpercent">';
 
 	// Date payment
 	print '<tr><td>';
 	print $form->editfieldkey('DatePayment', 'datep', '', $object, 0, 'string', '', 1).'</td><td>';
-	print $form->selectDate((empty($datep) ?-1 : $datep), "datep", '', '', '', 'add', 1, 1);
+	print $form->selectDate((empty($datep) ? '' : $datep), "datep", 0, 0, 0, 'add', 1, 1);
 	print '</td></tr>';
 
 	// Date value for bank
@@ -303,31 +305,19 @@ if ($action == 'create')
 	print '<input name="amount" id="amount" class="minwidth100" value="'.GETPOST("amount").'">';
 	print '</td></tr>';
 
-	// Project
-	if (!empty($conf->projet->enabled))
-	{
-		$formproject = new FormProjets($db);
-
-		print '<tr><td>'.$langs->trans("Project").'</td><td>';
-
-		$numproject = $formproject->select_projects(-1, $projectid, 'fk_project', 0, 0, 1, 1);
-
-		print '</td></tr>';
-	}
-
 	// Bank
 	if (!empty($conf->banque->enabled))
 	{
 		print '<tr><td>';
 		print $form->editfieldkey('BankAccount', 'selectaccountid', '', $object, 0, 'string', '', 1).'</td><td>';
-		$form->select_comptes($_POST["accountid"], "accountid", 0, '', 1); // Affiche liste des comptes courant
+		$form->select_comptes($accountid, "accountid", 0, '', 1); // Affiche liste des comptes courant
 		print '</td></tr>';
 	}
 
 	// Type payment
 	print '<tr><td>';
 	print $form->editfieldkey('PaymentMode', 'selectpaymenttype', '', $object, 0, 'string', '', 1).'</td><td>';
-	$form->select_types_paiements(GETPOST("paymenttype"), "paymenttype", '', 2);
+	$form->select_types_paiements(GETPOST("paymenttype", 'aZ09'), "paymenttype", '', 2);
 	print '</td></tr>';
 
 	// Number
@@ -340,23 +330,35 @@ if ($action == 'create')
 		print '<td><input name="num_payment" id="num_payment" type="text" value="'.GETPOST("num_payment").'"></td></tr>'."\n";
 	}
 
-    // Other attributes
-    $parameters = array();
-    $reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
-    print $hookmanager->resPrint;
-    if (empty($reshook))
-    {
-        print $object->showOptionals($extrafields, 'edit');
-    }
+	// Project
+	if (!empty($conf->projet->enabled))
+	{
+	    $formproject = new FormProjets($db);
+
+	    print '<tr><td>'.$langs->trans("Project").'</td><td>';
+	    $formproject->select_projects(-1, $projectid, 'fk_project', 0, 0, 1, 1);
+	    print '</td></tr>';
+	}
+
+	// Other attributes
+	$parameters = array();
+	$reshook = $hookmanager->executeHooks('formObjectOptions', $parameters, $object, $action); // Note that $action and $object may have been modified by hook
+	print $hookmanager->resPrint;
+	if (empty($reshook))
+	{
+		print $object->showOptionals($extrafields, 'edit');
+	}
 
 	print '</table>';
 
-	dol_fiche_end();
+	print dol_get_fiche_end();
 
 	print '<div class="center">';
-	print '<input type="submit" class="button" value="'.$langs->trans("Save").'">';
-	print '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	print '<input type="submit" class="button" name="cancel" value="'.$langs->trans("Cancel").'">';
+	print '<input type="submit" class="button button-save" name="save" value="'.$langs->trans("Save").'">';
+	print '&nbsp;&nbsp; &nbsp;&nbsp;';
+	print '<input type="submit" class="button" name="saveandnew" value="'.$langs->trans("SaveAndNew").'">';
+	print '&nbsp;&nbsp; &nbsp;&nbsp;';
+	print '<input type="submit" class="button button-cancel" name="cancel" value="'.$langs->trans("Cancel").'">';
 	print '</div>';
 
 	print '</form>';
@@ -371,59 +373,59 @@ if ($action == 'create')
 
 if ($id)
 {
-	$head=salaries_prepare_head($object);
+	$head = salaries_prepare_head($object);
 
-	dol_fiche_head($head, 'card', $langs->trans("SalaryPayment"), -1, 'payment');
+	print dol_get_fiche_head($head, 'card', $langs->trans("SalaryPayment"), -1, 'salary');
 
-	$linkback = '<a href="'.DOL_URL_ROOT.'/salaries/list.php?restore_lastsearch_values=1'.(! empty($socid)?'&socid='.$socid:'').'">'.$langs->trans("BackToList").'</a>';
+	$linkback = '<a href="'.DOL_URL_ROOT.'/salaries/list.php?restore_lastsearch_values=1'.(!empty($socid) ? '&socid='.$socid : '').'">'.$langs->trans("BackToList").'</a>';
 
-	$morehtmlref='<div class="refidno">';
+	$morehtmlref = '<div class="refidno">';
 
 	// Employee
-	$userstatic=new User($db);
+	$userstatic = new User($db);
 	$userstatic->fetch($object->fk_user);
-	$morehtmlref.=$langs->trans('Employee') . ' : ' . $userstatic->getNomUrl(1);
+	$morehtmlref .= $langs->trans('Employee').' : '.$userstatic->getNomUrl(1);
 
 	// Project
-	if (! empty($conf->projet->enabled))
+	if (!empty($conf->projet->enabled))
 	{
-		$morehtmlref.='<br>'.$langs->trans('Project') . ' ';
+		$morehtmlref .= '<br>'.$langs->trans('Project').' ';
 		if ($user->rights->salaries->write)
 		{
 			if ($action != 'classify') {
-				$morehtmlref.='<a class="editfielda" href="' . $_SERVER['PHP_SELF'] . '?action=classify&amp;id=' . $object->id . '">' . img_edit($langs->transnoentitiesnoconv('SetProject')) . '</a> : ';
+				$morehtmlref .= '<a class="editfielda" href="'.$_SERVER['PHP_SELF'].'?action=classify&amp;id='.$object->id.'">'.img_edit($langs->transnoentitiesnoconv('SetProject')).'</a> : ';
 			}
 			if ($action == 'classify') {
 				//$morehtmlref.=$form->form_project($_SERVER['PHP_SELF'] . '?id=' . $object->id, $object->socid, $object->fk_project, 'projectid', 0, 0, 1, 1);
-				$morehtmlref.='<form method="post" action="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'">';
-				$morehtmlref.='<input type="hidden" name="action" value="classin">';
-				$morehtmlref.='<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
-				$morehtmlref.=$formproject->select_projects(0, $object->fk_project, 'projectid', $maxlength, 0, 1, 0, 1, 0, 0, '', 1);
-				$morehtmlref.='<input type="submit" class="button valignmiddle" value="'.$langs->trans("Modify").'">';
-				$morehtmlref.='</form>';
+				$morehtmlref .= '<form method="post" action="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'">';
+				$morehtmlref .= '<input type="hidden" name="action" value="classin">';
+				$morehtmlref .= '<input type="hidden" name="token" value="'.newToken().'">';
+				$morehtmlref .= $formproject->select_projects(0, $object->fk_project, 'projectid', $maxlength, 0, 1, 0, 1, 0, 0, '', 1);
+				$morehtmlref .= '<input type="submit" class="button valignmiddle" value="'.$langs->trans("Modify").'">';
+				$morehtmlref .= '</form>';
 			} else {
-				$morehtmlref.=$form->form_project($_SERVER['PHP_SELF'] . '?id=' . $object->id, $object->socid, $object->fk_project, 'none', 0, 0, 0, 1);
+				$morehtmlref .= $form->form_project($_SERVER['PHP_SELF'].'?id='.$object->id, $object->socid, $object->fk_project, 'none', 0, 0, 0, 1);
 			}
 		} else {
-			if (! empty($object->fk_project)) {
+			if (!empty($object->fk_project)) {
 				$proj = new Project($db);
 				$proj->fetch($object->fk_project);
-				$morehtmlref.='<a href="'.DOL_URL_ROOT.'/projet/card.php?id=' . $object->fk_project . '" title="' . $langs->trans('ShowProject') . '">';
-				$morehtmlref.=$proj->ref;
-				$morehtmlref.='</a>';
+				$morehtmlref .= '<a href="'.DOL_URL_ROOT.'/projet/card.php?id='.$object->fk_project.'" title="'.$langs->trans('ShowProject').'">';
+				$morehtmlref .= $proj->ref;
+				$morehtmlref .= '</a>';
 			} else {
-				$morehtmlref.='';
+				$morehtmlref .= '';
 			}
 		}
 	}
-	$morehtmlref.='</div>';
+	$morehtmlref .= '</div>';
 
 	dol_banner_tab($object, 'id', $linkback, 1, 'rowid', 'ref', $morehtmlref, '', 0, '', '');
 
 	print '<div class="fichecenter">';
 	print '<div class="underbanner clearboth"></div>';
 
-	print '<table class="border centpercent">';
+	print '<table class="border centpercent tableforfield">';
 
 	// Label
 	print '<tr><td class="titlefield">'.$langs->trans("Label").'</td><td>'.$object->label.'</td></tr>';
@@ -464,33 +466,28 @@ if ($id)
 		}
 	}
 
-    // Other attributes
-    include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_view.tpl.php';
+	// Other attributes
+	include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_view.tpl.php';
 
 	print '</table>';
 
 	print '</div>';
 
-	dol_fiche_end();
+	print dol_get_fiche_end();
 
 
-	/*
-	 * Action buttons
-	 */
+	// Action buttons
+
 	print '<div class="tabsAction">'."\n";
 	if ($object->rappro == 0)
 	{
 		if (!empty($user->rights->salaries->delete))
 		{
-			print '<div class="inline-block divButAction"><a class="butActionDelete" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=delete">'.$langs->trans("Delete").'</a></div>';
-		}
-		else
-		{
+			print '<div class="inline-block divButAction"><a class="butActionDelete" href="'.$_SERVER['PHP_SELF'].'?id='.$object->id.'&action=delete&token='.newToken().'">'.$langs->trans("Delete").'</a></div>';
+		} else {
 			print '<div class="inline-block divButAction"><a class="butActionRefused classfortooltip" href="#" title="'.(dol_escape_htmltag($langs->trans("NotAllowed"))).'">'.$langs->trans("Delete").'</a></div>';
 		}
-	}
-	else
-	{
+	} else {
 		print '<div class="inline-block divButAction"><a class="butActionRefused classfortooltip" href="#" title="'.$langs->trans("LinkedToAConciliatedTransaction").'">'.$langs->trans("Delete").'</a></div>';
 	}
 	print "</div>";

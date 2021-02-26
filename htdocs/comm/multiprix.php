@@ -20,7 +20,7 @@
 /**
  *	\file       htdocs/comm/multiprix.php
  *	\ingroup    societe
- *	\brief      Onglet choix du niveau de prix
+ *	\brief      Tab to set the price level of a thirdparty
  */
 
 require '../main.inc.php';
@@ -33,8 +33,7 @@ $langs->loadLangs(array('orders', 'companies'));
 $id = GETPOST('id', 'int');
 $_socid = GETPOST("id", 'int');
 // Security check
-if ($user->socid > 0)
-{
+if ($user->socid > 0) {
 	$_socid = $user->socid;
 }
 
@@ -43,8 +42,7 @@ if ($user->socid > 0)
  * Actions
  */
 
-if ($_POST["action"] == 'setpricelevel')
-{
+if ($_POST["action"] == 'setpricelevel') {
 	$soc = new Societe($db);
 	$soc->fetch($id);
 	$soc->set_price_level($_POST["price_level"], $user);
@@ -62,36 +60,30 @@ llxHeader();
 
 $userstatic = new User($db);
 
-if ($_socid > 0)
-{
-	// On recupere les donnees societes par l'objet
+if ($_socid > 0) {
+	// We load data of thirdparty
 	$objsoc = new Societe($db);
 	$objsoc->id = $_socid;
 	$objsoc->fetch($_socid, $to);
 
-	if ($errmesg)
-	{
-		print '<div class="error">'.$errmesg.'</div><br>';
-	}
-
-
-	/*
-	 * Affichage onglets
-	 */
 
 	$head = societe_prepare_head($objsoc);
 
 	$tabchoice = '';
-	if ($objsoc->client == 1) $tabchoice = 'customer';
-	if ($objsoc->client == 2) $tabchoice = 'prospect';
+	if ($objsoc->client == 1) {
+		$tabchoice = 'customer';
+	}
+	if ($objsoc->client == 2) {
+		$tabchoice = 'prospect';
+	}
 
 	print '<form method="POST" action="multiprix.php?id='.$objsoc->id.'">';
-	print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+	print '<input type="hidden" name="token" value="'.newToken().'">';
 	print '<input type="hidden" name="action" value="setpricelevel">';
 
-	dol_fiche_head($head, $tabchoice, $langs->trans("ThirdParty"), 0, 'company');
+	print dol_get_fiche_head($head, $tabchoice, $langs->trans("ThirdParty"), 0, 'company');
 
-	print '<table class="border centpercent">';
+	print '<table class="border centpercent tableforfield">';
 
 	print '<tr><td class="titlefieldcreate">';
 	print $langs->trans("PriceLevel").'</td><td>'.$objsoc->price_level."</td></tr>";
@@ -99,14 +91,16 @@ if ($_socid > 0)
 	print '<tr><td>';
 	print $langs->trans("NewValue").'</td><td>';
 	print '<select name="price_level" class="flat">';
-	for ($i = 1; $i <= $conf->global->PRODUIT_MULTIPRICES_LIMIT; $i++)
-	{
+	for ($i = 1; $i <= $conf->global->PRODUIT_MULTIPRICES_LIMIT; $i++) {
 		print '<option value="'.$i.'"';
-		if ($i == $objsoc->price_level)
-		print 'selected';
+		if ($i == $objsoc->price_level) {
+			print 'selected';
+		}
 		print '>'.$i;
 		$keyforlabel = 'PRODUIT_MULTIPRICES_LABEL'.$i;
-		if (!empty($conf->global->$keyforlabel)) print ' - '.$langs->trans($conf->global->$keyforlabel);
+		if (!empty($conf->global->$keyforlabel)) {
+			print ' - '.$langs->trans($conf->global->$keyforlabel);
+		}
 		print '</option>';
 	}
 	print '</select>';
@@ -114,9 +108,9 @@ if ($_socid > 0)
 
 	print "</table>";
 
-	dol_fiche_end();
+	print dol_get_fiche_end();
 
-	print '<div align="center"><input type="submit" class="button" value="'.$langs->trans("Save").'"></div>';
+	print '<div align="center"><input type="submit" class="button button-save" value="'.$langs->trans("Save").'"></div>';
 
 	print "</form>";
 
@@ -134,8 +128,7 @@ if ($_socid > 0)
 	$sql .= " ORDER BY rc.datec DESC";
 
 	$resql = $db->query($sql);
-	if ($resql)
-	{
+	if ($resql) {
 		print '<table class="noborder centpercent">';
 		$tag = !$tag;
 		print '<tr class="liste_titre">';
@@ -146,8 +139,7 @@ if ($_socid > 0)
 		$i = 0;
 		$num = $db->num_rows($resql);
 
-		while ($i < $num)
-		{
+		while ($i < $num) {
 			$obj = $db->fetch_object($resql);
 
 			print '<tr class="oddeven">';
@@ -161,9 +153,7 @@ if ($_socid > 0)
 		}
 		$db->free($resql);
 		print "</table>";
-	}
-	else
-	{
+	} else {
 		dol_print_error($db);
 	}
 }

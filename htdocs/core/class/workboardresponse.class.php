@@ -18,12 +18,17 @@
  */
 
 /**
- *	\file       htdocs/core/class/WorkboardResponse.class.php
+ *	\file       htdocs/core/class/workboardresponse.class.php
  *	\brief      Class that represents response of load_board functions
  */
 
 class WorkboardResponse
 {
+	/**
+	 * Unique key of the workboard
+	 * @var string
+	 */
+	public $id;
 
 	/**
 	 * Image URL to represent the board item

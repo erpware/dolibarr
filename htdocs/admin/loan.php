@@ -33,9 +33,9 @@ $langs->loadLangs(array('admin', 'loan'));
 
 // Security check
 if (!$user->admin)
-    accessforbidden();
+	accessforbidden();
 
-$action = GETPOST('action', 'alpha');
+$action = GETPOST('action', 'aZ09');
 
 // Other parameters LOAN_*
 $list = array(
@@ -50,24 +50,22 @@ $list = array(
 
 if ($action == 'update')
 {
-    $error = 0;
+	$error = 0;
 
-    foreach ($list as $constname) {
-        $constvalue = GETPOST($constname, 'alpha');
+	foreach ($list as $constname) {
+		$constvalue = GETPOST($constname, 'alpha');
 
-        if (!dolibarr_set_const($db, $constname, $constvalue, 'chaine', 0, '', $conf->entity)) {
-            $error++;
-        }
-    }
+		if (!dolibarr_set_const($db, $constname, $constvalue, 'chaine', 0, '', $conf->entity)) {
+			$error++;
+		}
+	}
 
-    if (!$error)
-    {
-        setEventMessages($langs->trans("SetupSaved"), null, 'mesgs');
-    }
-    else
-    {
-        setEventMessages($langs->trans("Error"), null, 'errors');
-    }
+	if (!$error)
+	{
+		setEventMessages($langs->trans("SetupSaved"), null, 'mesgs');
+	} else {
+		setEventMessages($langs->trans("Error"), null, 'errors');
+	}
 }
 
 /*
@@ -83,7 +81,7 @@ $linkback = '<a href="'.DOL_URL_ROOT.'/admin/modules.php?restore_lastsearch_valu
 print load_fiche_titre($langs->trans('ConfigLoan'), $linkback, 'title_setup');
 
 print '<form action="'.$_SERVER["PHP_SELF"].'" method="post">';
-print '<input type="hidden" name="token" value="'.$_SESSION['newtoken'].'">';
+print '<input type="hidden" name="token" value="'.newToken().'">';
 print '<input type="hidden" name="action" value="update">';
 
 /*
@@ -107,9 +105,7 @@ foreach ($list as $key)
 	if (!empty($conf->accounting->enabled))
 	{
 		print $formaccounting->select_account($conf->global->$key, $key, 1, '', 1, 1);
-	}
-	else
-	{
+	} else {
 		print '<input type="text" size="20" id="'.$key.'" name="'.$key.'" value="'.$conf->global->$key.'">';
 	}
 	print '</td></tr>';
