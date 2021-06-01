@@ -392,7 +392,6 @@ class SMTPs
 		} else {
 			if (function_exists('stream_socket_client') && !empty($this->_options)) {
 				$socket_context = stream_context_create($this->_options); // An array of options for stream_context_create()
-				set_error_handler([$this, 'errorHandler']);
 				$this->socket = @stream_socket_client(
 					preg_replace('@tls://@i', '', $this->getHost()).// Host to 'hit', IP or domain
 					':'.$this->getPort(), // which Port number to use
@@ -426,9 +425,8 @@ class SMTPs
 				if ($_retVal = $this->server_parse($this->socket, "220")) {
 					$_retVal = $this->socket;
 				}
-			}
-			// This connection attempt failed.
-			else {
+			} else {
+				// This connection attempt failed.
 				// @CHANGE LDR
 				if (empty($this->errstr)) {
 					$this->errstr = 'Failed to connect with fsockopen host='.$this->getHost().' port='.$this->getPort();
@@ -535,6 +533,10 @@ class SMTPs
 			// Send Authentication to Server
 			// Check for errors along the way
 			switch ($conf->global->MAIL_SMTP_AUTH_TYPE) {
+				case 'NONE':
+					// Do not send the 'AUTH type' message. For test purpose, if you don't need authentication, it is better to not enter login/pass into setup.
+					$_retVal = true;
+					break;
 				case 'PLAIN':
 					$this->socket_send_str('AUTH PLAIN', '334');
 					// The error here just means the ID/password combo doesn't work.
@@ -542,12 +544,16 @@ class SMTPs
 					break;
 				case 'LOGIN':	// most common case
 				default:
-					$this->socket_send_str('AUTH LOGIN', '334');
-					// User name will not return any error, server will take anything we give it.
-					$this->socket_send_str(base64_encode($this->_smtpsID), '334');
-					// The error here just means the ID/password combo doesn't work.
-					// There is not a method to determine which is the problem, ID or password
-					$_retVal = $this->socket_send_str(base64_encode($this->_smtpsPW), '235');
+					$_retVal = $this->socket_send_str('AUTH LOGIN', '334');
+					if (!$_retVal) {
+						$this->_setErr(130, 'Error when asking for AUTH LOGIN');
+					} else {
+						// User name will not return any error, server will take anything we give it.
+						$this->socket_send_str(base64_encode($this->_smtpsID), '334');
+						// The error here just means the ID/password combo doesn't work.
+						// There is not a method to determine which is the problem, ID or password
+						$_retVal = $this->socket_send_str(base64_encode($this->_smtpsPW), '235');
+					}
 					break;
 			}
 			if (!$_retVal) {
@@ -580,10 +586,8 @@ class SMTPs
 			if (!empty($this->_smtpsID) && !empty($this->_smtpsPW)) {
 				// Send the RFC2554 specified EHLO.
 				$_retVal = $this->_server_authenticate();
-			}
-
-			// This is a "normal" SMTP Server "handshack"
-			else {
+			} else {
+				// This is a "normal" SMTP Server "handshack"
 				// Send the RFC821 specified HELO.
 				$host = $this->getHost();
 				$usetls = preg_match('@tls://@i', $host);
@@ -705,10 +709,8 @@ class SMTPs
 				$this->_setErr(110, '"'.$_strConfigPath.'" is not a valid path.');
 				$_retVal = false;
 			}
-		}
-
-		// Read the Systems php.ini file
-		else {
+		} else {
+			// Read the Systems php.ini file
 			// Set these properties ONLY if they are set in the php.ini file.
 			// Otherwise the default values will be used.
 			if ($_host = ini_get('SMTPs')) {
@@ -1048,10 +1050,8 @@ class SMTPs
 				if (strstr($_addrList, ',')) {
 					// "explode "list" into an array
 					$_addrList = explode(',', $_addrList);
-				}
-
-				// Stick it in an array
-				else {
+				} else {
+					// Stick it in an array
 					$_addrList = array($_addrList);
 				}
 			}
@@ -1070,9 +1070,8 @@ class SMTPs
 					$_tmpHost = explode('@', $_tmpaddr[1]);
 					$_tmpaddr[0] = trim($_tmpaddr[0], ' ">');
 					$aryHost[$_tmpHost[1]][$_type][$_tmpHost[0]] = $_tmpaddr[0];
-				}
-				// We only have an eMail address
-				else {
+				} else {
+					// We only have an eMail address
 					// Strip off the beggining '<'
 					$_strAddr = str_replace('<', '', $_strAddr);
 
@@ -1449,10 +1448,8 @@ class SMTPs
 		// If we have ZERO, we have a problem
 		if ($keyCount === 0) {
 			die("Sorry, no content");
-		}
-
-		// If we have ONE, we can use the simple format
-		elseif ($keyCount === 1 && empty($conf->global->MAIN_MAIL_USE_MULTI_PART)) {
+		} elseif ($keyCount === 1 && empty($conf->global->MAIN_MAIL_USE_MULTI_PART)) {
+			// If we have ONE, we can use the simple format
 			$_msgData = $this->_msgContent;
 			$_msgData = $_msgData[$_types[0]];
 
@@ -1467,10 +1464,8 @@ class SMTPs
 
 			$content .= "\r\n"
 			.  $_msgData['data']."\r\n";
-		}
-
-		// If we have more than ONE, we use the multi-part format
-		elseif ($keyCount >= 1 || !empty($conf->global->MAIN_MAIL_USE_MULTI_PART)) {
+		} elseif ($keyCount >= 1 || !empty($conf->global->MAIN_MAIL_USE_MULTI_PART)) {
+			// If we have more than ONE, we use the multi-part format
 			// Since this is an actual multi-part message
 			// We need to define a content message Boundary
 			// NOTE: This was 'multipart/alternative', but Windows based mail servers have issues with this.
@@ -1512,9 +1507,8 @@ class SMTPs
 
 						$content .= "\r\n".$_data['data']."\r\n\r\n";
 					}
-				}
-				// @CHANGE LDR
-				elseif ($type == 'image') {
+				} elseif ($type == 'image') {
+					// @CHANGE LDR
 					// loop through all images
 					foreach ($_content as $_image => $_data) {
 						$content .= "--".$this->_getBoundary('related')."\r\n"; // always related for an inline image
@@ -1546,7 +1540,8 @@ class SMTPs
 						$content .= "--".$this->_getBoundary('related')."\r\n";
 					}
 
-					if (!key_exists('image', $this->_msgContent) && $_content['dataText'] && !empty($conf->global->MAIN_MAIL_USE_MULTI_PART)) {  // Add plain text message part before html part
+					if (!key_exists('image', $this->_msgContent) && $_content['dataText'] && !empty($conf->global->MAIN_MAIL_USE_MULTI_PART)) {
+						// Add plain text message part before html part
 						$content .= 'Content-Type: multipart/alternative; boundary="'.$this->_getBoundary('alternative').'"'."\r\n";
 						$content .= "\r\n";
 						   $content .= "--".$this->_getBoundary('alternative')."\r\n";
@@ -1566,7 +1561,8 @@ class SMTPs
 
 					$content .= "\r\n".$_content['data']."\r\n";
 
-					if (!key_exists('image', $this->_msgContent) && $_content['dataText'] && !empty($conf->global->MAIN_MAIL_USE_MULTI_PART)) {  // Add plain text message part after html part
+					if (!key_exists('image', $this->_msgContent) && $_content['dataText'] && !empty($conf->global->MAIN_MAIL_USE_MULTI_PART)) {
+						// Add plain text message part after html part
 						$content .= "--".$this->_getBoundary('alternative')."--\r\n";
 					}
 
@@ -1599,7 +1595,7 @@ class SMTPs
 			$this->_msgContent['attachment'][$strFileName]['data']     = $strContent;
 
 			if ($this->getMD5flag()) {
-				$this->_msgContent['attachment'][$strFileName]['md5']      = dol_hash($strContent, 3);
+				$this->_msgContent['attachment'][$strFileName]['md5'] = dol_hash($strContent, 3);
 			}
 		}
 	}

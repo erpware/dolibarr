@@ -397,9 +397,9 @@ if ($action == 'confirm_deleteline' && $confirm == 'yes' && $user->rights->fourn
 		$qty = $supplierorderdispatch->qty;
 		$entrepot = $supplierorderdispatch->fk_entrepot;
 		$product = $supplierorderdispatch->fk_product;
-		$price = GETPOST('price');
+		$price = price2num(GETPOST('price', 'alpha'), 'MU');
 		$comment = $supplierorderdispatch->comment;
-		$eatby = $supplierorderdispatch->fk_product;
+		$eatby = $supplierorderdispatch->eatby;
 		$sellby = $supplierorderdispatch->sellby;
 		$batch = $supplierorderdispatch->batch;
 
@@ -410,7 +410,7 @@ if ($action == 'confirm_deleteline' && $confirm == 'yes' && $user->rights->fourn
 		$error++;
 	} else {
 		// If module stock is enabled and the stock increase is done on purchase order dispatching
-		if ($entrepot > 0 && !empty($conf->stock->enabled) && !empty($conf->global->STOCK_CALCULATE_ON_SUPPLIER_DISPATCH_ORDER)) {
+		if ($entrepot > 0 && !empty($conf->stock->enabled) && !empty($conf->global->STOCK_CALCULATE_ON_SUPPLIER_DISPATCH_ORDER) && empty($supplierorderdispatch->fk_reception)) {
 			$mouv = new MouvementStock($db);
 			if ($product > 0) {
 				$mouv->origin = &$object;
@@ -441,13 +441,13 @@ if ($action == 'updateline' && $user->rights->fournisseur->commande->receptionne
 		$qty = $supplierorderdispatch->qty;
 		$entrepot = $supplierorderdispatch->fk_entrepot;
 		$product = $supplierorderdispatch->fk_product;
-		$price = GETPOST('price');
+		$price = price2num(GETPOST('price'), '', 2);
 		$comment = $supplierorderdispatch->comment;
 		$eatby = $supplierorderdispatch->fk_product;
 		$sellby = $supplierorderdispatch->sellby;
 		$batch = $supplierorderdispatch->batch;
 
-		$supplierorderdispatch->qty = GETPOST('qty', 'int');
+		$supplierorderdispatch->qty = price2num(GETPOST('qty', 'alpha'), 'MS', 2);
 		$supplierorderdispatch->fk_entrepot = GETPOST('fk_entrepot');
 		$result = $supplierorderdispatch->update($user);
 	}
@@ -545,7 +545,7 @@ if ($id > 0 || !empty($ref)) {
 	if (!empty($conf->projet->enabled)) {
 		$langs->load("projects");
 		$morehtmlref .= '<br>'.$langs->trans('Project').' ';
-		if ($user->rights->fournisseur->commande->creer) {
+		if ($user->rights->fournisseur->commande->creer || $user->rights->supplier_order->creer) {
 			if ($action != 'classify') {
 				//$morehtmlref.='<a class="editfielda" href="' . $_SERVER['PHP_SELF'] . '?action=classify&amp;id=' . $object->id . '">' . img_edit($langs->transnoentitiesnoconv('SetProject')) . '</a> : ';
 				$morehtmlref .= ' : ';
@@ -855,7 +855,7 @@ if ($id > 0 || !empty($ref)) {
 						// Already dispatched
 						print '<td class="right">'.$products_dispatched[$objp->rowid].'</td>';
 
-						if (!empty($conf->productbatch->enabled) && $objp->tobatch == 1) {
+						if (!empty($conf->productbatch->enabled) && $objp->tobatch > 0) {
 							$type = 'batch';
 							print '<td class="right">';
 							print '</td>'; // Qty to dispatch
@@ -967,7 +967,7 @@ if ($id > 0 || !empty($ref)) {
 						print '</td>';
 
 						print '<td>';
-						if (!empty($conf->productbatch->enabled) && $objp->tobatch == 1) {
+						if (!empty($conf->productbatch->enabled) && $objp->tobatch > 0) {
 							$type = 'batch';
 							print img_picto($langs->trans('AddStockLocationLine'), 'split.png', 'class="splitbutton" onClick="addDispatchLine('.$i.', \''.$type.'\')"');
 						} else {
@@ -1046,7 +1046,7 @@ if ($id > 0 || !empty($ref)) {
 				if (empty($conf->reception->enabled)) {
 					print $langs->trans("Comment").' : ';
 					print '<input type="text" class="minwidth400" maxlength="128" name="comment" value="';
-					print $_POST["comment"] ? GETPOST("comment") : $langs->trans("DispatchSupplierOrder", $object->ref);
+					print GETPOSTISSET("comment") ? GETPOST("comment") : $langs->trans("DispatchSupplierOrder", $object->ref);
 					// print ' / '.$object->ref_supplier; // Not yet available
 					print '" class="flat"><br>';
 
@@ -1166,7 +1166,7 @@ if ($id > 0 || !empty($ref)) {
 				$objp = $db->fetch_object($resql);
 
 				if ($action == 'editline' && $lineid == $objp->dispatchlineid) {
-					print '<form name="editdispatchedlines" id="editdispatchedlines" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'#line_'.GETPOST('lineid').'" method="POST">
+					print '<form name="editdispatchedlines" id="editdispatchedlines" action="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'#line_'.GETPOST('lineid', 'int').'" method="POST">
 					<input type="hidden" name="token" value="'.newToken().'">
 					<input type="hidden" name="action" value="updateline">
 					<input type="hidden" name="mode" value="">
@@ -1235,7 +1235,7 @@ if ($id > 0 || !empty($ref)) {
 					}
 				} else {
 					$warehouse_static->id = $objp->warehouse_id;
-					$warehouse_static->libelle = $objp->entrepot;
+					$warehouse_static->label = $objp->entrepot;
 					print $warehouse_static->getNomUrl(1);
 				}
 				print '</td>';
@@ -1287,19 +1287,22 @@ if ($id > 0 || !empty($ref)) {
 					}
 					print '</td>';
 				}
-
 				if ($action != 'editline' || $lineid != $objp->dispatchlineid) {
-					print '<td class="linecoledit center">';
-					print '<a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=editline&amp;lineid='.$objp->dispatchlineid.'#line_'.$objp->dispatchlineid.'">';
-					print img_edit();
-					print '</a>';
-					print '</td>';
+					if (empty($reception->id) || ($reception->statut == Reception::STATUS_DRAFT)) { // only allow edit on draft reception
+						print '<td class="linecoledit center">';
+						print '<a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=editline&amp;lineid='.$objp->dispatchlineid.'#line_'.$objp->dispatchlineid.'">';
+						print img_edit();
+						print '</a>';
+						print '</td>';
 
-					print '<td class="linecoldelete center">';
-					print '<a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=ask_deleteline&amp;lineid='.$objp->dispatchlineid.'#dispatch_received_products">';
-					print img_delete();
-					print '</a>';
-					print '</td>';
+						print '<td class="linecoldelete center">';
+						print '<a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=ask_deleteline&amp;lineid='.$objp->dispatchlineid.'#dispatch_received_products">';
+						print img_delete();
+						print '</a>';
+						print '</td>';
+					} else {
+						print '<td></td><td></td>';
+					}
 				} else {
 					print '<td class="center valignmiddle">';
 					print '<input type="submit" class="button button-save" id="savelinebutton" name="save" value="'.$langs->trans("Save").'" />';

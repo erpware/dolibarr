@@ -1,6 +1,7 @@
 <?php
 /* Copyright (C) 2014	Maxime Kohlhaas		<support@atm-consulting.fr>
  * Copyright (C) 2014	Juanjo Menent		<jmenent@2byte.es>
+ * Copyright (C) 2021		Frédéric France		<frederic.france@netlogic.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,7 +60,7 @@ if ($reshook < 0) {
 
 
 //var_dump($extrafields->attributes[$object->table_element]);
-if (empty($reshook) && is_array($extrafields->attributes[$object->table_element]['label'])) {
+if (empty($reshook) && isset($extrafields->attributes[$object->table_element]['label']) && is_array($extrafields->attributes[$object->table_element]['label'])) {
 	$lastseparatorkeyfound = '';
 	$extrafields_collapse_num = '';
 	$extrafields_collapse_num_old = '';
@@ -81,7 +82,7 @@ if (empty($reshook) && is_array($extrafields->attributes[$object->table_element]
 		if ($perms && isset($extrafields->attributes[$object->table_element]['perms'][$tmpkeyextra])) {
 			$perms = dol_eval($extrafields->attributes[$object->table_element]['perms'][$tmpkeyextra], 1);
 		}
-		//print $tmpkeyextra.'-'.$enabled.'-'.$perms.'-'.$tmplabelextra.$_POST["options_" . $tmpkeyextra].'<br>'."\n";
+		//print $tmpkeyextra.'-'.$enabled.'-'.$perms.'<br>'."\n";
 
 		if (empty($enabled)) {
 			continue; // 0 = Never visible field
@@ -159,13 +160,21 @@ if (empty($reshook) && is_array($extrafields->attributes[$object->table_element]
 				$keyforperm = 'ficheinter';
 			}
 			if (isset($user->rights->$keyforperm)) {
-				$permok = $user->rights->$keyforperm->creer || $user->rights->$keyforperm->create || $user->rights->$keyforperm->write;
+				$permok = !empty($user->rights->$keyforperm->creer) || !empty($user->rights->$keyforperm->create) || !empty($user->rights->$keyforperm->write);
 			}
 			if ($object->element == 'order_supplier') {
-				$permok = $user->rights->fournisseur->commande->creer;
+				if (empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD)) {
+					$permok = $user->rights->fournisseur->commande->creer;
+				} else {
+					$permok = $user->rights->supplier_order->creer;
+				}
 			}
 			if ($object->element == 'invoice_supplier') {
-				$permok = $user->rights->fournisseur->facture->creer;
+				if (empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD)) {
+					$permok = $user->rights->fournisseur->facture->creer;
+				} else {
+					$permok = $user->rights->supplier_invoice->creer;
+				}
 			}
 			if ($object->element == 'shipping') {
 				$permok = $user->rights->expedition->creer;
@@ -181,6 +190,9 @@ if (empty($reshook) && is_array($extrafields->attributes[$object->table_element]
 			}
 			if ($object->element == 'mo') {
 				$permok = $user->rights->mrp->write;
+			}
+			if ($object->element == 'contact') {
+				$permok = $user->rights->societe->contact->creer;
 			}
 
 			$isdraft = ((isset($object->statut) && $object->statut == 0) || (isset($object->status) && $object->status == 0));
@@ -198,17 +210,26 @@ if (empty($reshook) && is_array($extrafields->attributes[$object->table_element]
 
 			$html_id = !empty($object->id) ? $object->element.'_extras_'.$tmpkeyextra.'_'.$object->id : '';
 
-			print '<td id="'.$html_id.'" class="'.$object->element.'_extras_'.$tmpkeyextra.' wordbreak"'.(!empty($cols) ? ' colspan="'.$cols.'"' : '').'>';
+			print '<td id="'.$html_id.'" class="valuefield '.$object->element.'_extras_'.$tmpkeyextra.' wordbreak"'.(!empty($cols) ? ' colspan="'.$cols.'"' : '').'>';
 
 			// Convert date into timestamp format
-			if (in_array($extrafields->attributes[$object->table_element]['type'][$tmpkeyextra], array('date', 'datetime'))) {
+			if (in_array($extrafields->attributes[$object->table_element]['type'][$tmpkeyextra], array('date'))) {
 				$datenotinstring = $object->array_options['options_'.$tmpkeyextra];
 				// print 'X'.$object->array_options['options_' . $tmpkeyextra].'-'.$datenotinstring.'x';
 				if (!is_numeric($object->array_options['options_'.$tmpkeyextra])) {	// For backward compatibility
 					$datenotinstring = $db->jdate($datenotinstring);
 				}
 				//print 'x'.$object->array_options['options_' . $tmpkeyextra].'-'.$datenotinstring.' - '.dol_print_date($datenotinstring, 'dayhour');
-				$value = GETPOSTISSET("options_".$tmpkeyextra) ? dol_mktime(GETPOST("options_".$tmpkeyextra."hour", 'int'), GETPOST("options_".$tmpkeyextra."min", 'int'), 0, GETPOST("options_".$tmpkeyextra."month", 'int'), GETPOST("options_".$tmpkeyextra."day", 'int'), GETPOST("options_".$tmpkeyextra."year", 'int')) : $datenotinstring;
+				$value = GETPOSTISSET("options_".$tmpkeyextra) ? dol_mktime(12, 0, 0, GETPOST("options_".$tmpkeyextra."month", 'int'), GETPOST("options_".$tmpkeyextra."day", 'int'), GETPOST("options_".$tmpkeyextra."year", 'int')) : $datenotinstring;
+			}
+			if (in_array($extrafields->attributes[$object->table_element]['type'][$tmpkeyextra], array('datetime'))) {
+				$datenotinstring = $object->array_options['options_'.$tmpkeyextra];
+				// print 'X'.$object->array_options['options_' . $tmpkeyextra].'-'.$datenotinstring.'x';
+				if (!is_numeric($object->array_options['options_'.$tmpkeyextra])) {	// For backward compatibility
+					$datenotinstring = $db->jdate($datenotinstring);
+				}
+				//print 'x'.$object->array_options['options_' . $tmpkeyextra].'-'.$datenotinstring.' - '.dol_print_date($datenotinstring, 'dayhour');
+				$value = GETPOSTISSET("options_".$tmpkeyextra) ? dol_mktime(GETPOST("options_".$tmpkeyextra."hour", 'int'), GETPOST("options_".$tmpkeyextra."min", 'int'), GETPOST("options_".$tmpkeyextra."sec", 'int'), GETPOST("options_".$tmpkeyextra."month", 'int'), GETPOST("options_".$tmpkeyextra."day", 'int'), GETPOST("options_".$tmpkeyextra."year", 'int'), 'tzuserrel') : $datenotinstring;
 			}
 
 			//TODO Improve element and rights detection

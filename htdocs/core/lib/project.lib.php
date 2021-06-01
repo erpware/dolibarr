@@ -47,14 +47,14 @@ function project_prepare_head(Project $project)
 	$nbContacts = 0;
 	// Enable caching of project count Contacts
 	require_once DOL_DOCUMENT_ROOT.'/core/lib/memory.lib.php';
-	$cachekey = 'count_contacts_project_'.$object->id;
+	$cachekey = 'count_contacts_project_'.$project->id;
 	$dataretrieved = dol_getcache($cachekey);
 
 	if (!is_null($dataretrieved)) {
 		$nbContacts = $dataretrieved;
 	} else {
 		$nbContacts = count($project->liste_contact(-1, 'internal')) + count($project->liste_contact(-1, 'external'));
-		dol_setcache($cachekey, $nbContact, 120);	// If setting cache fails, this is not a problem, so we do not test result.
+		dol_setcache($cachekey, $nbContacts, 120);	// If setting cache fails, this is not a problem, so we do not test result.
 	}
 	$head[$h][0] = DOL_URL_ROOT.'/projet/contact.php?id='.$project->id;
 	$head[$h][1] = $langs->trans("ProjectContact");
@@ -69,7 +69,7 @@ function project_prepare_head(Project $project)
 		$nbTasks = 0;
 		// Enable caching of project count Tasks
 		require_once DOL_DOCUMENT_ROOT.'/core/lib/memory.lib.php';
-		$cachekey = 'count_tasks_project_'.$object->id;
+		$cachekey = 'count_tasks_project_'.$project->id;
 		$dataretrieved = dol_getcache($cachekey);
 
 		if (!is_null($dataretrieved)) {
@@ -90,7 +90,7 @@ function project_prepare_head(Project $project)
 
 		$nbTimeSpent = 0;
 		// Enable caching of project count Timespent
-		$cachekey = 'count_timespent_project_'.$object->id;
+		$cachekey = 'count_timespent_project_'.$project->id;
 		$dataretrieved = dol_getcache($cachekey);
 		if (!is_null($dataretrieved)) {
 			$nbTimeSpent = $dataretrieved;
@@ -122,77 +122,78 @@ function project_prepare_head(Project $project)
 		$h++;
 	}
 
-	if ((!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD) || !empty($conf->supplier_order->enabled) || !empty($conf->supplier_invoice->enabled))
+	if (((!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD)) || !empty($conf->supplier_order->enabled) || !empty($conf->supplier_invoice->enabled))
 		|| !empty($conf->propal->enabled) || !empty($conf->commande->enabled)
 		|| !empty($conf->facture->enabled) || !empty($conf->contrat->enabled)
 		|| !empty($conf->ficheinter->enabled) || !empty($conf->agenda->enabled) || !empty($conf->deplacement->enabled)) {
 		$nbElements = 0;
 		// Enable caching of thirdrparty count Contacts
-		$cachekey = 'count_elements_project_'.$object->id;
+		$cachekey = 'count_elements_project_'.$project->id;
 		$dataretrieved = dol_getcache($cachekey);
 		if (!is_null($dataretrieved)) {
 			$nbElements = $dataretrieved;
 		} else {
 			if (!empty($conf->propal->enabled)) {
-				$count += $project->getElementCount('propal', 'propal');
+				$nbElements += $project->getElementCount('propal', 'propal');
 			}
 			if (!empty($conf->commande->enabled)) {
-				$count += $project->getElementCount('order', 'commande');
+				$nbElements += $project->getElementCount('order', 'commande');
 			}
 			if (!empty($conf->facture->enabled)) {
-				$count += $project->getElementCount('invoice', 'facture');
+				$nbElements += $project->getElementCount('invoice', 'facture');
 			}
 			if (!empty($conf->facture->enabled)) {
-				$count += $project->getElementCount('invoice_predefined', 'facture_rec');
+				$nbElements += $project->getElementCount('invoice_predefined', 'facture_rec');
 			}
 			if (!empty($conf->supplier_proposal->enabled)) {
-				$count += $project->getElementCount('proposal_supplier', 'supplier_proposal');
+				$nbElements += $project->getElementCount('proposal_supplier', 'supplier_proposal');
 			}
 			if (!empty($conf->supplier_order->enabled)) {
-				$count += $project->getElementCount('order_supplier', 'commande_fournisseur');
+				$nbElements += $project->getElementCount('order_supplier', 'commande_fournisseur');
 			}
 			if (!empty($conf->supplier_invoice->enabled)) {
-				$count += $project->getElementCount('invoice_supplier', 'facture_fourn');
+				$nbElements += $project->getElementCount('invoice_supplier', 'facture_fourn');
 			}
 			if (!empty($conf->contrat->enabled)) {
-				$count += $project->getElementCount('contract', 'contrat');
+				$nbElements += $project->getElementCount('contract', 'contrat');
 			}
 			if (!empty($conf->ficheinter->enabled)) {
-				$count += $project->getElementCount('intervention', 'fichinter');
+				$nbElements += $project->getElementCount('intervention', 'fichinter');
 			}
 			if (!empty($conf->expedition->enabled)) {
-				$count += $project->getElementCount('shipping', 'expedition');
+				$nbElements += $project->getElementCount('shipping', 'expedition');
 			}
 			if (!empty($conf->mrp->enabled)) {
-				$count += $project->getElementCount('mrp', 'mrp_mo', 'fk_project');
+				$nbElements += $project->getElementCount('mrp', 'mrp_mo', 'fk_project');
 			}
 			if (!empty($conf->deplacement->enabled)) {
-				$count += $project->getElementCount('trip', 'deplacement');
+				$nbElements += $project->getElementCount('trip', 'deplacement');
 			}
 			if (!empty($conf->expensereport->enabled)) {
-				$count += $project->getElementCount('expensereport', 'expensereport');
+				$nbElements += $project->getElementCount('expensereport', 'expensereport');
 			}
 			if (!empty($conf->don->enabled)) {
-				$count += $project->getElementCount('donation', 'don');
+				$nbElements += $project->getElementCount('donation', 'don');
 			}
 			if (!empty($conf->loan->enabled)) {
-				$count += $project->getElementCount('loan', 'loan');
+				$nbElements += $project->getElementCount('loan', 'loan');
 			}
 			if (!empty($conf->tax->enabled)) {
-				$count += $project->getElementCount('chargesociales', 'chargesociales');
+				$nbElements += $project->getElementCount('chargesociales', 'chargesociales');
 			}
 			if (!empty($conf->projet->enabled)) {
-				$count += $project->getElementCount('project_task', 'projet_task');
+				$nbElements += $project->getElementCount('project_task', 'projet_task');
 			}
 			if (!empty($conf->stock->enabled)) {
-				$count += $project->getElementCount('stock_mouvement', 'stock');
+				$nbElements += $project->getElementCount('stock_mouvement', 'stock');
 			}
 			if (!empty($conf->salaries->enabled)) {
-				$count += $project->getElementCount('salaries', 'payment_salary');
+				$nbElements += $project->getElementCount('salaries', 'payment_salary');
 			}
 			if (!empty($conf->banque->enabled)) {
-				$count += $project->getElementCount('variouspayment', 'payment_various');
+				$nbElements += $project->getElementCount('variouspayment', 'payment_various');
 			}
+			dol_setcache($cachekey, $nbElements, 120);	// If setting cache fails, this is not a problem, so we do not test result.
 		}
 		$head[$h][0] = DOL_URL_ROOT.'/projet/element.php?id='.$project->id;
 		$head[$h][1] = $langs->trans("ProjectOverview");
@@ -203,13 +204,31 @@ function project_prepare_head(Project $project)
 		$h++;
 	}
 
-	if ($conf->eventorganization->enabled) {
+	if ($conf->eventorganization->enabled && !empty($project->usage_organize_event)) {
 		$langs->load('eventorganization');
-		//TODO : Count
-		$nbConfOrBooth = 1;
-		$head[$h][0] = DOL_URL_ROOT . '/projet/event.php?id=' . $project->id;
+		$head[$h][0] = DOL_URL_ROOT . '/eventorganization/conferenceorbooth_list.php?projectid=' . $project->id;
 		$head[$h][1] = $langs->trans("ConferenceOrBoothTab");
-		if ($nbContact > 0) {
+
+		// Enable caching of conf or booth count
+		$nbConfOrBooth = 0;
+		require_once DOL_DOCUMENT_ROOT.'/core/lib/memory.lib.php';
+		$cachekey = 'count_conferenceorbooth_'.$project->id;
+		$dataretrieved = dol_getcache($cachekey);
+		if (!is_null($dataretrieved)) {
+			$nbConfOrBooth = $dataretrieved;
+		} else {
+			require_once DOL_DOCUMENT_ROOT.'/eventorganization/class/conferenceorbooth.class.php';
+			$conforbooth=new ConferenceOrBooth($db);
+			$result = $conforbooth->fetchAll('', '', 0, 0, array('t.fk_project'=>$project->id));
+			//,
+			if (!is_array($result) && $result<0) {
+				setEventMessages($conforbooth->error, $conforbooth->errors, 'errors');
+			} else {
+				$nbConfOrBooth = count($result);
+			}
+			dol_setcache($cachekey, $nbConfOrBooth, 120);	// If setting cache fails, this is not a problem, so we do not test result.
+		}
+		if ($nbConfOrBooth > 0) {
 			$head[$h][1] .= '<span class="badge marginleftonlyshort">' . $nbConfOrBooth . '</span>';
 		}
 		$head[$h][2] = 'eventorganisation';
@@ -244,7 +263,7 @@ function project_prepare_head(Project $project)
 	$totalAttached = 0;
 	// Enable caching of thirdrparty count attached files and links
 	require_once DOL_DOCUMENT_ROOT.'/core/lib/memory.lib.php';
-	$cachekey = 'count_attached_project_'.$object->id;
+	$cachekey = 'count_attached_project_'.$project->id;
 	$dataretrieved = dol_getcache($cachekey);
 	if (!is_null($dataretrieved)) {
 		$totalAttached = $dataretrieved;
@@ -270,7 +289,7 @@ function project_prepare_head(Project $project)
 		$nbComments = 0;
 		// Enable caching of thirdrparty count attached files and links
 		require_once DOL_DOCUMENT_ROOT.'/core/lib/memory.lib.php';
-		$cachekey = 'count_attached_project_'.$object->id;
+		$cachekey = 'count_attached_project_'.$project->id;
 		$dataretrieved = dol_getcache($cachekey);
 		if (!is_null($dataretrieved)) {
 			$nbComments = $dataretrieved;
@@ -805,7 +824,8 @@ function projectLinesa(&$inc, $parent, &$lines, &$level, $var, $showproject, &$t
 					}
 				}
 
-				// Contacts of task
+				// Contacts of tasks. Disabled, because available by default just after
+				/*
 				if (!empty($conf->global->PROJECT_SHOW_CONTACTS_IN_LIST)) {
 					print '<td>';
 					foreach (array('internal', 'external') as $source) {
@@ -821,6 +841,36 @@ function projectLinesa(&$inc, $parent, &$lines, &$level, $var, $showproject, &$t
 								}
 								$c->fetch($contacttask['id']);
 								print $c->getNomUrl(1).' ('.$contacttask['libelle'].')<br>';
+							}
+						}
+					}
+					print '</td>';
+				}*/
+
+				// Contacts of task
+				if (count($arrayfields) > 0 && !empty($arrayfields['c.assigned']['checked'])) {
+					print '<td>';
+					foreach (array('internal', 'external') as $source) {
+						$tab = $lines[$i]->liste_contact(-1, $source);
+						$num = count($tab);
+						if (!empty($num)) {
+							foreach ($tab as $contacttask) {
+								//var_dump($contacttask);
+								if ($source == 'internal') {
+									$c = new User($db);
+								} else {
+									$c = new Contact($db);
+								}
+								$c->fetch($contacttask['id']);
+								if (!empty($c->photo)) {
+									print $c->getNomUrl(-2).'&nbsp;';
+								} else {
+									if (get_class($c) == 'User') {
+										print $c->getNomUrl(2, '', 0, 0, 24, 1);//.'&nbsp;';
+									} else {
+										print $c->getNomUrl(2);//.'&nbsp;';
+									}
+								}
 							}
 						}
 					}
@@ -964,8 +1014,12 @@ function projectLinesa(&$inc, $parent, &$lines, &$level, $var, $showproject, &$t
 				print '</td>';
 			}
 		}
-		// Contacts of task
+		// Contacts of task for backward compatibility,
 		if (!empty($conf->global->PROJECT_SHOW_CONTACTS_IN_LIST)) {
+			print '<td></td>';
+		}
+		// Contacts of task
+		if (count($arrayfields) > 0 && !empty($arrayfields['c.assigned']['checked'])) {
 			print '<td></td>';
 		}
 		print '<td class=""></td>';
@@ -1124,7 +1178,8 @@ function projectLinesPerAction(&$inc, $parent, $fuser, $lines, &$level, &$projec
 			print dol_print_date($lines[$i]->timespent_datehour, 'day');
 			print '</td>';
 
-			$disabledproject = 1; $disabledtask = 1;
+			$disabledproject = 1;
+			$disabledtask = 1;
 			//print "x".$lines[$i]->fk_project;
 			//var_dump($lines[$i]);
 			//var_dump($projectsrole[$lines[$i]->fk_project]);
@@ -1457,29 +1512,32 @@ function projectLinesPerDay(&$inc, $parent, $fuser, $lines, &$level, &$projectsr
 					print '</td>';
 				}
 
-				// Time spent by everybody
-				print '<td class="right">';
-				// $lines[$i]->duration is a denormalised field = summ of time spent by everybody for task. What we need is time consummed by user
-				if ($lines[$i]->duration) {
-					print '<a href="'.DOL_URL_ROOT.'/projet/tasks/time.php?id='.$lines[$i]->id.'">';
-					print convertSecondToTime($lines[$i]->duration, 'allhourmin');
-					print '</a>';
-				} else {
-					print '--:--';
-				}
-				print "</td>\n";
+				if (!empty($arrayfields['timeconsumed']['checked'])) {
+					// Time spent by everybody
+					print '<td class="right">';
+					// $lines[$i]->duration is a denormalised field = summ of time spent by everybody for task. What we need is time consummed by user
+					if ($lines[$i]->duration) {
+						print '<a href="'.DOL_URL_ROOT.'/projet/tasks/time.php?id='.$lines[$i]->id.'">';
+						print convertSecondToTime($lines[$i]->duration, 'allhourmin');
+						print '</a>';
+					} else {
+						print '--:--';
+					}
+					print "</td>\n";
 
-				// Time spent by user
-				print '<td class="right">';
-				$tmptimespent = $taskstatic->getSummaryOfTimeSpent($fuser->id);
-				if ($tmptimespent['total_duration']) {
-					print convertSecondToTime($tmptimespent['total_duration'], 'allhourmin');
-				} else {
-					print '--:--';
+					// Time spent by user
+					print '<td class="right">';
+					$tmptimespent = $taskstatic->getSummaryOfTimeSpent($fuser->id);
+					if ($tmptimespent['total_duration']) {
+						print convertSecondToTime($tmptimespent['total_duration'], 'allhourmin');
+					} else {
+						print '--:--';
+					}
+					print "</td>\n";
 				}
-				print "</td>\n";
 
-				$disabledproject = 1; $disabledtask = 1;
+				$disabledproject = 1;
+				$disabledtask = 1;
 				//print "x".$lines[$i]->fk_project;
 				//var_dump($lines[$i]);
 				//var_dump($projectsrole[$lines[$i]->fk_project]);
@@ -1847,29 +1905,32 @@ function projectLinesPerWeek(&$inc, $firstdaytoshow, $fuser, $parent, $lines, &$
 					print '</td>';
 				}
 
-				// Time spent by everybody
-				print '<td class="right">';
-				// $lines[$i]->duration is a denormalised field = summ of time spent by everybody for task. What we need is time consummed by user
-				if ($lines[$i]->duration) {
-					print '<a href="'.DOL_URL_ROOT.'/projet/tasks/time.php?id='.$lines[$i]->id.'">';
-					print convertSecondToTime($lines[$i]->duration, 'allhourmin');
-					print '</a>';
-				} else {
-					print '--:--';
-				}
-				print "</td>\n";
+				if (!empty($arrayfields['timeconsumed']['checked'])) {
+					// Time spent by everybody
+					print '<td class="right">';
+					// $lines[$i]->duration is a denormalised field = summ of time spent by everybody for task. What we need is time consummed by user
+					if ($lines[$i]->duration) {
+						print '<a href="'.DOL_URL_ROOT.'/projet/tasks/time.php?id='.$lines[$i]->id.'">';
+						print convertSecondToTime($lines[$i]->duration, 'allhourmin');
+						print '</a>';
+					} else {
+						print '--:--';
+					}
+					print "</td>\n";
 
-				// Time spent by user
-				print '<td class="right">';
-				$tmptimespent = $taskstatic->getSummaryOfTimeSpent($fuser->id);
-				if ($tmptimespent['total_duration']) {
-					print convertSecondToTime($tmptimespent['total_duration'], 'allhourmin');
-				} else {
-					print '--:--';
+					// Time spent by user
+					print '<td class="right">';
+					$tmptimespent = $taskstatic->getSummaryOfTimeSpent($fuser->id);
+					if ($tmptimespent['total_duration']) {
+						print convertSecondToTime($tmptimespent['total_duration'], 'allhourmin');
+					} else {
+						print '--:--';
+					}
+					print "</td>\n";
 				}
-				print "</td>\n";
 
-				$disabledproject = 1; $disabledtask = 1;
+				$disabledproject = 1;
+				$disabledtask = 1;
 				//print "x".$lines[$i]->fk_project;
 				//var_dump($lines[$i]);
 				//var_dump($projectsrole[$lines[$i]->fk_project]);
@@ -1886,7 +1947,8 @@ function projectLinesPerWeek(&$inc, $firstdaytoshow, $fuser, $parent, $lines, &$
 				//var_dump($projectstatic->weekWorkLoadPerTask);
 
 				// Fields to show current time
-				$tableCell = ''; $modeinput = 'hours';
+				$tableCell = '';
+				$modeinput = 'hours';
 				for ($idw = 0; $idw < 7; $idw++) {
 					$tmpday = dol_time_plus_duree($firstdaytoshow, $idw, 'd');
 
@@ -2147,7 +2209,8 @@ function projectLinesPerMonth(&$inc, $firstdaytoshow, $fuser, $parent, $lines, &
 				}
 				print "</td>\n";
 
-				$disabledproject = 1; $disabledtask = 1;
+				$disabledproject = 1;
+				$disabledtask = 1;
 				//print "x".$lines[$i]->fk_project;
 				//var_dump($lines[$i]);
 				//var_dump($projectsrole[$lines[$i]->fk_project]);
@@ -2164,7 +2227,8 @@ function projectLinesPerMonth(&$inc, $firstdaytoshow, $fuser, $parent, $lines, &
 				//var_dump($projectstatic->weekWorkLoadPerTask);
 				//TODO
 				// Fields to show current time
-				$tableCell = ''; $modeinput = 'hours';
+				$tableCell = '';
+				$modeinput = 'hours';
 				$TFirstDay = getFirstDayOfEachWeek($TWeek, date('Y', $firstdaytoshow));
 				$TFirstDay[reset($TWeek)] = 1;
 				foreach ($TFirstDay as &$fday) {
@@ -2336,9 +2400,9 @@ function print_projecttasks_array($db, $form, $socid, $projectsListId, $mytasks 
 		$sql .= " LEFT JOIN ".MAIN_DB_PREFIX."projet_task as t ON p.rowid = t.fk_projet";
 	}
 	$sql .= " WHERE p.entity IN (".getEntity('project').")";
-	$sql .= " AND p.rowid IN (".$projectsListId.")";
+	$sql .= " AND p.rowid IN (".$db->sanitize($projectsListId).")";
 	if ($socid) {
-		$sql .= "  AND (p.fk_soc IS NULL OR p.fk_soc = 0 OR p.fk_soc = ".$socid.")";
+		$sql .= "  AND (p.fk_soc IS NULL OR p.fk_soc = 0 OR p.fk_soc = ".((int) $socid).")";
 	}
 	if ($mytasks) {
 		$sql .= " AND p.rowid = t.fk_projet";
@@ -2394,7 +2458,7 @@ function print_projecttasks_array($db, $form, $socid, $projectsListId, $mytasks 
 	$sql2 .= " FROM ".MAIN_DB_PREFIX."projet as p";
 	$sql2 .= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s ON s.rowid = p.fk_soc";
 	$sql2 .= " LEFT JOIN ".MAIN_DB_PREFIX."projet_task as t ON p.rowid = t.fk_projet";
-	$sql2 .= " WHERE p.rowid IN (".join(',', $arrayidofprojects).")";
+	$sql2 .= " WHERE p.rowid IN (".$db->sanitize(join(',', $arrayidofprojects)).")";
 	$sql2 .= " GROUP BY p.rowid, p.ref, p.title, p.fk_soc, s.rowid, s.nom, s.name_alias, s.code_client, s.code_compta, s.client, s.code_fournisseur, s.code_compta_fournisseur, s.fournisseur,";
 	$sql2 .= " s.logo, s.email, s.entity, p.fk_user_creat, p.public, p.fk_statut, p.fk_opp_status, p.opp_percent, p.opp_amount, p.dateo, p.datee";
 	$sql2 .= " ORDER BY p.title, p.ref";
@@ -2409,22 +2473,22 @@ function print_projecttasks_array($db, $form, $socid, $projectsListId, $mytasks 
 		$i = 0;
 
 		print '<tr class="liste_titre">';
-		print_liste_field_titre($title.'<span class="badge marginleftonlyshort">'.$num.'</span>', $_SERVER["PHP_SELF"], "", "", "", "", $sortfield, $sortorder);
+		print_liste_field_titre($title.'<a href="'.DOL_URL_ROOT.'/projet/list.php?search_status='.((int) $status).'"><span class="badge marginleftonlyshort">'.$num.'</span></a>', $_SERVER["PHP_SELF"], "", "", "", "", $sortfield, $sortorder);
 		print_liste_field_titre("ThirdParty", $_SERVER["PHP_SELF"], "", "", "", "", $sortfield, $sortorder);
 		if (!empty($conf->global->PROJECT_USE_OPPORTUNITIES)) {
 			if (!in_array('prospectionstatus', $hiddenfields)) {
-				print_liste_field_titre("OpportunityStatus", "", "", "", "", '', $sortfield, $sortorder, 'right ');
+				print_liste_field_titre("OpportunityStatus", "", "", "", "", 'style="max-width: 100px"', $sortfield, $sortorder, 'center ');
 			}
-			print_liste_field_titre("OpportunityAmount", "", "", "", "", 'align="right"', $sortfield, $sortorder);
+			print_liste_field_titre($form->textwithpicto($langs->trans("Amount"), $langs->trans("OpportunityAmount").' ('.$langs->trans("Tooltip").' = '.$langs->trans("OpportunityWeightedAmount").')'), "", "", "", "", 'style="max-width: 100px"', $sortfield, $sortorder, 'right ');
 			//print_liste_field_titre('OpportunityWeightedAmount', '', '', '', '', 'align="right"', $sortfield, $sortorder);
 		}
 		if (empty($conf->global->PROJECT_HIDE_TASKS)) {
 			print_liste_field_titre("Tasks", "", "", "", "", 'align="right"', $sortfield, $sortorder);
 			if (!in_array('plannedworkload', $hiddenfields)) {
-				print_liste_field_titre("PlannedWorkload", "", "", "", "", '', $sortfield, $sortorder, 'right ');
+				print_liste_field_titre("PlannedWorkload", "", "", "", "", 'style="max-width: 100px"', $sortfield, $sortorder, 'right ');
 			}
 			if (!in_array('declaredprogress', $hiddenfields)) {
-				print_liste_field_titre("ProgressDeclared", "", "", "", "", '', $sortfield, $sortorder, 'right ');
+				print_liste_field_titre("%", "", "", "", "", '', $sortfield, $sortorder, 'right ', $langs->trans("ProgressDeclared"));
 			}
 		}
 		if (!in_array('projectstatus', $hiddenfields)) {
@@ -2512,7 +2576,7 @@ function print_projecttasks_array($db, $form, $socid, $projectsListId, $mytasks 
 						$ponderated_opp_amount += price2num($opp_weighted_amount);
 					}
 					if ($objp->opp_amount) {
-						print '<span title="'.$alttext.'">'.price($objp->opp_amount, 0, '', 1, -1, 0, $conf->currency).'</span>';
+						print '<span class="amount" title="'.$alttext.'">'.$form->textwithpicto(price($objp->opp_amount, 0, '', 1, -1, 0), $alttext).'</span>';
 					}
 					print '</td>';
 				}
@@ -2558,7 +2622,7 @@ function print_projecttasks_array($db, $form, $socid, $projectsListId, $mytasks 
 			}
 			print '<td class="liste_total right">';
 			//$form->textwithpicto(price($ponderated_opp_amount, 0, '', 1, -1, -1, $conf->currency), $langs->trans("OpportunityPonderatedAmountDesc"), 1);
-			print $form->textwithpicto(price($total_opp_amount, 0, '', 1, -1, 0, $conf->currency), $langs->trans("OpportunityPonderatedAmountDesc").' : '.price($ponderated_opp_amount, 0, '', 1, -1, 0, $conf->currency));
+			print $form->textwithpicto(price($total_opp_amount, 0, '', 1, -1, 0), $langs->trans("OpportunityPonderatedAmountDesc").' : '.price($ponderated_opp_amount, 0, '', 1, -1, 0, $conf->currency));
 			print '</td>';
 		}
 		if (empty($conf->global->PROJECT_HIDE_TASKS)) {
@@ -2630,7 +2694,7 @@ function getTaskProgressView($task, $label = true, $progressNumber = true, $hide
 	// define progress color according to time spend vs workload
 	$progressBarClass = 'progress-bar-info';
 	if ($task->planned_workload) {
-		$progressCalculated = round(100 * doubleval($task->duration_effective) / doubleval($task->planned_workload), 2);
+		$progressCalculated = round(100 * floatval($task->duration_effective) / floatval($task->planned_workload), 2);
 
 		// this conf is actually hidden, by default we use 10% for "be carefull or warning"
 		$warningRatio = !empty($conf->global->PROJECT_TIME_SPEND_WARNING_PERCENT) ? (1 + $conf->global->PROJECT_TIME_SPEND_WARNING_PERCENT / 100) : 1.10;
@@ -2638,12 +2702,12 @@ function getTaskProgressView($task, $label = true, $progressNumber = true, $hide
 		$diffTitle = '<br>'.$langs->trans('ProgressDeclared').' : '.$task->progress.($task->progress ? '%' : '');
 		$diffTitle .= '<br>'.$langs->trans('ProgressCalculated').' : '.$progressCalculated.($progressCalculated ? '%' : '');
 
-		//var_dump($progressCalculated.' '.$warningRatio.' '.$task->progress.' '.doubleval($task->progress * $warningRatio));
-		if (doubleval($progressCalculated) > doubleval($task->progress * $warningRatio)) {
+		//var_dump($progressCalculated.' '.$warningRatio.' '.$task->progress.' '.floatval($task->progress * $warningRatio));
+		if (floatval($progressCalculated) > floatval($task->progress * $warningRatio)) {
 			$progressBarClass = 'progress-bar-danger';
 			$title = $langs->trans('TheReportedProgressIsLessThanTheCalculatedProgressionByX', abs($task->progress - $progressCalculated).' '.$langs->trans("point"));
 			$diff = '<span class="text-danger classfortooltip paddingrightonly" title="'.dol_htmlentities($title.$diffTitle).'" ><i class="fa fa-caret-down"></i> '.($task->progress - $progressCalculated).'%</span>';
-		} elseif (doubleval($progressCalculated) > doubleval($task->progress)) { // warning if close at 10%
+		} elseif (floatval($progressCalculated) > floatval($task->progress)) { // warning if close at 10%
 			$progressBarClass = 'progress-bar-warning';
 			$title = $langs->trans('TheReportedProgressIsLessThanTheCalculatedProgressionByX', abs($task->progress - $progressCalculated).' '.$langs->trans("point"));
 			$diff = '<span class="text-warning classfortooltip paddingrightonly" title="'.dol_htmlentities($title.$diffTitle).'" ><i class="fa fa-caret-left"></i> '.($task->progress - $progressCalculated).'%</span>';
@@ -2707,18 +2771,18 @@ function getTaskProgressView($task, $label = true, $progressNumber = true, $hide
 
 	$out .= '</span>';
 	$out .= '    <div class="progress sm '.$spaced.'">';
-	$diffval = doubleval($task->progress) - doubleval($progressCalculated);
+	$diffval = floatval($task->progress) - floatval($progressCalculated);
 	if ($diffval >= 0) {
 		// good
-		$out .= '        <div class="progress-bar '.$progressBarClass.'" style="width: '.doubleval($task->progress).'%" title="'.doubleval($task->progress).'%">';
+		$out .= '        <div class="progress-bar '.$progressBarClass.'" style="width: '.floatval($task->progress).'%" title="'.floatval($task->progress).'%">';
 		if (!empty($task->progress)) {
-			$out .= '        <div class="progress-bar progress-bar-consumed" style="width: '.doubleval($progressCalculated / $task->progress * 100).'%" title="'.doubleval($progressCalculated).'%"></div>';
+			$out .= '        <div class="progress-bar progress-bar-consumed" style="width: '.floatval($progressCalculated / $task->progress * 100).'%" title="'.floatval($progressCalculated).'%"></div>';
 		}
 		$out .= '        </div>';
 	} else {
 		// bad
-		$out .= '        <div class="progress-bar progress-bar-consumed" style="width: '.doubleval($progressCalculated).'%" title="'.doubleval($progressCalculated).'%">';
-		$out .= '        <div class="progress-bar '.$progressBarClass.'" style="width: '.($task->progress ? doubleval($task->progress / $progressCalculated * 100).'%' : '1px').'" title="'.doubleval($task->progress).'%"></div>';
+		$out .= '        <div class="progress-bar progress-bar-consumed" style="width: '.floatval($progressCalculated).'%" title="'.floatval($progressCalculated).'%">';
+		$out .= '        <div class="progress-bar '.$progressBarClass.'" style="width: '.($task->progress ? floatval($task->progress / $progressCalculated * 100).'%' : '1px').'" title="'.floatval($task->progress).'%"></div>';
 		$out .= '        </div>';
 	}
 	$out .= '    </div>';
@@ -2747,17 +2811,17 @@ function getTaskProgressBadge($task, $label = '', $tooltip = '')
 		// define color according to time spend vs workload
 		$badgeClass = 'badge ';
 		if ($task->planned_workload) {
-			$progressCalculated = round(100 * doubleval($task->duration_effective) / doubleval($task->planned_workload), 2);
+			$progressCalculated = round(100 * floatval($task->duration_effective) / floatval($task->planned_workload), 2);
 
 			// this conf is actually hidden, by default we use 10% for "be carefull or warning"
 			$warningRatio = !empty($conf->global->PROJECT_TIME_SPEND_WARNING_PERCENT) ? (1 + $conf->global->PROJECT_TIME_SPEND_WARNING_PERCENT / 100) : 1.10;
 
-			if (doubleval($progressCalculated) > doubleval($task->progress * $warningRatio)) {
+			if (floatval($progressCalculated) > floatval($task->progress * $warningRatio)) {
 				$badgeClass .= 'badge-danger';
 				if (empty($tooltip)) {
 					$tooltip = $task->progress.'% < '.$langs->trans("TimeConsumed").' '.$progressCalculated.'%';
 				}
-			} elseif (doubleval($progressCalculated) > doubleval($task->progress)) { // warning if close at 10%
+			} elseif (floatval($progressCalculated) > floatval($task->progress)) { // warning if close at 10%
 				$badgeClass .= 'badge-warning';
 				if (empty($tooltip)) {
 					$tooltip = $task->progress.'% < '.$langs->trans("TimeConsumed").' '.$progressCalculated.'%';

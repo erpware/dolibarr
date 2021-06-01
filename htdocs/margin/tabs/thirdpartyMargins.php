@@ -33,8 +33,6 @@ $socid = GETPOST('socid', 'int');
 if (!empty($user->socid)) {
 	$socid = $user->socid;
 }
-$result = restrictedArea($user, 'societe', '', '');
-
 
 $limit = GETPOST('limit', 'int') ? GETPOST('limit', 'int') : $conf->liste_limit;
 $sortfield = GETPOST("sortfield", 'alpha');
@@ -60,6 +58,12 @@ if ($socid > 0) {
 
 // Initialize technical object to manage hooks of page. Note that conf->hooks_modules contains array of hook context
 $hookmanager->initHooks(array('thirdpartymargins', 'globalcard'));
+
+$result = restrictedArea($user, 'societe', $object->id, '');
+
+if (empty($user->rights->margins->liretous)) {
+	accessforbidden();
+}
 
 
 /*
@@ -112,7 +116,7 @@ if ($socid > 0) {
 	if ($object->client) {
 		print '<tr><td class="titlefield">';
 		print $langs->trans('CustomerCode').'</td><td colspan="3">';
-		print $object->code_client;
+		print showValueWithClipboardCPButton(dol_escape_htmltag($object->code_client));
 		$tmpcheck = $object->check_codeclient();
 		if ($tmpcheck != 0 && $tmpcheck != -5) {
 			print ' <font class="error">('.$langs->trans("WrongCustomerCode").')</font>';
@@ -120,10 +124,10 @@ if ($socid > 0) {
 		print '</td></tr>';
 	}
 
-	if ((!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD) || !empty($conf->supplier_order->enabled) || !empty($conf->supplier_invoice->enabled)) && $object->fournisseur && !empty($user->rights->fournisseur->lire)) {
+	if (((!empty($conf->fournisseur->enabled) && !empty($user->rights->fournisseur->lire) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD)) || (!empty($conf->supplier_order->enabled) && !empty($user->rights->supplier_order->lire)) || (!empty($conf->supplier_invoice->enabled) && !empty($user->rights->supplier_invoice->lire))) && $object->fournisseur) {
 		print '<tr><td class="titlefield">';
 		print $langs->trans('SupplierCode').'</td><td colspan="3">';
-		print $object->code_fournisseur;
+		print showValueWithClipboardCPButton(dol_escape_htmltag($object->code_fournisseur));
 		$tmpcheck = $object->check_codefournisseur();
 		if ($tmpcheck != 0 && $tmpcheck != -5) {
 			print ' <font class="error">('.$langs->trans("WrongSupplierCode").')</font>';
@@ -160,7 +164,7 @@ if ($socid > 0) {
 	print '<br>';
 
 	$sql = "SELECT distinct s.nom, s.rowid as socid, s.code_client,";
-	$sql .= " f.rowid as facid, f.ref, f.total as total_ht,";
+	$sql .= " f.rowid as facid, f.ref, f.total_ht,";
 	$sql .= " f.datef, f.paye, f.fk_statut as statut, f.type,";
 	$sql .= " sum(d.total_ht) as selling_price,"; // may be negative or positive
 	$sql .= " sum(d.qty * d.buy_price_ht * (d.situation_percent / 100)) as buying_price,"; // always positive
@@ -174,10 +178,12 @@ if ($socid > 0) {
 	$sql .= " AND d.fk_facture = f.rowid";
 	$sql .= " AND f.fk_soc = $socid";
 	$sql .= " AND d.buy_price_ht IS NOT NULL";
-	if (isset($conf->global->ForceBuyingPriceIfNull) && $conf->global->ForceBuyingPriceIfNull == 1) {
+	// We should not use this here. Option ForceBuyingPriceIfNull should have effect only when inserting data. Once data is recorded, it must be used as it is for report.
+	// We keep it with value ForceBuyingPriceIfNull = 2 for retroactive effect but results are unpredicable.
+	if (isset($conf->global->ForceBuyingPriceIfNull) && $conf->global->ForceBuyingPriceIfNull == 2) {
 		$sql .= " AND d.buy_price_ht <> 0";
 	}
-	$sql .= " GROUP BY s.nom, s.rowid, s.code_client, f.rowid, f.ref, f.total, f.datef, f.paye, f.fk_statut, f.type";
+	$sql .= " GROUP BY s.nom, s.rowid, s.code_client, f.rowid, f.ref, f.total_ht, f.datef, f.paye, f.fk_statut, f.type";
 	$sql .= $db->order($sortfield, $sortorder);
 	// TODO: calculate total to display then restore pagination
 	//$sql.= $db->plimit($conf->liste_limit +1, $offset);

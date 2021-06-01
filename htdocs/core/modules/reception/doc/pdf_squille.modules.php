@@ -388,6 +388,18 @@ class pdf_squille extends ModelePdfReception
 					// Description of product line
 					$curX = $this->posxdesc - 1;
 
+					// The desc of line is not store into reception, so we force it to the value of product.
+					/*
+					if (empty($object->lines[0]->desc)) {
+						// TODO We must get value from fk_commendefourndet
+						$sqldesc = 'SELECT description FROM '.MAIN_DB_PREFIX.' WHERE rowid = '.((int) $object->lines[0]->fk_commandefourndet);
+						$resqldesc = $this->db->query($sqldesc);
+						if ($resqldesc) {
+							$objdesc = $this->db->fetch_object($resqldesc);
+							$object->lines[0]->desc = $objdesc->description;
+						}
+					}*/
+
 					$pdf->startTransaction();
 					pdf_writelinedesc($pdf, $object, $i, $outputlangs, $this->posxpicture - $curX, 3, $curX, $curY, $hideref, $hidedesc);
 
@@ -439,12 +451,14 @@ class pdf_squille extends ModelePdfReception
 
 					// We suppose that a too long description or photo were moved completely on next page
 					if ($pageposafter > $pageposbefore && empty($showpricebeforepagebreak)) {
-						$pdf->setPage($pageposafter); $curY = $tab_top_newpage;
+						$pdf->setPage($pageposafter);
+						$curY = $tab_top_newpage;
 					}
 
 					// We suppose that a too long description is moved completely on next page
 					if ($pageposafter > $pageposbefore) {
-						$pdf->setPage($pageposafter); $curY = $tab_top_newpage;
+						$pdf->setPage($pageposafter);
+						$curY = $tab_top_newpage;
 					}
 
 					$pdf->SetFont('', '', $default_font_size - 1); // On repositionne la police par defaut
@@ -599,7 +613,8 @@ class pdf_squille extends ModelePdfReception
 		$pdf->SetFont('', 'B', $default_font_size - 1);
 
 		// Tableau total
-		$col1x = $this->posxweightvol - 50; $col2x = $this->posxweightvol;
+		$col1x = $this->posxweightvol - 50;
+		$col2x = $this->posxweightvol;
 		/*if ($this->page_largeur < 210) // To work with US executive format
 		{
 			$col2x-=20;
@@ -876,7 +891,7 @@ class pdf_squille extends ModelePdfReception
 		$origin_id = $object->origin_id;
 
 		// TODO move to external function
-		if (!empty($conf->fournisseur->enabled)) {     // commonly $origin='commande'
+		if ((!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD)) || !empty($conf->supplier_order->enabled)) {     // commonly $origin='commande'
 			$outputlangs->load('orders');
 
 			$classname = 'CommandeFournisseur';
@@ -931,7 +946,7 @@ class pdf_squille extends ModelePdfReception
 			$pdf->SetTextColor(0, 0, 0);
 			$pdf->SetFont('', '', $default_font_size - 2);
 			$pdf->SetXY($posx, $posy - 5);
-			$pdf->MultiCell(66, 5, $outputlangs->transnoentities("Sender").":", 0, 'L');
+			$pdf->MultiCell($widthrecbox, 5, $outputlangs->transnoentities("Sender"), 0, 'L');
 			$pdf->SetXY($posx, $posy);
 			$pdf->SetFillColor(230, 230, 230);
 			$pdf->MultiCell($widthrecbox, $hautcadre, "", 0, 'R', 1);
@@ -985,7 +1000,7 @@ class pdf_squille extends ModelePdfReception
 			$pdf->SetTextColor(0, 0, 0);
 			$pdf->SetFont('', '', $default_font_size - 2);
 			$pdf->SetXY($posx + 2, $posy - 5);
-			$pdf->MultiCell($widthrecbox, 5, $outputlangs->transnoentities("Recipient").":", 0, 'L');
+			$pdf->MultiCell($widthrecbox, 5, $outputlangs->transnoentities("Recipient"), 0, 'L');
 			$pdf->Rect($posx, $posy, $widthrecbox, $hautcadre);
 
 

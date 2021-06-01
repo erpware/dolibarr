@@ -208,7 +208,16 @@ if (!empty($extrafields->attributes[$object->table_element]['label'])) {
 		$sql .= ($extrafields->attributes[$object->table_element]['type'][$key] != 'separate' ? "ef.".$key.' as options_'.$key.', ' : '');
 	}
 }
-$sql .= " SUM(p.pmp * ps.reel) as estimatedvalue, SUM(p.price * ps.reel) as sellvalue, SUM(ps.reel) as stockqty";
+
+//For Multicompany PMP per entity
+$separatedPMP = false;
+if (!empty($conf->global->MULTICOMPANY_PRODUCT_SHARING_ENABLED) && !empty($conf->global->MULTICOMPANY_PMP_PER_ENTITY_ENABLED)) {
+	$separatedPMP = true;
+	$sql .= " SUM(pa.pmp * ps.reel) as estimatedvalue, SUM(p.price * ps.reel) as sellvalue, SUM(ps.reel) as stockqty";
+} else {
+	$sql .= " SUM(p.pmp * ps.reel) as estimatedvalue, SUM(p.price * ps.reel) as sellvalue, SUM(ps.reel) as stockqty";
+}
+
 // Add fields from hooks
 $parameters = array();
 $reshook = $hookmanager->executeHooks('printFieldListSelect', $parameters, $object); // Note that $action and $object may have been modified by hook
@@ -225,7 +234,12 @@ $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."product_stock as ps ON t.rowid = ps.fk_ent
 $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON ps.fk_product = p.rowid";
 $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."c_departements as c_dep ON c_dep.rowid = t.fk_departement";
 $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."c_country as ccount ON ccount.rowid = t.fk_pays";
+if ($separatedPMP) {
+	$sql .= " LEFT JOIN ".MAIN_DB_PREFIX."product_perentity as pa ON pa.fk_product = p.rowid AND pa.fk_product = ps.fk_product AND pa.entity = ". (int) $conf->entity;
+}
+
 $sql .= " WHERE t.entity IN (".getEntity('stock').")";
+
 if (!empty($conf->categorie->enabled)) {
 	$sql .= Categorie::getFilterSelectQuery(Categorie::TYPE_WAREHOUSE, "t.rowid", $search_category_list);
 }
@@ -273,6 +287,7 @@ $reshook = $hookmanager->executeHooks('printFieldListGroupBy', $parameters); // 
 $sql .= $hookmanager->resPrint;
 $sql = preg_replace('/,\s*$/', '', $sql);
 $totalnboflines = 0;
+
 $result = $db->query($sql);
 if ($result) {
 	$totalnboflines = $db->num_rows($result);
@@ -280,14 +295,14 @@ if ($result) {
 	$line = $total = $totalsell = $totalStock = 0;
 	while ($line < $totalnboflines) {
 		$objp = $db->fetch_object($result);
-		$total += price2num($objp->estimatedvalue, 'MU');
-		$totalsell += price2num($objp->sellvalue, 'MU');
+		$total += $objp->estimatedvalue;
+		$totalsell += $objp->sellvalue;
 		$totalStock += $objp->stockqty;
 		$line++;
 	}
-	$totalarray['val']['stockqty'] = $totalStock;
-	$totalarray['val']['estimatedvalue'] = $total;
-	$totalarray['val']['estimatedstockvaluesell'] = $totalsell;
+	$totalarray['val']['stockqty'] = price2num($totalStock, 'MS');
+	$totalarray['val']['estimatedvalue'] = price2num($total, 'MT');
+	$totalarray['val']['estimatedstockvaluesell'] = price2num($totalsell, 'MT');
 }
 $sql .= $db->order($sortfield, $sortorder);
 
@@ -356,15 +371,15 @@ include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_search_param.tpl.php';
 
 // List of mass actions available
 $arrayofmassactions = array(
-	//'presend'=>$langs->trans("SendByMail"),
-	//'builddoc'=>$langs->trans("PDFMerge"),
+	//'presend'=>img_picto('', 'email', 'class="pictofixedwidth"').$langs->trans("SendByMail"),
+	//'builddoc'=>img_picto('', 'pdf', 'class="pictofixedwidth"').$langs->trans("PDFMerge"),
 );
-//if ($user->rights->stock->supprimer) $arrayofmassactions['predelete']='<span class="fa fa-trash paddingrightonly"></span>'.$langs->trans("Delete");
+//if ($user->rights->stock->supprimer) $arrayofmassactions['predelete']=img_picto('', 'delete', 'class="pictofixedwidth"').$langs->trans("Delete");
 if (GETPOST('nomassaction', 'int') || in_array($massaction, array('presend', 'predelete','preaffecttag'))) {
 	$arrayofmassactions = array();
 }
 if ($user->rights->stock->creer) {
-	$arrayofmassactions['preaffecttag'] = '<span class="fa fa-tag paddingrightonly"></span>'.$langs->trans("AffectTag");
+	$arrayofmassactions['preaffecttag'] = img_picto('', 'label', 'class="pictofixedwidth"').$langs->trans("AffectTag");
 }
 $massactionbutton = $form->selectMassAction('', $arrayofmassactions);
 
@@ -633,7 +648,7 @@ if ($num) {
 		if (!empty($arrayfields["estimatedvalue"]['checked'])) {
 			print '<td class="right">';
 			if (price2num($obj->estimatedvalue, 'MT')) {
-				print price(price2num($obj->estimatedvalue, 'MT'), 1);
+				print '<span class="amount">'.price(price2num($obj->estimatedvalue, 'MT'), 1).'</span>';
 			} else {
 				print '';
 			}
@@ -650,7 +665,9 @@ if ($num) {
 		if (!empty($arrayfields["estimatedstockvaluesell"]['checked'])) {
 			print '<td class="right">';
 			if (empty($conf->global->PRODUIT_MULTIPRICES)) {
-				print price(price2num($obj->sellvalue, 'MT'), 1);
+				if ($obj->sellvalue) {
+					print '<span class="amount">'.price(price2num($obj->sellvalue, 'MT'), 1).'</span>';
+				}
 			} else {
 				$htmltext = $langs->trans("OptionMULTIPRICESIsOn");
 				print $form->textwithtooltip($langs->trans("Variable"), $htmltext);

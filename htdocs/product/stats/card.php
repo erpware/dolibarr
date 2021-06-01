@@ -58,13 +58,14 @@ if (!empty($user->socid)) {
 // Security check
 $fieldvalue = (!empty($id) ? $id : $ref);
 $fieldtype = (!empty($ref) ? 'ref' : 'rowid');
-$result = restrictedArea($user, 'produit|service', $fieldvalue, 'product&product', '', '', $fieldtype);
 
 $tmp = dol_getdate(dol_now());
 $currentyear = $tmp['year'];
 if (empty($search_year)) {
 	$search_year = $currentyear;
 }
+
+$result = restrictedArea($user, 'produit|service', $fieldvalue, 'product&product', '', '', $fieldtype);
 
 
 /*
@@ -184,9 +185,8 @@ if ($result || empty($id)) {
 		// Tag
 		if ($conf->categorie->enabled) {
 			print '<tr><td class="titlefield">'.$langs->trans("Categories").'</td><td>';
-			//$moreforfilter.='<div class="divsearchfield">';
+			$moreforfilter .= img_picto($langs->trans("Categories"), 'category', 'paddingright');
 			$moreforfilter .= $htmlother->select_categories(Categorie::TYPE_PRODUCT, $search_categ, 'search_categ', 1);
-			//$moreforfilter.='</div>';
 			print $moreforfilter;
 			print '</td></tr>';
 		}
@@ -205,11 +205,11 @@ if ($result || empty($id)) {
 		$arrayyears[$currentyear] = $currentyear;
 	}
 	arsort($arrayyears);
-	print $form->selectarray('search_year', $arrayyears, $search_year, 1);
+	print $form->selectarray('search_year', $arrayyears, $search_year, 1, 0, 0, '', 0, 0, 0, '', 'width75');
 	print '</td></tr>';
 	print '</table>';
 	print '<div class="center"><input type="submit" name="submit" class="button" value="'.$langs->trans("Refresh").'"></div>';
-	print '</form>';
+	print '</form><br>';
 
 	print '<br>';
 
@@ -337,7 +337,7 @@ if ($result || empty($id)) {
 						$categ = new Categorie($db);
 						$categ->fetch($search_categ);
 						$listofprodids = $categ->getObjectsInCateg('product', 1);
-						$morefilters = ' AND d.fk_product IN ('.((is_array($listofprodids) && count($listofprodids)) ? join(',', $listofprodids) : '0').')';
+						$morefilters = ' AND d.fk_product IN ('.$db->sanitize((is_array($listofprodids) && count($listofprodids)) ? join(',', $listofprodids) : '0').')';
 					}
 					if ($search_categ == -2) {
 						$morefilters = ' AND d.fk_product NOT IN (SELECT cp.fk_product from '.MAIN_DB_PREFIX.'categorie_product as cp)';

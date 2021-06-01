@@ -796,7 +796,7 @@ class pdf_standard extends ModeleExpenseReport
 			$pdf->SetTextColor(0, 0, 0);
 			$pdf->SetFont('', 'B', $default_font_size - 2);
 			$pdf->SetXY($posx, $posy - 5);
-			$pdf->MultiCell(66, 5, $outputlangs->transnoentities("TripSociete")." :", '', 'L');
+			$pdf->MultiCell(80, 5, $outputlangs->transnoentities("TripSociete"), '', 'L');
 			$pdf->SetXY($posx, $posy);
 			$pdf->SetFillColor(224, 224, 224);
 			$pdf->MultiCell(82, $hautcadre, "", 0, 'R', 1);
@@ -849,7 +849,8 @@ class pdf_standard extends ModeleExpenseReport
 			if ($object->fk_statut == 99) {
 				if ($object->fk_user_refuse > 0) {
 					$userfee = new User($this->db);
-					$userfee->fetch($object->fk_user_refuse); $posy += 6;
+					$userfee->fetch($object->fk_user_refuse);
+					$posy += 6;
 					$pdf->SetXY($posx + 2, $posy);
 					$pdf->MultiCell(96, 4, $outputlangs->transnoentities("REFUSEUR")." : ".dolGetFirstLastname($userfee->firstname, $userfee->lastname), 0, 'L');
 					$posy += 5;
@@ -862,7 +863,8 @@ class pdf_standard extends ModeleExpenseReport
 			} elseif ($object->fk_statut == 4) {
 				if ($object->fk_user_cancel > 0) {
 					$userfee = new User($this->db);
-					$userfee->fetch($object->fk_user_cancel); $posy += 6;
+					$userfee->fetch($object->fk_user_cancel);
+					$posy += 6;
 					$pdf->SetXY($posx + 2, $posy);
 					$pdf->MultiCell(96, 4, $outputlangs->transnoentities("CANCEL_USER")." : ".dolGetFirstLastname($userfee->firstname, $userfee->lastname), 0, 'L');
 					$posy += 5;
@@ -875,7 +877,8 @@ class pdf_standard extends ModeleExpenseReport
 			} else {
 				if ($object->fk_user_approve > 0) {
 					$userfee = new User($this->db);
-					$userfee->fetch($object->fk_user_approve); $posy += 6;
+					$userfee->fetch($object->fk_user_approve);
+					$posy += 6;
 					$pdf->SetXY($posx + 2, $posy);
 					$pdf->MultiCell(96, 4, $outputlangs->transnoentities("VALIDOR")." : ".dolGetFirstLastname($userfee->firstname, $userfee->lastname), 0, 'L');
 					$posy += 5;
@@ -887,7 +890,8 @@ class pdf_standard extends ModeleExpenseReport
 			if ($object->fk_statut == 6) {
 				if ($object->fk_user_paid > 0) {
 					$userfee = new User($this->db);
-					$userfee->fetch($object->fk_user_paid); $posy += 6;
+					$userfee->fetch($object->fk_user_paid);
+					$posy += 6;
 					$pdf->SetXY($posx + 2, $posy);
 					$pdf->MultiCell(96, 4, $outputlangs->transnoentities("AUTHORPAIEMENT")." : ".dolGetFirstLastname($userfee->firstname, $userfee->lastname), 0, 'L');
 					$posy += 5;

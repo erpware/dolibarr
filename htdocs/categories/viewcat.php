@@ -207,26 +207,28 @@ $formother = new FormOther($db);
 
 $arrayofjs = array('/includes/jquery/plugins/jquerytreeview/jquery.treeview.js', '/includes/jquery/plugins/jquerytreeview/lib/jquery.cookie.js');
 $arrayofcss = array('/includes/jquery/plugins/jquerytreeview/jquery.treeview.css');
-$helpurl = '';
-llxHeader("", $langs->trans("Categories"), $helpurl, '', 0, 0, $arrayofjs, $arrayofcss);
+
+$help_url = '';
+
+llxHeader("", $langs->trans("Categories"), $help_url, '', 0, 0, $arrayofjs, $arrayofcss);
 
 $title = Categorie::$MAP_TYPE_TITLE_AREA[$type];
 
 $head = categories_prepare_head($object, $type);
 print dol_get_fiche_head($head, 'card', $langs->trans($title), -1, 'category');
 
-$backtolist = (GETPOST('backtolist') ? GETPOST('backtolist') : DOL_URL_ROOT.'/categories/index.php?leftmenu=cat&type='.$type);
-$linkback = '<a href="'.$backtolist.'">'.$langs->trans("BackToList").'</a>';
+$backtolist = (GETPOST('backtolist') ? GETPOST('backtolist') : DOL_URL_ROOT.'/categories/index.php?leftmenu=cat&type='.urlencode($type));
+$linkback = '<a href="'.dol_sanitizeUrl($backtolist).'">'.$langs->trans("BackToList").'</a>';
 $object->next_prev_filter = ' type = '.$object->type;
 $object->ref = $object->label;
-$morehtmlref = '<br><div class="refidno"><a href="'.DOL_URL_ROOT.'/categories/index.php?leftmenu=cat&type='.$type.'">'.$langs->trans("Root").'</a> >> ';
+$morehtmlref = '<br><div class="refidno"><a href="'.DOL_URL_ROOT.'/categories/index.php?leftmenu=cat&type='.urlencode($type).'">'.$langs->trans("Root").'</a> >> ';
 $ways = $object->print_all_ways(" &gt;&gt; ", '', 1);
 foreach ($ways as $way) {
 	$morehtmlref .= $way."<br>\n";
 }
 $morehtmlref .= '</div>';
 
-dol_banner_tab($object, 'label', $linkback, ($user->socid ? 0 : 1), 'label', 'label', $morehtmlref, '&type='.$type, 0, '', '', 1);
+dol_banner_tab($object, 'label', $linkback, ($user->socid ? 0 : 1), 'label', 'label', $morehtmlref, '&type='.urlencode($type), 0, '', '', 1);
 
 
 /*
@@ -752,6 +754,7 @@ if ($type == Categorie::TYPE_CONTACT) {
 		$num = count($contacts);
 		$nbtotalofrecords = '';
 		$newcardbutton = '';
+		$objsoc = new Societe($db);
 		print_barre_liste($langs->trans("Contact"), $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'contact', 0, $newcardbutton, '', $limit);
 
 		print '<table class="noborder centpercent">'."\n";
@@ -768,6 +771,11 @@ if ($type == Categorie::TYPE_CONTACT) {
 				print "\t".'<tr class="oddeven">'."\n";
 				print '<td class="nowrap" valign="top">';
 				print $contact->getNomUrl(1, 'category');
+				if ($contact->socid > 0) {
+					$objsoc->fetch($contact->socid);
+					print ' - ';
+					print $objsoc->getNomUrl(1, 'contact');
+				}
 				print "</td>\n";
 				// Link to delete from category
 				print '<td class="right">';

@@ -133,7 +133,8 @@ class CUnits // extends CommonObject
 		dol_syslog(get_class($this)."::create", LOG_DEBUG);
 		$resql = $this->db->query($sql);
 		if (!$resql) {
-			$error++; $this->errors[] = "Error ".$this->db->lasterror();
+			$error++;
+			$this->errors[] = "Error ".$this->db->lasterror();
 		}
 
 		if (!$error) {
@@ -180,7 +181,7 @@ class CUnits // extends CommonObject
 		$sql .= " FROM ".MAIN_DB_PREFIX."c_units as t";
 		$sql_where = array();
 		if ($id) {
-			$sql_where[] = " t.rowid = ".$id;
+			$sql_where[] = " t.rowid = ".((int) $id);
 		}
 		if ($unit_type) {
 			$sql_where[] = " t.unit_type = '".$this->db->escape($unit_type)."'";
@@ -344,14 +345,15 @@ class CUnits // extends CommonObject
 		$sql .= " unit_type=".(isset($this->unit_type) ? "'".$this->db->escape($this->unit_type)."'" : "null").",";
 		$sql .= " scale=".(isset($this->scale) ? "'".$this->db->escape($this->scale)."'" : "null").",";
 		$sql .= " active=".(isset($this->active) ? $this->active : "null");
-		$sql .= " WHERE rowid=".$this->id;
+		$sql .= " WHERE rowid=".((int) $this->id);
 
 		$this->db->begin();
 
 		dol_syslog(get_class($this)."::update", LOG_DEBUG);
 		$resql = $this->db->query($sql);
 		if (!$resql) {
-			$error++; $this->errors[] = "Error ".$this->db->lasterror();
+			$error++;
+			$this->errors[] = "Error ".$this->db->lasterror();
 		}
 
 		// Commit or rollback
@@ -382,14 +384,15 @@ class CUnits // extends CommonObject
 		$error = 0;
 
 		$sql = "DELETE FROM ".MAIN_DB_PREFIX."c_units";
-		$sql .= " WHERE rowid=".$this->id;
+		$sql .= " WHERE rowid=".((int) $this->id);
 
 		$this->db->begin();
 
 		dol_syslog(get_class($this)."::delete", LOG_DEBUG);
 		$resql = $this->db->query($sql);
 		if (!$resql) {
-			$error++; $this->errors[] = "Error ".$this->db->lasterror();
+			$error++;
+			$this->errors[] = "Error ".$this->db->lasterror();
 		}
 
 		// Commit or rollback
@@ -434,7 +437,7 @@ class CUnits // extends CommonObject
 	 */
 	public function unitConverter($value, $fk_unit, $fk_new_unit = 0)
 	{
-		$value = doubleval(price2num($value));
+		$value = floatval(price2num($value));
 		$fk_unit = intval($fk_unit);
 
 		// Calcul en unité de base
@@ -466,10 +469,10 @@ class CUnits // extends CommonObject
 		if ($unit) {
 			// TODO : if base exist in unit dictionary table remove this convertion exception and update convertion infos in database exemple time hour currently scale 3600 will become scale 2 base 60
 			if ($unit->unit_type == 'time') {
-				return doubleval($unit->scale);
+				return floatval($unit->scale);
 			}
 
-			return pow($base, doubleval($unit->scale));
+			return pow($base, floatval($unit->scale));
 		}
 
 		return 0;

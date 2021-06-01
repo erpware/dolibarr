@@ -220,7 +220,7 @@ class pdf_standard extends ModelePDFSuppliersPayments
 			$sql .= ', f.fk_statut, s.nom as name, s.rowid as socid';
 			$sql .= ' FROM '.MAIN_DB_PREFIX.'paiementfourn_facturefourn as pf,'.MAIN_DB_PREFIX.'facture_fourn as f,'.MAIN_DB_PREFIX.'societe as s';
 			$sql .= ' WHERE pf.fk_facturefourn = f.rowid AND f.fk_soc = s.rowid';
-			$sql .= ' AND pf.fk_paiementfourn = '.$object->id;
+			$sql .= ' AND pf.fk_paiementfourn = '.((int) $object->id);
 			$resql = $this->db->query($sql);
 			if ($resql) {
 				if ($this->db->num_rows($resql) > 0) {
@@ -388,7 +388,8 @@ class pdf_standard extends ModelePDFSuppliersPayments
 
 					// We suppose that a too long description is moved completely on next page
 					if ($pageposafter > $pageposbefore && empty($showpricebeforepagebreak)) {
-						$pdf->setPage($pageposafter); $curY = $tab_top_newpage;
+						$pdf->setPage($pageposafter);
+						$curY = $tab_top_newpage;
 					}
 
 					$pdf->SetFont('', '', $default_font_size - 1); // On repositionne la police par defaut
@@ -687,16 +688,27 @@ class pdf_standard extends ModelePDFSuppliersPayments
 
 		$pdf->SetFont('','', $default_font_size - 1);
 
+		if (!empty($conf->global->PDF_SHOW_PROJECT_TITLE)) {
+			$object->fetch_projet();
+			if (!empty($object->project->ref)) {
+				$posy += 3;
+				$pdf->SetXY($posx, $posy);
+				$pdf->SetTextColor(0, 0, 60);
+				$pdf->MultiCell($w, 3, $outputlangs->transnoentities("Project")." : ".(empty($object->project->title) ? '' : $object->project->title), '', 'R');
+			}
+		}
+
 		if (! empty($conf->global->PDF_SHOW_PROJECT))
 		{
 			$object->fetch_projet();
 			if (! empty($object->project->ref))
 			{
+				$outputlangs->load("projects");
 				$posy+=4;
 				$pdf->SetXY($posx,$posy);
 				$langs->load("projects");
 				$pdf->SetTextColor(0,0,60);
-				$pdf->MultiCell(100, 3, $outputlangs->transnoentities("Project")." : " . (empty($object->project->ref)?'':$object->projet->ref), '', 'R');
+				$pdf->MultiCell(100, 3, $outputlangs->transnoentities("Project")." : " . (empty($object->project->ref)?'':$object->project->ref), '', 'R');
 			}
 		}
 
@@ -745,7 +757,7 @@ class pdf_standard extends ModelePDFSuppliersPayments
 			$pdf->SetTextColor(0, 0, 0);
 			$pdf->SetFont('', '', $default_font_size - 2);
 			$pdf->SetXY($posx, $posy - 5);
-			$pdf->MultiCell(66, 5, $outputlangs->transnoentities("PayedBy").":", 0, 'L');
+			$pdf->MultiCell(80, 5, $outputlangs->transnoentities("PayedBy"), 0, 'L');
 			$pdf->SetXY($posx, $posy);
 			$pdf->SetFillColor(230, 230, 230);
 			$pdf->MultiCell(82, $hautcadre, "", 0, 'R', 1);
@@ -786,7 +798,7 @@ class pdf_standard extends ModelePDFSuppliersPayments
 			$pdf->SetTextColor(0, 0, 0);
 			$pdf->SetFont('', '', $default_font_size - 2);
 			$pdf->SetXY($posx + 2, $posy - 5);
-			$pdf->MultiCell($widthrecbox, 5, $outputlangs->transnoentities("PayedTo").":", 0, 'L');
+			$pdf->MultiCell($widthrecbox, 5, $outputlangs->transnoentities("PayedTo"), 0, 'L');
 			$pdf->Rect($posx, $posy, $widthrecbox, $hautcadre);
 
 			// Show recipient name

@@ -9,6 +9,7 @@
  * Copyright (C) 2014-2015 Cédric Gross            <c.gross@kreiz-it.fr>
  * Copyright (C) 2015      Marcos García           <marcosgdf@gmail.com>
  * Copyright (C) 2018-2019 Frédéric France         <frederic.france@netlogic.fr>
+ * Copyright (C) 2021	   Gauthier VERDOL         <gauthier.verdol@atm-consulting.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -81,8 +82,6 @@ if (!empty($batchnumber)) {
 if ($user->socid) {
 	$socid = $user->socid;
 }
-$result = restrictedArea($user, 'produit&stock', $id, 'product&product', '', '', $fieldid);
-
 
 $object = new Product($db);
 $extrafields = new ExtraFields($db);
@@ -113,6 +112,17 @@ if (!empty($canvas)) {
 $hookmanager->initHooks(array('stockproductcard', 'globalcard'));
 
 $error = 0;
+
+if ($object->id > 0) {
+	if ($object->type == $object::TYPE_PRODUCT) {
+		restrictedArea($user, 'produit', $object->id, 'product&product', '', '');
+	}
+	if ($object->type == $object::TYPE_SERVICE) {
+		restrictedArea($user, 'service', $object->id, 'product&product', '', '');
+	}
+} else {
+	restrictedArea($user, 'produit|service', $id, 'product&product', '', '', $fieldid);
+}
 
 
 /*
@@ -521,6 +531,45 @@ if ($id > 0 || $ref) {
 
 	llxHeader('', $title, $helpurl);
 
+	if (!empty($conf->use_javascript_ajax)) {
+		?>
+		<script type="text/javascript" language="javascript">
+			$(document).ready(function() {
+				$(".collapse_batch").click(function() {
+					console.log("We click on collapse_batch");
+					var id_entrepot = $(this).attr('id').replace('ent', '');
+
+					if($(this).text().indexOf('+') > 0) {
+						$(".batch_warehouse" + id_entrepot).show();
+						$(this).html('(-)');
+					}
+					else {
+						$(".batch_warehouse" + id_entrepot).hide();
+						$(this).html('(+)');
+					}
+
+					return false;
+				});
+
+				$("#show_all").click(function() {
+					console.log("We click on show_all");
+					$("[class^=batch_warehouse]").show();
+					$("[class^=collapse_batch]").html('(-)');
+					return false;
+				});
+
+				$("#hide_all").click(function() {
+					console.log("We click on hide_all");
+					$("[class^=batch_warehouse]").hide();
+					$("[class^=collapse_batch]").html('(+)');
+					return false;
+				});
+
+			});
+		</script>
+		<?php
+	}
+
 	if ($result > 0) {
 		$head = product_prepare_head($object);
 		$titre = $langs->trans("CardProduct".$object->type);
@@ -564,7 +613,9 @@ if ($id > 0 || $ref) {
 			print '</td></tr>';
 
 			// AWP
-			print '<tr><td class="titlefield">'.$form->textwithpicto($langs->trans("AverageUnitPricePMPShort"), $langs->trans("AverageUnitPricePMPDesc")).'</td>';
+			print '<tr><td class="titlefield">';
+			print $form->textwithpicto($langs->trans("AverageUnitPricePMPShort"), $langs->trans("AverageUnitPricePMPDesc"));
+			print '</td>';
 			print '<td>';
 			if ($object->pmp > 0) {
 				print price($object->pmp).' '.$langs->trans("HT");
@@ -699,7 +750,7 @@ if ($id > 0 || $ref) {
 			}
 
 			// Number of supplier order running
-			if (!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD) || !empty($conf->supplier_order->enabled) || !empty($conf->supplier_invoice->enabled)) {
+			if ((!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD)) || !empty($conf->supplier_order->enabled) || !empty($conf->supplier_invoice->enabled)) {
 				if ($found) {
 					$helpondiff .= '<br>';
 				} else {
@@ -715,7 +766,7 @@ if ($id > 0 || $ref) {
 			}
 
 			// Number of product from supplier order already received (partial receipt)
-			if (!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD) || !empty($conf->supplier_order->enabled) || !empty($conf->supplier_invoice->enabled)) {
+			if ((!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD)) || !empty($conf->supplier_order->enabled) || !empty($conf->supplier_invoice->enabled)) {
 				if ($found) {
 					$helpondiff .= '<br>';
 				} else {
@@ -765,8 +816,11 @@ if ($id > 0 || $ref) {
 				print '<tr><td class="tdtop">'.$langs->trans("LastMovement").'</td><td>';
 				if ($lastmovementdate) {
 					print dol_print_date($lastmovementdate, 'dayhour').' ';
-					print ' &nbsp; &nbsp;<a href="'.DOL_URL_ROOT.'/product/stock/movement_list.php?idproduct='.$object->id.'">'.$langs->trans("FullList").'</a>';
+					print ' &nbsp; &nbsp; ';
+					print img_picto($langs->trans("StockMovement"), 'movement', 'class="pictofixedwidth"');
+					print '<a href="'.DOL_URL_ROOT.'/product/stock/movement_list.php?idproduct='.$object->id.'">'.$langs->trans("FullList").'</a>';
 				} else {
+					print img_picto($langs->trans("StockMovement"), 'movement', 'class="pictofixedwidth"');
 					print '<a href="'.DOL_URL_ROOT.'/product/stock/movement_list.php?idproduct='.$object->id.'">'.$langs->trans("None").'</a>';
 				}
 				print "</td></tr>";
@@ -811,20 +865,19 @@ if (empty($reshook)) {
 
 		if ($user->rights->stock->mouvement->creer) {
 			if (!$variants || !empty($conf->global->VARIANT_ALLOW_STOCK_MOVEMENT_ON_VARIANT_PARENT)) {
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=correction">'.$langs->trans("CorrectStock").'</a>';
+				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=transfert">'.$langs->trans("TransferStock").'</a>';
 			} else {
-				print '<a class="butActionRefused classfortooltip" href="#" title="'.$langs->trans("ActionAvailableOnVariantProductOnly").'">'.$langs->trans("CorrectStock").'</a>';
+				print '<a class="butActionRefused classfortooltip" href="#" title="'.$langs->trans("ActionAvailableOnVariantProductOnly").'">'.$langs->trans("TransferStock").'</a>';
 			}
 		} else {
 			print '<a class="butActionRefused classfortooltip" href="#" title="'.$langs->trans("NotEnoughPermissions").'">'.$langs->trans("CorrectStock").'</a>';
 		}
 
-		//if (($user->rights->stock->mouvement->creer) && ! $object->hasbatch())
 		if ($user->rights->stock->mouvement->creer) {
 			if (!$variants || !empty($conf->global->VARIANT_ALLOW_STOCK_MOVEMENT_ON_VARIANT_PARENT)) {
-				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=transfert">'.$langs->trans("TransferStock").'</a>';
+				print '<a class="butAction" href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;action=correction">'.$langs->trans("CorrectStock").'</a>';
 			} else {
-				print '<a class="butActionRefused classfortooltip" href="#" title="'.$langs->trans("ActionAvailableOnVariantProductOnly").'">'.$langs->trans("TransferStock").'</a>';
+				print '<a class="butActionRefused classfortooltip" href="#" title="'.$langs->trans("ActionAvailableOnVariantProductOnly").'">'.$langs->trans("CorrectStock").'</a>';
 			}
 		} else {
 			print '<a class="butActionRefused classfortooltip" href="#" title="'.$langs->trans("NotEnoughPermissions").'">'.$langs->trans("CorrectStock").'</a>';
@@ -850,20 +903,30 @@ if (!$variants) {
 	print '<td class="right">'.$langs->trans("EstimatedStockValueShort").'</td>';
 	print '<td class="right">'.$langs->trans("SellPriceMin").'</td>';
 	print '<td class="right">'.$langs->trans("EstimatedStockValueSellShort").'</td>';
+	print '<td></td>';
+	print '<td></td>';
 	print '</tr>';
 	if ((!empty($conf->productbatch->enabled)) && $object->hasbatch()) {
 		$colspan = 3;
-		print '<tr class="liste_titre"><td width="10%"></td>';
-		print '<td class="right" width="10%">'.$langs->trans("batch_number").'</td>';
+		print '<tr class="liste_titre"><td width="14%">';
+		if (!empty($conf->use_javascript_ajax)) {
+			print '<a id="show_all" href="#">'.img_picto('', 'folder-open', 'class="paddingright"').$langs->trans("ExpandAll").'</a> &nbsp; ';
+			print '<a id="hide_all" href="#">'.img_picto('', 'folder', 'class="paddingright"').$langs->trans("UndoExpandAll").'</a>';
+			//print '&nbsp;'.$form->textwithpicto('', $langs->trans('CollapseBatchDetailHelp'), 1, 'help', '');
+		}
+		print '</td>';
+		print '<td class="right">'.$langs->trans("batch_number").'</td>';
 		if (empty($conf->global->PRODUCT_DISABLE_EATBY)) {
 			$colspan--;
-			print '<td class="center" width="10%">'.$langs->trans("EatByDate").'</td>';
+			print '<td class="center width100">'.$langs->trans("EatByDate").'</td>';
 		}
 		if (empty($conf->global->PRODUCT_DISABLE_SELLBY)) {
 			$colspan--;
-			print '<td class="center" width="10%">'.$langs->trans("SellByDate").'</td>';
+			print '<td class="center width100">'.$langs->trans("SellByDate").'</td>';
 		}
 		print '<td colspan="'.$colspan.'"></td>';
+		print '<td></td>';
+		print '<td></td>';
 		print '<td></td>';
 		print '<td></td>';
 		print '<td></td>';
@@ -871,7 +934,7 @@ if (!$variants) {
 		print '</tr>';
 	}
 
-	$sql = "SELECT e.rowid, e.ref, e.lieu, e.fk_parent, e.statut, ps.reel, ps.rowid as product_stock_id, p.pmp";
+	$sql = "SELECT e.rowid, e.ref, e.lieu, e.fk_parent, e.statut as status, ps.reel, ps.rowid as product_stock_id, p.pmp";
 	$sql .= " FROM ".MAIN_DB_PREFIX."entrepot as e,";
 	$sql .= " ".MAIN_DB_PREFIX."product_stock as ps";
 	$sql .= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = ps.fk_product";
@@ -901,11 +964,19 @@ if (!$variants) {
 			$entrepotstatic->label = $obj->ref;
 			$entrepotstatic->lieu = $obj->lieu;
 			$entrepotstatic->fk_parent = $obj->fk_parent;
-			$entrepotstatic->statut = $obj->statut;
+			$entrepotstatic->statut = $obj->status;
+			$entrepotstatic->status = $obj->status;
 
 			$stock_real = price2num($obj->reel, 'MS');
 			print '<tr class="oddeven">';
-			print '<td colspan="4">'.$entrepotstatic->getNomUrl(1).'</td>';
+			print '<td colspan="4">';
+			print $entrepotstatic->getNomUrl(1);
+			if (!empty($conf->use_javascript_ajax) && !empty($conf->productbatch->enabled) && $object->hasbatch()) {
+				print '<a class="collapse_batch marginleftonly" id="ent' . $entrepotstatic->id . '" href="#">';
+				print (empty($conf->global->STOCK_SHOW_ALL_BATCH_BY_DEFAULT) ? '(+)' : '(-)');
+				print '</a>';
+			}
+			print '</td>';
 			print '<td class="right">'.$stock_real.($stock_real < 0 ? ' '.img_warning() : '').'</td>';
 			// PMP
 			print '<td class="right">'.(price2num($object->pmp) ? price2num($object->pmp, 'MU') : '').'</td>';
@@ -922,10 +993,13 @@ if (!$variants) {
 			// Value sell
 			print '<td class="right">';
 			if (empty($conf->global->PRODUIT_MULTIPRICES)) {
-				print price(price2num($object->price * $obj->reel, 'MT'), 1).'</td>';
+				print price(price2num($object->price * $obj->reel, 'MT'), 1);
 			} else {
 				print $langs->trans("Variable");
 			}
+			print '</td>';
+			print '<td></td>';
+			print '<td></td>';
 			print '</tr>';
 			$total += $obj->reel;
 			if (price2num($object->pmp)) {
@@ -967,16 +1041,14 @@ if (!$variants) {
 						print '<input type="submit" class="button button-cancel" id="cancellinebutton" name="Cancel" value="'.$langs->trans("Cancel").'"></td></tr>';
 						print '</table>';
 						print '</form>';
-						print '</td></tr>';
+						print '</td>';
+						print '<td></td>';
+						print '<td></td>';
+						print '</tr>';
 					} else {
-						print "\n".'<tr><td class="right">';
-						print img_picto($langs->trans("Tranfer"), 'uparrow', 'class="hideonsmartphone"').' ';
-						print '<a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;id_entrepot='.$entrepotstatic->id.'&amp;action=transfert&amp;pdluoid='.$pdluo->id.'">'.$langs->trans("TransferStock").'</a>';
-						// Disabled, because edition of stock content must use the "Correct stock menu".
-						// Do not use this, or data will be wrong (bad tracking of movement label, inventory code, ...
-						//print '<a href="'.$_SERVER["PHP_SELF"].'?id='.$id.'&amp;action=editline&amp;lineid='.$pdluo->id.'#'.$pdluo->id.'">';
-						//print img_edit().'</a></td>';
-						print '<td class="right">';
+						print "\n".'<tr style="display:'.(empty($conf->global->STOCK_SHOW_ALL_BATCH_BY_DEFAULT) ? 'none' : 'visible').';" class="batch_warehouse'.$entrepotstatic->id.'"><td class="left">';
+						print '</td>';
+						print '<td class="right nowraponall">';
 						print $product_lot_static->getNomUrl(1);
 						print '</td>';
 						$colspan = 3;
@@ -990,6 +1062,30 @@ if (!$variants) {
 						}
 						print '<td class="right" colspan="'.$colspan.'">'.$pdluo->qty.($pdluo->qty < 0 ? ' '.img_warning() : '').'</td>';
 						print '<td colspan="4"></td>';
+						print '<td>';
+						if ($entrepotstatic->status != $entrepotstatic::STATUS_CLOSED) {
+							print '<a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;id_entrepot='.$entrepotstatic->id.'&amp;action=transfert&amp;pdluoid='.$pdluo->id.'">';
+							print img_picto($langs->trans("TransferStock"), 'add', 'class="hideonsmartphone paddingright" style="color: #a69944"');
+							print $langs->trans("TransferStock");
+							print '</a>';
+							// Disabled, because edition of stock content must use the "Correct stock menu".
+							// Do not use this, or data will be wrong (bad tracking of movement label, inventory code, ...
+							//print '<a href="'.$_SERVER["PHP_SELF"].'?id='.$id.'&amp;action=editline&amp;lineid='.$pdluo->id.'#'.$pdluo->id.'">';
+							//print img_edit().'</a>';
+						}
+						print '</td>';
+						print '<td>';
+						if ($entrepotstatic->status != $entrepotstatic::STATUS_CLOSED) {
+							print '<a href="'.$_SERVER["PHP_SELF"].'?id='.$object->id.'&amp;id_entrepot='.$entrepotstatic->id.'&amp;action=correction&amp;pdluoid='.$pdluo->id.'">';
+							print img_picto($langs->trans("CorrectStock"), 'add', 'class="hideonsmartphone paddingright" style="color: #a69944"');
+							print $langs->trans("CorrectStock");
+							print '</a>';
+							// Disabled, because edition of stock content must use the "Correct stock menu".
+							// Do not use this, or data will be wrong (bad tracking of movement label, inventory code, ...
+							//print '<a href="'.$_SERVER["PHP_SELF"].'?id='.$id.'&amp;action=editline&amp;lineid='.$pdluo->id.'#'.$pdluo->id.'">';
+							//print img_edit().'</a>';
+						}
+						print '</td>';
 						print '</tr>';
 					}
 				}
@@ -1025,6 +1121,8 @@ if (!$variants) {
 		print $langs->trans("Variable");
 	}
 	print '</td>';
+	print '<td></td>';
+	print '<td></td>';
 	print "</tr>";
 
 	print "</table>";

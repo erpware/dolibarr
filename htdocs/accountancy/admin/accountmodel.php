@@ -54,8 +54,8 @@ $code = GETPOST('code', 'alpha');
 
 $acts[0] = "activate";
 $acts[1] = "disable";
-$actl[0] = img_picto($langs->trans("Disabled"), 'switch_off');
-$actl[1] = img_picto($langs->trans("Activated"), 'switch_on');
+$actl[0] = img_picto($langs->trans("Disabled"), 'switch_off', 'class="size15x"');
+$actl[1] = img_picto($langs->trans("Activated"), 'switch_on', 'class="size15x"');
 
 $listoffset = GETPOST('listoffset', 'alpha');
 $listlimit = GETPOST('listlimit', 'int') > 0 ?GETPOST('listlimit', 'int') : 1000;
@@ -180,10 +180,6 @@ if (GETPOST('actionadd', 'alpha') || GETPOST('actionmodify', 'alpha')) {
 		}
 	}
 	// Other checks
-	if ($tabname[$id] == MAIN_DB_PREFIX."c_actioncomm" && GETPOSTISSET("type") && in_array($_POST["type"], array('system', 'systemauto'))) {
-		$ok = 0;
-		setEventMessages($langs->transnoentities('ErrorReservedTypeSystemSystemAuto'), null, 'errors');
-	}
 	if (GETPOSTISSET("pcg_version")) {
 		if (GETPOST("pcg_version") == '0') {
 			$ok = 0;
@@ -446,7 +442,7 @@ if ($id) {
 		} else {
 			$sql .= " WHERE ";
 		}
-		$sql .= " c.rowid = ".$search_country_id;
+		$sql .= " c.rowid = ".((int) $search_country_id);
 	}
 
 	// If sort order is "country", we use country_code instead
@@ -613,10 +609,12 @@ if ($id) {
 		print '</tr>';
 
 		if ($num) {
+			$i = 0;
 			// Lines with values
 			while ($i < $num) {
 				$obj = $db->fetch_object($resql);
 				//print_r($obj);
+
 				print '<tr class="oddeven" id="rowid-'.$obj->rowid.'">';
 				if ($action == 'edit' && ($rowid == (!empty($obj->rowid) ? $obj->rowid : $obj->code))) {
 					print '<form action="'.$_SERVER['PHP_SELF'].'?id='.$id.'" method="POST">';
@@ -712,6 +710,7 @@ if ($id) {
 
 					print "</tr>\n";
 				}
+
 				$i++;
 			}
 		}

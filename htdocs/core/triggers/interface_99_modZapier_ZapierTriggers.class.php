@@ -70,10 +70,11 @@ class InterfaceZapierTriggers extends DolibarrTriggers
 	 */
 	public function runTrigger($action, $object, User $user, Translate $langs, Conf $conf)
 	{
-		if (empty($conf->zapier->enabled)) {
+		if (empty($conf->zapier) || empty($conf->zapier->enabled)) {
 			// Module not active, we do nothing
 			return 0;
 		}
+
 		$logtriggeraction = false;
 		$sql = '';
 		if ($action != '') {
@@ -110,13 +111,9 @@ class InterfaceZapierTriggers extends DolibarrTriggers
 			//case 'USER_NEW_PASSWORD':
 			//case 'USER_ENABLEDISABLE':
 			//case 'USER_DELETE':
-			//case 'USER_SETINGROUP':
-			//case 'USER_REMOVEFROMGROUP':
-			// case 'USER_LOGIN':
-			// case 'USER_LOGIN_FAILED':
-			// case 'USER_LOGOUT':
-			// Warning: To increase performances, this action is triggered only if constant MAIN_ACTIVATE_UPDATESESSIONTRIGGER is set to 1.
-			// // case 'USER_UPDATE_SESSION':
+			//case 'USER_LOGIN':
+			//case 'USER_LOGIN_FAILED':
+			//case 'USER_LOGOUT':
 
 			// Actions
 			case 'ACTION_MODIFY':

@@ -66,13 +66,19 @@ if (GETPOST('action', 'aZ09') == 'setremise') {
 			header("Location: ".$backtopage);
 			exit;
 		} else {
-			header("Location: remise.php?id=".$_GET["id"]);
+			header("Location: remise.php?id=".GETPOST("id", 'int'));
 			exit;
 		}
 	} else {
 		setEventMessages($object->error, $object->errors, 'errors');
 	}
 }
+
+// Security check
+if ($user->socid > 0) {
+	$id = $user->socid;
+}
+$result = restrictedArea($user, 'societe', $id, '&societe', '', 'fk_soc', 'rowid', 0);
 
 
 /*
@@ -82,7 +88,6 @@ if (GETPOST('action', 'aZ09') == 'setremise') {
 $form = new Form($db);
 
 llxHeader();
-
 
 /*********************************************************************************
  *
@@ -162,10 +167,10 @@ if ($socid > 0) {
 		// Discount type
 		print '<tr><td class="titlefield fieldrequired">'.$langs->trans('DiscountType').'</td><td>';
 		if ($isCustomer) {
-			print '<input type="radio" name="discount_type" id="discount_type_0" checked value="0"/> <label for="discount_type_0">'.$langs->trans('Customer').'</label>';
+			print '<input type="radio" name="discount_type" id="discount_type_0" '.(GETPOSTISSET('discount_type') ? (GETPOST('discount_type', 'int') == 0 ? ' checked' : '') : ' checked').' value="0"> <label for="discount_type_0">'.$langs->trans('Customer').'</label>';
 		}
 		if ($isSupplier) {
-			print ' <input type="radio" name="discount_type" id="discount_type_1"'.($isCustomer ? '' : ' checked').' value="1"/> <label for="discount_type_1">'.$langs->trans('Supplier').'</label>';
+			print ' <input type="radio" name="discount_type" id="discount_type_1"'.(GETPOSTISSET('discount_type') ? (GETPOST('discount_type', 'int') ? ' checked' : '') : ($isCustomer ? '' : ' checked')).' value="1"> <label for="discount_type_1">'.$langs->trans('Supplier').'</label>';
 		}
 		print '</td></tr>';
 	}

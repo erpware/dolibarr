@@ -231,17 +231,24 @@ class pdf_cornas extends ModelePDFSuppliersOrders
 				$objphoto->fetch($object->lines[$i]->fk_product);
 
 				if (!empty($conf->global->PRODUCT_USE_OLD_PATH_FOR_PHOTO)) {
-					$pdir = get_exdir($object->lines[$i]->fk_product, 2, 0, 0, $objphoto, 'product').$object->lines[$i]->fk_product."/photos/";
+					$pdir = get_exdir($objphoto->id, 2, 0, 0, $objphoto, 'product').$object->lines[$i]->fk_product."/photos/";
 					$dir = $conf->product->dir_output.'/'.$pdir;
 				} else {
-					$pdir = get_exdir(0, 2, 0, 0, $objphoto, 'product').dol_sanitizeFileName($objphoto->ref).'/';
+					$pdir = get_exdir($objphoto->id, 0, 0, 0, $objphoto, 'product');
 					$dir = $conf->product->dir_output.'/'.$pdir;
 				}
 
 				$realpath = '';
 				foreach ($objphoto->liste_photos($dir, 1) as $key => $obj) {
-					$filename = $obj['photo'];
-					//if ($obj['photo_vignette']) $filename='thumbs/'.$obj['photo_vignette'];
+					if (empty($conf->global->CAT_HIGH_QUALITY_IMAGES)) {		// If CAT_HIGH_QUALITY_IMAGES not defined, we use thumb if defined and then original photo
+						if ($obj['photo_vignette']) {
+							$filename = $obj['photo_vignette'];
+						} else {
+							$filename = $obj['photo'];
+						}
+					} else {
+						$filename = $obj['photo'];
+					}
 					$realpath = $dir.$filename;
 					break;
 				}
@@ -611,7 +618,8 @@ class pdf_cornas extends ModelePDFSuppliersOrders
 
 					// We suppose that a too long description is moved completely on next page
 					if ($pageposafter > $pageposbefore && empty($showpricebeforepagebreak)) {
-						$pdf->setPage($pageposafter); $curY = $tab_top_newpage;
+						$pdf->setPage($pageposafter);
+						$curY = $tab_top_newpage;
 					}
 
 					$pdf->SetFont('', '', $default_font_size - 1); // On repositionne la police par defaut
@@ -941,7 +949,8 @@ class pdf_cornas extends ModelePDFSuppliersOrders
 		$pdf->SetFont('', '', $default_font_size - 1);
 
 		// Tableau total
-		$col1x = 120; $col2x = 170;
+		$col1x = 120;
+		$col2x = 170;
 		if ($this->page_largeur < 210) { // To work with US executive format
 			$col2x -= 20;
 		}
@@ -1209,6 +1218,9 @@ class pdf_cornas extends ModelePDFSuppliersOrders
 	{
 		global $langs, $conf, $mysoc;
 
+		$ltrdirection = 'L';
+		if ($outputlangs->trans("DIRECTION") == 'rtl') $ltrdirection = 'R';
+
 		// Load translation files required by the page
 		$outputlangs->loadLangs(array("main", "orders", "companies", "bills", "sendings"));
 
@@ -1246,7 +1258,7 @@ class pdf_cornas extends ModelePDFSuppliersOrders
 			}
 		} else {
 			$text = $this->emetteur->name;
-			$pdf->MultiCell(100, 4, $outputlangs->convToOutputCharset($text), 0, 'L');
+			$pdf->MultiCell(100, 4, $outputlangs->convToOutputCharset($text), 0, $ltrdirection);
 		}
 
 		$pdf->SetFont('', 'B', $default_font_size + 3);
@@ -1267,14 +1279,25 @@ class pdf_cornas extends ModelePDFSuppliersOrders
 
 		$pdf->SetFont('', '', $default_font_size - 1);
 
+		if (!empty($conf->global->PDF_SHOW_PROJECT_TITLE)) {
+			$object->fetch_projet();
+			if (!empty($object->project->ref)) {
+				$posy += 3;
+				$pdf->SetXY($posx, $posy);
+				$pdf->SetTextColor(0, 0, 60);
+				$pdf->MultiCell($w, 3, $outputlangs->transnoentities("Project")." : ".(empty($object->project->title) ? '' : $object->project->title), '', 'R');
+			}
+		}
+
 		if (!empty($conf->global->PDF_SHOW_PROJECT)) {
 			$object->fetch_projet();
 			if (!empty($object->project->ref)) {
+				$outputlangs->load("projects");
 				$posy += 4;
 				$pdf->SetXY($posx, $posy);
 				$langs->load("projects");
 				$pdf->SetTextColor(0, 0, 60);
-				$pdf->MultiCell(100, 3, $outputlangs->transnoentities("Project")." : ".(empty($object->project->ref) ? '' : $object->projet->ref), '', 'R');
+				$pdf->MultiCell(100, 3, $outputlangs->transnoentities("Project")." : ".(empty($object->project->ref) ? '' : $object->project->ref), '', 'R');
 			}
 		}
 
@@ -1356,7 +1379,7 @@ class pdf_cornas extends ModelePDFSuppliersOrders
 			$pdf->SetTextColor(0, 0, 0);
 			$pdf->SetFont('', '', $default_font_size - 2);
 			$pdf->SetXY($posx, $posy - 5);
-			$pdf->MultiCell(66, 5, $outputlangs->transnoentities("BillFrom").":", 0, 'L');
+			$pdf->MultiCell(80, 5, $outputlangs->transnoentities("BillFrom"), 0, $ltrdirection);
 			$pdf->SetXY($posx, $posy);
 			$pdf->SetFillColor(230, 230, 230);
 			$pdf->MultiCell(82, $hautcadre, "", 0, 'R', 1);
@@ -1365,13 +1388,13 @@ class pdf_cornas extends ModelePDFSuppliersOrders
 			// Show sender name
 			$pdf->SetXY($posx + 2, $posy + 3);
 			$pdf->SetFont('', 'B', $default_font_size);
-			$pdf->MultiCell(80, 4, $outputlangs->convToOutputCharset($this->emetteur->name), 0, 'L');
+			$pdf->MultiCell(80, 4, $outputlangs->convToOutputCharset($this->emetteur->name), 0, $ltrdirection);
 			$posy = $pdf->getY();
 
 			// Show sender information
 			$pdf->SetXY($posx + 2, $posy);
 			$pdf->SetFont('', '', $default_font_size - 1);
-			$pdf->MultiCell(80, 4, $carac_emetteur, 0, 'L');
+			$pdf->MultiCell(80, 4, $carac_emetteur, 0, $ltrdirection);
 
 
 
@@ -1409,20 +1432,20 @@ class pdf_cornas extends ModelePDFSuppliersOrders
 			$pdf->SetTextColor(0, 0, 0);
 			$pdf->SetFont('', '', $default_font_size - 2);
 			$pdf->SetXY($posx + 2, $posy - 5);
-			$pdf->MultiCell($widthrecbox, 5, $outputlangs->transnoentities("BillTo").":", 0, 'L');
+			$pdf->MultiCell($widthrecbox, 5, $outputlangs->transnoentities("BillTo"), 0, $ltrdirection);
 			$pdf->Rect($posx, $posy, $widthrecbox, $hautcadre);
 
 			// Show recipient name
 			$pdf->SetXY($posx + 2, $posy + 3);
 			$pdf->SetFont('', 'B', $default_font_size);
-			$pdf->MultiCell($widthrecbox, 4, $carac_client_name, 0, 'L');
+			$pdf->MultiCell($widthrecbox, 4, $carac_client_name, 0, $ltrdirection);
 
 			$posy = $pdf->getY();
 
 			// Show recipient information
 			$pdf->SetFont('', '', $default_font_size - 1);
 			$pdf->SetXY($posx + 2, $posy);
-			$pdf->MultiCell($widthrecbox, 4, $carac_client, 0, 'L');
+			$pdf->MultiCell($widthrecbox, 4, $carac_client, 0, $ltrdirection);
 		}
 
 		return $top_shift;
@@ -1548,12 +1571,16 @@ class pdf_cornas extends ModelePDFSuppliersOrders
 		$this->cols['subprice'] = array(
 			'rank' => $rank,
 			'width' => 19, // in mm
-			'status' => true,
+			'status' => false,
 			'title' => array(
 				'textkey' => 'PriceUHT'
 			),
 			'border-left' => true, // add left line separator
 		);
+
+		if (empty($conf->global->MAIN_GENERATE_DOCUMENTS_PURCHASE_ORDER_WITHOUT_UNIT_PRICE)) {
+			$this->cols['subprice']['status'] = true;
+		}
 
 		$rank = $rank + 10;
 		$this->cols['qty'] = array(
@@ -1604,6 +1631,10 @@ class pdf_cornas extends ModelePDFSuppliersOrders
 			),
 			'border-left' => true, // add left line separator
 		);
+
+		if (empty($conf->global->MAIN_GENERATE_DOCUMENTS_PURCHASE_ORDER_WITHOUT_TOTAL_COLUMN)) {
+			$this->cols['totalexcltax']['status'] = true;
+		}
 
 		// Add extrafields cols
 		if (!empty($object->lines)) {

@@ -232,6 +232,10 @@ class Tickets extends DolibarrApi
 	{
 		global $db, $conf;
 
+		if (!DolibarrApiAccess::$user->rights->ticket->read) {
+			throw new RestException(403);
+		}
+
 		$obj_ret = array();
 
 		if (!$socid && DolibarrApiAccess::$user->socid) {
@@ -273,7 +277,7 @@ class Tickets extends DolibarrApi
 			if (!DolibarrApi::_checkFilters($sqlfilters)) {
 				throw new RestException(503, 'Error when validating parameter sqlfilters '.$sqlfilters);
 			}
-			$regexstring = '\(([^:\'\(\)]+:[^:\'\(\)]+:[^:\(\)]+)\)';
+			$regexstring = '\(([^:\'\(\)]+:[^:\'\(\)]+:[^\(\)]+)\)';
 			$sql .= " AND (".preg_replace_callback('/'.$regexstring.'/', 'DolibarrApi::_forge_criteria_callback', $sqlfilters).")";
 		}
 

@@ -9,7 +9,7 @@
  * Copyright (C) 2015       Charles-Fr BENKE        <charles.fr@benke.fr>
  * Copyright (C) 2016       Raphaël Doursenaud      <rdoursenaud@gpcsolutions.fr>
  * Copyright (C) 2017       Nicolas ZABOURI         <info@inovea-conseil.com>
- * Copyright (C) 2018-2019  Frédéric France         <frederic.france@netlogic.fr>
+ * Copyright (C) 2018-2021  Frédéric France         <frederic.france@netlogic.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -251,7 +251,8 @@ class ExtraFields
 		}
 
 		if ($type == 'separate') {
-			$unique = 0; $required = 0;
+			$unique = 0;
+			$required = 0;
 		}	// Force unique and not required if this is a separator field to avoid troubles.
 		if ($elementtype == 'thirdparty') {
 			$elementtype = 'societe';
@@ -628,6 +629,8 @@ class ExtraFields
 	 */
 	public function update($attrname, $label, $type, $length, $elementtype, $unique = 0, $required = 0, $pos = 0, $param = '', $alwayseditable = 0, $perms = '', $list = '', $help = '', $default = '', $computed = '', $entity = '', $langfile = '', $enabled = '1', $totalizable = 0, $printable = 0)
 	{
+		global $hookmanager;
+
 		if ($elementtype == 'thirdparty') {
 			$elementtype = 'societe';
 		}
@@ -672,6 +675,17 @@ class ExtraFields
 				$lengthdb = $length;
 			}
 			$field_desc = array('type'=>$typedb, 'value'=>$lengthdb, 'null'=>($required ? 'NOT NULL' : 'NULL'), 'default'=>$default);
+
+			if (is_object($hookmanager)) {
+				$hookmanager->initHooks(array('extrafieldsdao'));
+				$parameters = array('field_desc'=>&$field_desc, 'table'=>$table, 'attr_name'=>$attrname, 'label'=>$label, 'type'=>$type, 'length'=>$length, 'unique'=>$unique, 'required'=>$required, 'pos'=>$pos, 'param'=>$param, 'alwayseditable'=>$alwayseditable, 'perms'=>$perms, 'list'=>$list, 'help'=>$help, 'default'=>$default, 'computed'=>$computed, 'entity'=>$entity, 'langfile'=>$langfile, 'enabled'=>$enabled, 'totalizable'=>$totalizable, 'printable'=>$printable);
+				$reshook = $hookmanager->executeHooks('updateExtrafields', $parameters, $this, $action); // Note that $action and $object may have been modified by some hooks
+
+				if ($reshook < 0) {
+					$this->error = $this->db->lasterror();
+					return -1;
+				}
+			}
 
 			if ($type != 'separate') { // No table update when separate type
 				$result = $this->db->DDLUpdateField(MAIN_DB_PREFIX.$table, $attrname, $field_desc);
@@ -1061,11 +1075,10 @@ class ExtraFields
 			}
 		}
 
-		if (in_array($type, array('date', 'datetime'))) {
+		if (in_array($type, array('date'))) {
 			$tmp = explode(',', $size);
 			$newsize = $tmp[0];
-
-			$showtime = in_array($type, array('datetime')) ? 1 : 0;
+			$showtime = 0;
 
 			// Do not show current date when field not required (see selectDate() method)
 			if (!$required && $value == '') {
@@ -1078,16 +1091,41 @@ class ExtraFields
 					'start' => isset($value['start']) ? $value['start'] : '',
 					'end'   => isset($value['end'])   ? $value['end']   : ''
 				);
-				$out = '<div ' . ($moreparam ? $moreparam : '') . '><div class="nowrap">'
-					. $form->selectDate($prefill['start'], $keyprefix.$key.$keysuffix.'_start', 0, 0, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans("From"))
-					. '</div><div class="nowrap">'
-					. $form->selectDate($prefill['end'], $keyprefix.$key.$keysuffix.'_end', 0, 0, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans("to"))
-					. '</div></div>';
+				$out = '<div ' . ($moreparam ? $moreparam : '') . '><div class="nowrap">';
+				$out .= $form->selectDate($prefill['start'], $keyprefix.$key.$keysuffix.'_start', 0, 0, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans("From"));
+				$out .= '</div><div class="nowrap">';
+				$out .= $form->selectDate($prefill['end'], $keyprefix.$key.$keysuffix.'_end', 0, 0, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans("to"));
+				$out .= '</div></div>';
 			} else {
 				// TODO Must also support $moreparam
 				$out = $form->selectDate($value, $keyprefix.$key.$keysuffix, $showtime, $showtime, $required, '', 1, (($keyprefix != 'search_' && $keyprefix != 'search_options_') ? 1 : 0), 0, 1);
 			}
-		} elseif (in_array($type, array('int', 'integer'))) {
+		} elseif (in_array($type, array('datetime'))) {
+			$tmp = explode(',', $size);
+			$newsize = $tmp[0];
+			$showtime = 1;
+
+			// Do not show current date when field not required (see selectDate() method)
+			if (!$required && $value == '') {
+				$value = '-1';
+			}
+
+			if ($mode == 1) {
+				// search filter on a date extrafield shows two inputs to select a date range
+				$prefill = array(
+					'start' => isset($value['start']) ? $value['start'] : '',
+					'end'   => isset($value['end'])   ? $value['end']   : ''
+				);
+				$out = '<div ' . ($moreparam ? $moreparam : '') . '><div class="nowrap">';
+				$out .= $form->selectDate($prefill['start'], $keyprefix.$key.$keysuffix.'_start', 1, 1, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans("From"), 'tzuserrel');
+				$out .= '</div><div class="nowrap">';
+				$out .= $form->selectDate($prefill['end'], $keyprefix.$key.$keysuffix.'_end', 1, 1, 1, '', 1, 0, 0, '', '', '', '', 1, '', $langs->trans("to"), 'tzuserrel');
+				$out .= '</div></div>';
+			} else {
+				// TODO Must also support $moreparam
+				$out = $form->selectDate($value, $keyprefix.$key.$keysuffix, $showtime, $showtime, $required, '', 1, (($keyprefix != 'search_' && $keyprefix != 'search_options_') ? 1 : 0), 0, 1, '', '', '', 1, '', '', 'tzuserrel');
+			}
+		} elseif (in_array($type, array('int', 'integer')))	{
 			$tmp = explode(',', $size);
 			$newsize = $tmp[0];
 			$out = '<input type="text" class="flat '.$morecss.' maxwidthonsmartphone" name="'.$keyprefix.$key.$keysuffix.'" id="'.$keyprefix.$key.$keysuffix.'" maxlength="'.$newsize.'" value="'.dol_escape_htmltag($value).'"'.($moreparam ? $moreparam : '').'>';
@@ -1135,7 +1173,7 @@ class ExtraFields
 			$out = '<input type="text" class="flat '.$morecss.' maxwidthonsmartphone" name="'.$keyprefix.$key.$keysuffix.'" id="'.$keyprefix.$key.$keysuffix.'" value="'.$value.'" '.($moreparam ? $moreparam : '').'> ';
 		} elseif ($type == 'select') {
 			$out = '';
-			if (!empty($conf->use_javascript_ajax) && !empty($conf->global->MAIN_EXTRAFIELDS_USE_SELECT2)) {
+			if (!empty($conf->use_javascript_ajax) && empty($conf->global->MAIN_EXTRAFIELDS_DISABLE_SELECT2)) {
 				include_once DOL_DOCUMENT_ROOT.'/core/lib/ajax.lib.php';
 				$out .= ajax_combobox($keyprefix.$key.$keysuffix, array(), 0);
 			}
@@ -1166,7 +1204,7 @@ class ExtraFields
 			$out .= '</select>';
 		} elseif ($type == 'sellist') {
 			$out = '';
-			if (!empty($conf->use_javascript_ajax) && !empty($conf->global->MAIN_EXTRAFIELDS_USE_SELECT2)) {
+			if (!empty($conf->use_javascript_ajax) && empty($conf->global->MAIN_EXTRAFIELDS_DISABLE_SELECT2)) {
 				include_once DOL_DOCUMENT_ROOT.'/core/lib/ajax.lib.php';
 				$out .= ajax_combobox($keyprefix.$key.$keysuffix, array(), 0);
 			}
@@ -1320,7 +1358,10 @@ class ExtraFields
 			}
 			$out .= '</select>';
 		} elseif ($type == 'checkbox') {
-			$value_arr = explode(',', $value);
+			$value_arr = $value;
+			if (!is_array($value)) {
+				$value_arr = explode(',', $value);
+			}
 			$out = $form->multiselectarray($keyprefix.$key.$keysuffix, (empty($param['options']) ?null:$param['options']), $value_arr, '', 0, '', 0, '100%');
 		} elseif ($type == 'radio') {
 			$out = '';
@@ -1572,7 +1613,7 @@ class ExtraFields
 		if (!empty($extrafieldsobjectkey)) {
 			$label = $this->attributes[$extrafieldsobjectkey]['label'][$key];
 			$type = $this->attributes[$extrafieldsobjectkey]['type'][$key];
-			$size = $this->attributes[$extrafieldsobjectkey]['size'][$key];
+			$size = (int) $this->attributes[$extrafieldsobjectkey]['size'][$key];
 			$default = $this->attributes[$extrafieldsobjectkey]['default'][$key];
 			$computed = $this->attributes[$extrafieldsobjectkey]['computed'][$key];
 			$unique = $this->attributes[$extrafieldsobjectkey]['unique'][$key];
@@ -1610,10 +1651,10 @@ class ExtraFields
 		$showsize = 0;
 		if ($type == 'date') {
 			$showsize = 10;
-			$value = dol_print_date($value, 'day');
+			$value = dol_print_date($value, 'day');	// For date without hour, date is always GMT for storage and output
 		} elseif ($type == 'datetime') {
 			$showsize = 19;
-			$value = dol_print_date($value, 'dayhour');
+			$value = dol_print_date($value, 'dayhour', 'tzuserrel');
 		} elseif ($type == 'int') {
 			$showsize = 10;
 		} elseif ($type == 'double') {
@@ -1641,7 +1682,7 @@ class ExtraFields
 				$value = price($value, 0, $langs, 0, 0, -1);
 			}
 		} elseif ($type == 'select') {
-			$valstr = $param['options'][$value];
+			$valstr = (!empty($param['options'][$value]) ? $param['options'][$value] : '');
 			if (($pos = strpos($valstr, "|")) !== false) {
 				$valstr = substr($valstr, 0, $pos);
 			}
@@ -2013,7 +2054,7 @@ class ExtraFields
 		$nofillrequired = 0; // For error when required field left blank
 		$error_field_required = array();
 
-		if (is_array($this->attributes[$object->table_element]['label'])) {
+		if (isset($this->attributes[$object->table_element]['label']) && is_array($this->attributes[$object->table_element]['label'])) {
 			$extralabels = $this->attributes[$object->table_element]['label'];
 		}
 
@@ -2063,12 +2104,10 @@ class ExtraFields
 
 				if (in_array($key_type, array('date'))) {
 					// Clean parameters
-					// TODO GMT date in memory must be GMT so we should add gm=true in parameters
-					$value_key = dol_mktime(0, 0, 0, $_POST["options_".$key."month"], $_POST["options_".$key."day"], $_POST["options_".$key."year"]);
+					$value_key = dol_mktime(12, 0, 0, GETPOST("options_".$key."month", 'int'), GETPOST("options_".$key."day", 'int'), GETPOST("options_".$key."year", 'int'));
 				} elseif (in_array($key_type, array('datetime'))) {
 					// Clean parameters
-					// TODO GMT date in memory must be GMT so we should add gm=true in parameters
-					$value_key = dol_mktime($_POST["options_".$key."hour"], $_POST["options_".$key."min"], 0, $_POST["options_".$key."month"], $_POST["options_".$key."day"], $_POST["options_".$key."year"]);
+					$value_key = dol_mktime(GETPOST("options_".$key."hour", 'int'), GETPOST("options_".$key."min", 'int'), GETPOST("options_".$key."sec", 'int'), GETPOST("options_".$key."month", 'int'), GETPOST("options_".$key."day", 'int'), GETPOST("options_".$key."year", 'int'), 'tzuserrel');
 				} elseif (in_array($key_type, array('checkbox', 'chkbxlst'))) {
 					$value_arr = GETPOST("options_".$key, 'array'); // check if an array
 					if (!empty($value_arr)) {
@@ -2133,32 +2172,33 @@ class ExtraFields
 					$key_type = $this->attributes[$extrafieldsobjectkey]['type'][$key];
 				}
 
-				if (in_array($key_type, array('date', 'datetime'))) {
+				if (in_array($key_type, array('date'))) {
 					$dateparamname_start = $keysuffix . 'options_' . $key . $keyprefix . '_start';
 					$dateparamname_end   = $keysuffix . 'options_' . $key . $keyprefix . '_end';
 					if (GETPOSTISSET($dateparamname_start . 'year') && GETPOSTISSET($dateparamname_end . 'year')) {
 						// values provided as a date pair (start date + end date), each date being broken down as year, month, day, etc.
 						$value_key = array(
-							'start' => dol_mktime(
-								0,
-								0,
-								0,
-								GETPOST($dateparamname_start . 'month', 'int'),
-								GETPOST($dateparamname_start . 'day', 'int'),
-								GETPOST($dateparamname_start . 'year', 'int')
-							),
-							'end' => dol_mktime(
-								23,
-								59,
-								59,
-								GETPOST($dateparamname_end . 'month', 'int'),
-								GETPOST($dateparamname_end . 'day', 'int'),
-								GETPOST($dateparamname_end . 'year', 'int')
-							)
+							'start' => dol_mktime(0, 0, 0, GETPOST($dateparamname_start . 'month', 'int'), GETPOST($dateparamname_start . 'day', 'int'), GETPOST($dateparamname_start . 'year', 'int')),
+							'end' => dol_mktime(23, 59, 59, GETPOST($dateparamname_end . 'month', 'int'), GETPOST($dateparamname_end . 'day', 'int'), GETPOST($dateparamname_end . 'year', 'int'))
 						);
 					} elseif (GETPOSTISSET($keysuffix."options_".$key.$keyprefix."year")) {
 						// Clean parameters
-						$value_key = dol_mktime(GETPOST($keysuffix."options_".$key.$keyprefix."hour", 'int'), GETPOST($keysuffix."options_".$key.$keyprefix."min", 'int'), 0, GETPOST($keysuffix."options_".$key.$keyprefix."month", 'int'), GETPOST($keysuffix."options_".$key.$keyprefix."day", 'int'), GETPOST($keysuffix."options_".$key.$keyprefix."year", 'int'));
+						$value_key = dol_mktime(12, 0, 0, GETPOST($keysuffix."options_".$key.$keyprefix."month", 'int'), GETPOST($keysuffix."options_".$key.$keyprefix."day", 'int'), GETPOST($keysuffix."options_".$key.$keyprefix."year", 'int'));
+					} else {
+						continue; // Value was not provided, we should not set it.
+					}
+				} elseif (in_array($key_type, array('datetime'))) {
+					$dateparamname_start = $keysuffix . 'options_' . $key . $keyprefix . '_start';
+					$dateparamname_end   = $keysuffix . 'options_' . $key . $keyprefix . '_end';
+					if (GETPOSTISSET($dateparamname_start . 'year') && GETPOSTISSET($dateparamname_end . 'year')) {
+						// values provided as a date pair (start date + end date), each date being broken down as year, month, day, etc.
+						$value_key = array(
+							'start' => dol_mktime(GETPOST($dateparamname_start . 'hour', 'int'), GETPOST($dateparamname_start . 'min', 'int'), GETPOST($dateparamname_start . 'sec', 'int'), GETPOST($dateparamname_start . 'month', 'int'), GETPOST($dateparamname_start . 'day', 'int'), GETPOST($dateparamname_start . 'year', 'int'), 'tzuserrel'),
+							'end' => dol_mktime(GETPOST($dateparamname_end . 'hour', 'int'), GETPOST($dateparamname_start . 'min', 'int'), GETPOST($dateparamname_start . 'sec', 'int'), GETPOST($dateparamname_end . 'month', 'int'), GETPOST($dateparamname_end . 'day', 'int'), GETPOST($dateparamname_end . 'year', 'int'), 'tzuserrel')
+						);
+					} elseif (GETPOSTISSET($keysuffix."options_".$key.$keyprefix."year")) {
+						// Clean parameters
+						$value_key = dol_mktime(GETPOST($keysuffix."options_".$key.$keyprefix."hour", 'int'), GETPOST($keysuffix."options_".$key.$keyprefix."min", 'int'), GETPOST($keysuffix."options_".$key.$keyprefix."sec", 'int'), GETPOST($keysuffix."options_".$key.$keyprefix."month", 'int'), GETPOST($keysuffix."options_".$key.$keyprefix."day", 'int'), GETPOST($keysuffix."options_".$key.$keyprefix."year", 'int'), 'tzuserrel');
 					} else {
 						continue; // Value was not provided, we should not set it.
 					}

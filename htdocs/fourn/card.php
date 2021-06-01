@@ -99,7 +99,7 @@ if (empty($reshook)) {
 
 	if ($action == 'setsupplieraccountancycode') {
 		$result = $object->fetch($id);
-		$object->code_compta_fournisseur = $_POST["supplieraccountancycode"];
+		$object->code_compta_fournisseur = GETPOST("supplieraccountancycode");
 		$result = $object->update($object->id, $user, 1, 0, 1);
 		if ($result < 0) {
 			setEventMessages($object->error, $object->errors, 'errors');
@@ -195,7 +195,7 @@ if ($object->id > 0) {
 	print '<div class="fichecenter"><div class="fichehalfleft">';
 
 	print '<div class="underbanner clearboth"></div>';
-	print '<table width="100%" class="border">';
+	print '<table class="border centpercent tableforfield">';
 
 	// Type Prospect/Customer/Supplier
 	print '<tr><td class="titlefield">'.$langs->trans('NatureOfThirdParty').'</td><td>';
@@ -209,7 +209,7 @@ if ($object->id > 0) {
 	if ($object->fournisseur) {
 		print '<tr>';
 		print '<td class="titlefield">'.$langs->trans("SupplierCode").'</td><td>';
-		print $object->code_fournisseur;
+		print showValueWithClipboardCPButton(dol_escape_htmltag($object->code_fournisseur));
 		$tmpcheck = $object->check_codefournisseur();
 		if ($tmpcheck != 0 && $tmpcheck != -5) {
 			print ' <font class="error">('.$langs->trans("WrongSupplierCode").')</font>';
@@ -250,7 +250,7 @@ if ($object->id > 0) {
 
 	// TVA Intra
 	print '<tr><td class="nowrap">'.$langs->trans('VATIntra').'</td><td>';
-	print $object->tva_intra;
+	print showValueWithClipboardCPButton(dol_escape_htmltag($object->tva_intra));
 	print '</td></tr>';
 
 	// Default terms of the settlement
@@ -326,7 +326,7 @@ if ($object->id > 0) {
 	print '</td>';
 	print '</tr>';
 
-	if ((!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD) || !empty($conf->supplier_order->enabled)) && !empty($conf->global->ORDER_MANAGE_MIN_AMOUNT)) {
+	if (((!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD)) || !empty($conf->supplier_order->enabled)) && !empty($conf->global->ORDER_MANAGE_MIN_AMOUNT)) {
 		print '<tr class="nowrap">';
 		print '<td>';
 		print $form->editfieldkey("OrderMinAmount", 'supplier_order_min_amount', $object->supplier_order_min_amount, $object, $user->rights->societe->creer);
@@ -406,7 +406,7 @@ if ($object->id > 0) {
 		}
 	}
 
-	if (!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD) || !empty($conf->supplier_order->enabled) || !empty($conf->supplier_invoice->enabled)) {
+	if ((!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD)) || !empty($conf->supplier_order->enabled)) {
 		// Box proposals
 		$tmp = $object->getOutstandingOrders('supplier');
 		$outstandingOpened = $tmp['opened'];
@@ -427,7 +427,7 @@ if ($object->id > 0) {
 		}
 	}
 
-	if (!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD) || !empty($conf->supplier_order->enabled) || !empty($conf->supplier_invoice->enabled)) {
+	if ((!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD)) || !empty($conf->supplier_invoice->enabled)) {
 		$tmp = $object->getOutstandingBills('supplier');
 		$outstandingOpened = $tmp['opened'];
 		$outstandingTotal = $tmp['total_ht'];
@@ -481,6 +481,13 @@ if ($object->id > 0) {
 		}
 	}
 
+
+	$parameters = array();
+	$reshook = $hookmanager->executeHooks('addMoreBoxStatsSupplier', $parameters, $object, $action);
+	if (empty($reshook)) {
+		$boxstat .= $hookmanager->resPrint;
+	}
+
 	$boxstat .= '</td></tr>';
 	$boxstat .= '</table>';
 	$boxstat .= '</div>';
@@ -507,7 +514,7 @@ if ($object->id > 0) {
 	if (!empty($conf->product->enabled) || !empty($conf->service->enabled)) {
 		$langs->load("products");
 		//Query from product/liste.php
-		$sql = 'SELECT p.rowid, p.ref, p.label, p.fk_product_type, p.entity,';
+		$sql = 'SELECT p.rowid, p.ref, p.label, p.fk_product_type, p.entity, p.tosell as status, p.tobuy as status_buy, p.tobatch as status_batch,';
 		$sql .= ' pfp.tms, pfp.ref_fourn as supplier_ref, pfp.price, pfp.quantity, pfp.unitprice';
 		$sql .= ' FROM '.MAIN_DB_PREFIX.'product_fournisseur_price as pfp';
 		$sql .= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = pfp.fk_product";
@@ -539,6 +546,9 @@ if ($object->id > 0) {
 				$productstatic->label = $objp->label;
 				$productstatic->type = $objp->fk_product_type;
 				$productstatic->entity = $objp->entity;
+				$productstatic->status = $objp->status;
+				$productstatic->status_buy = $objp->status_buy;
+				$productstatic->status_batch = $objp->status_batch;
 
 				print '<tr class="oddeven">';
 				print '<td class="nowrap">';
@@ -654,7 +664,7 @@ if ($object->id > 0) {
 			$sql2 .= " AND c.fk_statut IN (".$db->sanitize(CommandeFournisseur::STATUS_RECEIVED_COMPLETELY).")"; //  Must match filter in htdocs/fourn/commande/list.php
 		} else {
 			// CommandeFournisseur::STATUS_ORDERSENT.", ".CommandeFournisseur::STATUS_RECEIVED_PARTIALLY.", ".CommandeFournisseur::STATUS_RECEIVED_COMPLETELY
-			$sql2 .= " AND c.fk_statut IN (".$db->sanitize($db->escape($conf->global->SUPPLIER_ORDER_TO_INVOICE_STATUS)).")";
+			$sql2 .= " AND c.fk_statut IN (".$db->sanitize($conf->global->SUPPLIER_ORDER_TO_INVOICE_STATUS).")";
 		}
 		$sql2 .= " AND c.billed = 0";
 		// Find order that are not already invoiced
@@ -808,7 +818,7 @@ if ($object->id > 0) {
 
 
 	/*
-	 * Barre d'actions
+	 * Action bar
 	 */
 	print '<div class="tabsAction">';
 
@@ -829,16 +839,16 @@ if ($object->id > 0) {
 			}
 		}
 
-		if ($user->rights->fournisseur->commande->creer) {
+		if ($user->rights->fournisseur->commande->creer || $user->rights->supplier_order->creer) {
 			$langs->load("orders");
 			if ($object->status == 1) {
-				print '<a class="butAction" href="'.DOL_URL_ROOT.'/fourn/commande/card.php?action=create&socid='.$object->id.'">'.$langs->trans("AddOrder").'</a>';
+				print '<a class="butAction" href="'.DOL_URL_ROOT.'/fourn/commande/card.php?action=create&socid='.$object->id.'">'.$langs->trans("AddSupplierOrderShort").'</a>';
 			} else {
-				print '<a class="butActionRefused classfortooltip" title="'.dol_escape_js($langs->trans("ThirdPartyIsClosed")).'" href="#">'.$langs->trans("AddOrder").'</a>';
+				print '<a class="butActionRefused classfortooltip" title="'.dol_escape_js($langs->trans("ThirdPartyIsClosed")).'" href="#">'.$langs->trans("AddSupplierOrderShort").'</a>';
 			}
 		}
 
-		if ($user->rights->fournisseur->facture->creer) {
+		if ($user->rights->fournisseur->facture->creer || $user->rights->supplier_invoice->creer) {
 			if (!empty($orders2invoice) && $orders2invoice > 0) {
 				if ($object->status == 1) {
 					// Company is open
@@ -851,7 +861,7 @@ if ($object->id > 0) {
 			}
 		}
 
-		if ($user->rights->fournisseur->facture->creer) {
+		if ($user->rights->fournisseur->facture->creer || $user->rights->supplier_invoice->creer) {
 			$langs->load("bills");
 			if ($object->status == 1) {
 				print '<a class="butAction" href="'.DOL_URL_ROOT.'/fourn/facture/card.php?action=create&socid='.$object->id.'">'.$langs->trans("AddBill").'</a>';

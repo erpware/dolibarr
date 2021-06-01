@@ -251,8 +251,15 @@ class pdf_aurore extends ModelePDFSupplierProposal
 
 				$realpath = '';
 				foreach ($objphoto->liste_photos($dir, 1) as $key => $obj) {
-					$filename = $obj['photo'];
-					//if ($obj['photo_vignette']) $filename='thumbs/'.$obj['photo_vignette'];
+					if (empty($conf->global->CAT_HIGH_QUALITY_IMAGES)) {		// If CAT_HIGH_QUALITY_IMAGES not defined, we use thumb if defined and then original photo
+						if ($obj['photo_vignette']) {
+							$filename = $obj['photo_vignette'];
+						} else {
+							$filename = $obj['photo'];
+						}
+					} else {
+						$filename = $obj['photo'];
+					}
 					$realpath = $dir.$filename;
 					break;
 				}
@@ -509,7 +516,8 @@ class pdf_aurore extends ModelePDFSupplierProposal
 
 					// We suppose that a too long description or photo were moved completely on next page
 					if ($pageposafter > $pageposbefore && empty($showpricebeforepagebreak)) {
-						$pdf->setPage($pageposafter); $curY = $tab_top_newpage;
+						$pdf->setPage($pageposafter);
+						$curY = $tab_top_newpage;
 					}
 
 					$pdf->SetFont('', '', $default_font_size - 1); // On repositionne la police par defaut
@@ -912,7 +920,8 @@ class pdf_aurore extends ModelePDFSupplierProposal
 		$pdf->SetFont('', '', $default_font_size - 1);
 
 		// Tableau total
-		$col1x = 120; $col2x = 170;
+		$col1x = 120;
+		$col2x = 170;
 		if ($this->page_largeur < 210) { // To work with US executive format
 			$col2x -= 20;
 		}
@@ -1381,7 +1390,7 @@ class pdf_aurore extends ModelePDFSupplierProposal
 			$pdf->SetTextColor(0, 0, 0);
 			$pdf->SetFont('', '', $default_font_size - 2);
 			$pdf->SetXY($posx, $posy - 5);
-			$pdf->MultiCell(66, 5, $outputlangs->transnoentities("BillFrom").":", 0, 'L');
+			$pdf->MultiCell(80, 5, $outputlangs->transnoentities("BillFrom"), 0, 'L');
 			$pdf->SetXY($posx, $posy);
 			$pdf->SetFillColor(230, 230, 230);
 			$pdf->MultiCell(82, $hautcadre, "", 0, 'R', 1);
@@ -1437,7 +1446,7 @@ class pdf_aurore extends ModelePDFSupplierProposal
 			$pdf->SetTextColor(0, 0, 0);
 			$pdf->SetFont('', '', $default_font_size - 2);
 			$pdf->SetXY($posx + 2, $posy - 5);
-			$pdf->MultiCell($widthrecbox, 5, $outputlangs->transnoentities("BillTo").":", 0, 'L');
+			$pdf->MultiCell($widthrecbox, 5, $outputlangs->transnoentities("BillTo"), 0, 'L');
 			$pdf->Rect($posx, $posy, $widthrecbox, $hautcadre);
 
 			// Show recipient name

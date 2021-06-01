@@ -246,17 +246,23 @@ class pdf_muscadet extends ModelePDFSuppliersOrders
 				$objphoto->fetch($object->lines[$i]->fk_product);
 
 				if (!empty($conf->global->PRODUCT_USE_OLD_PATH_FOR_PHOTO)) {
-					$pdir = get_exdir($object->lines[$i]->fk_product, 2, 0, 0, $objphoto, 'product').$object->lines[$i]->fk_product."/photos/";
+					$pdir = get_exdir($objphoto->id, 2, 0, 0, $objphoto, 'product').$object->lines[$i]->fk_product."/photos/";
 					$dir = $conf->product->dir_output.'/'.$pdir;
 				} else {
-					$pdir = get_exdir(0, 2, 0, 0, $objphoto, 'product').dol_sanitizeFileName($objphoto->ref).'/';
+					$pdir = get_exdir($objphoto->id, 0, 0, 0, $objphoto, 'product');
 					$dir = $conf->product->dir_output.'/'.$pdir;
 				}
-
 				$realpath = '';
 				foreach ($objphoto->liste_photos($dir, 1) as $key => $obj) {
-					$filename = $obj['photo'];
-					//if ($obj['photo_vignette']) $filename='thumbs/'.$obj['photo_vignette'];
+					if (empty($conf->global->CAT_HIGH_QUALITY_IMAGES)) {		// If CAT_HIGH_QUALITY_IMAGES not defined, we use thumb if defined and then original photo
+						if ($obj['photo_vignette']) {
+							$filename = $obj['photo_vignette'];
+						} else {
+							$filename = $obj['photo'];
+						}
+					} else {
+						$filename = $obj['photo'];
+					}
 					$realpath = $dir.$filename;
 					break;
 				}
@@ -339,10 +345,11 @@ class pdf_muscadet extends ModelePDFSuppliersOrders
 				$pdf->SetDrawColor(128, 128, 128);
 
 				$pdf->SetTitle($outputlangs->convToOutputCharset($object->ref));
-				$pdf->SetSubject($outputlangs->transnoentities("Order"));
+				$pdf->SetSubject($outputlangs->transnoentities("PurchaseOrder"));
 				$pdf->SetCreator("Dolibarr ".DOL_VERSION);
 				$pdf->SetAuthor($outputlangs->convToOutputCharset($user->getFullName($outputlangs)));
-				$pdf->SetKeyWords($outputlangs->convToOutputCharset($object->ref)." ".$outputlangs->transnoentities("Order")." ".$outputlangs->convToOutputCharset($object->thirdparty->name));
+
+				$pdf->SetKeyWords($outputlangs->convToOutputCharset($object->ref)." ".$outputlangs->transnoentities("PurchaseOrder")." ".$outputlangs->convToOutputCharset($object->thirdparty->name));
 				if (!empty($conf->global->MAIN_DISABLE_PDF_COMPRESSION)) {
 					$pdf->SetCompression(false);
 				}
@@ -519,22 +526,25 @@ class pdf_muscadet extends ModelePDFSuppliersOrders
 
 					// We suppose that a too long description is moved completely on next page
 					if ($pageposafter > $pageposbefore && empty($showpricebeforepagebreak)) {
-						$pdf->setPage($pageposafter); $curY = $tab_top_newpage;
+						$pdf->setPage($pageposafter);
+						$curY = $tab_top_newpage;
 					}
 
 					$pdf->SetFont('', '', $default_font_size - 1); // On repositionne la police par defaut
 
 					// VAT Rate
-					if (empty($conf->global->MAIN_GENERATE_DOCUMENTS_WITHOUT_VAT)) {
+					if (empty($conf->global->MAIN_GENERATE_DOCUMENTS_WITHOUT_VAT) && empty($conf->global->MAIN_GENERATE_DOCUMENTS_WITHOUT_VAT_COLUMN)) {
 						$vat_rate = pdf_getlinevatrate($object, $i, $outputlangs, $hidedetails);
 						$pdf->SetXY($this->posxtva, $curY);
 						$pdf->MultiCell($this->posxup - $this->posxtva - 1, 3, $vat_rate, 0, 'R');
 					}
 
 					// Unit price before discount
-					$up_excl_tax = pdf_getlineupexcltax($object, $i, $outputlangs, $hidedetails);
-					$pdf->SetXY($this->posxup, $curY);
-					$pdf->MultiCell($this->posxqty - $this->posxup - 0.8, 3, $up_excl_tax, 0, 'R', 0);
+					if (empty($conf->global->MAIN_GENERATE_DOCUMENTS_PURCHASE_ORDER_WITHOUT_UNIT_PRICE)) {
+						$up_excl_tax = pdf_getlineupexcltax($object, $i, $outputlangs, $hidedetails);
+						$pdf->SetXY($this->posxup, $curY);
+						$pdf->MultiCell($this->posxqty - $this->posxup - 0.8, 3, $up_excl_tax, 0, 'R', 0);
+					}
 
 					// Quantity
 					$qty = pdf_getlineqty($object, $i, $outputlangs, $hidedetails);
@@ -556,9 +566,11 @@ class pdf_muscadet extends ModelePDFSuppliersOrders
 					}
 
 					// Total HT line
-					$total_excl_tax = pdf_getlinetotalexcltax($object, $i, $outputlangs);
-					$pdf->SetXY($this->postotalht, $curY);
-					$pdf->MultiCell($this->page_largeur - $this->marge_droite - $this->postotalht, 3, $total_excl_tax, 0, 'R', 0);
+					if (empty($conf->global->MAIN_GENERATE_DOCUMENTS_PURCHASE_ORDER_WITHOUT_TOTAL_COLUMN)) {
+						$total_excl_tax = pdf_getlinetotalexcltax($object, $i, $outputlangs);
+						$pdf->SetXY($this->postotalht, $curY);
+						$pdf->MultiCell($this->page_largeur - $this->marge_droite - $this->postotalht, 3, $total_excl_tax, 0, 'R', 0);
+					}
 
 					// Collecte des totaux par valeur de tva dans $this->tva["taux"]=total_tva
 					if (!empty($conf->multicurrency->enabled) && $object->multicurrency_tx != 1) {
@@ -819,7 +831,8 @@ class pdf_muscadet extends ModelePDFSuppliersOrders
 		$pdf->SetFont('', '', $default_font_size - 1);
 
 		// Tableau total
-		$col1x = 120; $col2x = 170;
+		$col1x = 120;
+		$col2x = 170;
 		if ($this->page_largeur < 210) { // To work with US executive format
 			$col2x -= 20;
 		}
@@ -1113,6 +1126,9 @@ class pdf_muscadet extends ModelePDFSuppliersOrders
 	{
 		global $langs, $conf, $mysoc;
 
+		$ltrdirection = 'L';
+		if ($outputlangs->trans("DIRECTION") == 'rtl') $ltrdirection = 'R';
+
 		// Load translation files required by the page
 		$outputlangs->loadLangs(array("main", "orders", "companies", "bills", "sendings"));
 
@@ -1150,7 +1166,7 @@ class pdf_muscadet extends ModelePDFSuppliersOrders
 			}
 		} else {
 			$text = $this->emetteur->name;
-			$pdf->MultiCell(100, 4, $outputlangs->convToOutputCharset($text), 0, 'L');
+			$pdf->MultiCell(100, 4, $outputlangs->convToOutputCharset($text), 0, $ltrdirection);
 		}
 
 		$pdf->SetFont('', 'B', $default_font_size + 3);
@@ -1171,9 +1187,20 @@ class pdf_muscadet extends ModelePDFSuppliersOrders
 
 		$pdf->SetFont('', '', $default_font_size - 1);
 
+		if (!empty($conf->global->PDF_SHOW_PROJECT_TITLE)) {
+			$object->fetch_projet();
+			if (!empty($object->project->ref)) {
+				$posy += 3;
+				$pdf->SetXY($posx, $posy);
+				$pdf->SetTextColor(0, 0, 60);
+				$pdf->MultiCell($w, 3, $outputlangs->transnoentities("Project")." : ".(empty($object->project->title) ? '' : $object->project->title), '', 'R');
+			}
+		}
+
 		if (!empty($conf->global->PDF_SHOW_PROJECT)) {
 			$object->fetch_projet();
 			if (!empty($object->project->ref)) {
+				$outputlangs->load("projects");
 				$posy += 4;
 				$pdf->SetXY($posx, $posy);
 				$langs->load("projects");
@@ -1260,7 +1287,7 @@ class pdf_muscadet extends ModelePDFSuppliersOrders
 			$pdf->SetTextColor(0, 0, 0);
 			$pdf->SetFont('', '', $default_font_size - 2);
 			$pdf->SetXY($posx, $posy - 5);
-			$pdf->MultiCell(66, 5, $outputlangs->transnoentities("BillFrom").":", 0, 'L');
+			$pdf->MultiCell(80, 5, $outputlangs->transnoentities("BillFrom"), 0, $ltrdirection);
 			$pdf->SetXY($posx, $posy);
 			$pdf->SetFillColor(230, 230, 230);
 			$pdf->MultiCell(82, $hautcadre, "", 0, 'R', 1);
@@ -1269,13 +1296,13 @@ class pdf_muscadet extends ModelePDFSuppliersOrders
 			// Show sender name
 			$pdf->SetXY($posx + 2, $posy + 3);
 			$pdf->SetFont('', 'B', $default_font_size);
-			$pdf->MultiCell(80, 4, $outputlangs->convToOutputCharset($this->emetteur->name), 0, 'L');
+			$pdf->MultiCell(80, 4, $outputlangs->convToOutputCharset($this->emetteur->name), 0, $ltrdirection);
 			$posy = $pdf->getY();
 
 			// Show sender information
 			$pdf->SetXY($posx + 2, $posy);
 			$pdf->SetFont('', '', $default_font_size - 1);
-			$pdf->MultiCell(80, 4, $carac_emetteur, 0, 'L');
+			$pdf->MultiCell(80, 4, $carac_emetteur, 0, $ltrdirection);
 
 
 			// If CUSTOMER contact defined on order, we use it. Note: Even if this is a supplier object, the code for external contat that follow order is 'CUSTOMER'
@@ -1312,20 +1339,20 @@ class pdf_muscadet extends ModelePDFSuppliersOrders
 			$pdf->SetTextColor(0, 0, 0);
 			$pdf->SetFont('', '', $default_font_size - 2);
 			$pdf->SetXY($posx + 2, $posy - 5);
-			$pdf->MultiCell($widthrecbox, 5, $outputlangs->transnoentities("BillTo").":", 0, 'L');
+			$pdf->MultiCell($widthrecbox, 5, $outputlangs->transnoentities("BillTo"), 0, $ltrdirection);
 			$pdf->Rect($posx, $posy, $widthrecbox, $hautcadre);
 
 			// Show recipient name
 			$pdf->SetXY($posx + 2, $posy + 3);
 			$pdf->SetFont('', 'B', $default_font_size);
-			$pdf->MultiCell($widthrecbox, 4, $carac_client_name, 0, 'L');
+			$pdf->MultiCell($widthrecbox, 4, $carac_client_name, 0, $ltrdirection);
 
 			$posy = $pdf->getY();
 
 			// Show recipient information
 			$pdf->SetFont('', '', $default_font_size - 1);
 			$pdf->SetXY($posx + 2, $posy);
-			$pdf->MultiCell($widthrecbox, 4, $carac_client, 0, 'L');
+			$pdf->MultiCell($widthrecbox, 4, $carac_client, 0, $ltrdirection);
 		}
 
 		return $top_shift;

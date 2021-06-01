@@ -392,7 +392,8 @@ class pdf_soleil extends ModelePDFFicheinter
 
 						// We suppose that a too long description is moved completely on next page
 						if ($pageposafter > $pageposbefore) {
-							$pdf->setPage($pageposafter); $curY = $tab_top_newpage;
+							$pdf->setPage($pageposafter);
+							$curY = $tab_top_newpage;
 						}
 
 						$pdf->SetFont('', '', $default_font_size - 1); // We reposition the default font
@@ -527,7 +528,7 @@ class pdf_soleil extends ModelePDFFicheinter
 
 		if (empty($hidebottom)) {
 			$pdf->SetXY(20, 230);
-			$pdf->MultiCell(66, 5, $outputlangs->transnoentities("NameAndSignatureOfInternalContact"), 0, 'L', 0);
+			$pdf->MultiCell(80, 5, $outputlangs->transnoentities("NameAndSignatureOfInternalContact"), 0, 'L', 0);
 
 			$pdf->SetXY(20, 235);
 			$pdf->MultiCell(80, 25, '', 1);

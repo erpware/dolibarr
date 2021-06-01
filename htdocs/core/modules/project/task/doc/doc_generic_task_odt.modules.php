@@ -50,10 +50,10 @@ if (!empty($conf->facture->enabled)) {
 if (!empty($conf->commande->enabled)) {
 	require_once DOL_DOCUMENT_ROOT.'/commande/class/commande.class.php';
 }
-if (!empty($conf->fournisseur->enabled)) {
+if ((!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD)) || !empty($conf->supplier_invoice->enabled)) {
 	require_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.facture.class.php';
 }
-if (!empty($conf->fournisseur->enabled)) {
+if ((!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD)) || !empty($conf->supplier_order->enabled)) {
 	require_once DOL_DOCUMENT_ROOT.'/fourn/class/fournisseur.commande.class.php';
 }
 if (!empty($conf->contrat->enabled)) {
@@ -393,7 +393,8 @@ class doc_generic_task_odt extends ModelePDFTask
 			$tmpdir = trim($tmpdir);
 			$tmpdir = preg_replace('/DOL_DATA_ROOT/', DOL_DATA_ROOT, $tmpdir);
 			if (!$tmpdir) {
-				unset($listofdir[$key]); continue;
+				unset($listofdir[$key]);
+				continue;
 			}
 			if (!is_dir($tmpdir)) {
 				$texttitle .= img_warning($langs->trans("ErrorDirNotFound", $tmpdir), 0);

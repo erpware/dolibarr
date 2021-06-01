@@ -128,7 +128,6 @@ $socid = GETPOST("search_socid", 'int') ?GETPOST("search_socid", 'int') : GETPOS
 if ($user->socid) {
 	$socid = $user->socid;
 }
-$result = restrictedArea($user, 'agenda', 0, '', 'myactions');
 if ($socid < 0) {
 	$socid = '';
 }
@@ -165,7 +164,11 @@ include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_array_fields.tpl.php';
 $object->fields = dol_sort_array($object->fields, 'position');
 $arrayfields = dol_sort_array($arrayfields, 'position');
 
-//var_dump($_POST);exit;
+$result = restrictedArea($user, 'agenda', 0, '', 'myactions');
+if ($user->socid && $socid) {
+	$result = restrictedArea($user, 'societe', $socid);
+}
+
 
 /*
  *	Actions
@@ -317,7 +320,7 @@ if ($search_title != '') {
 	$param .= '&search_title='.urlencode($search_title);
 }
 if ($search_note != '') {
-	$param .= '&search_note='.$search_note;
+	$param .= '&search_note='.urlencode($search_note);
 }
 if (GETPOST('datestartday', 'int')) {
 	$param .= '&datestartday='.GETPOST('datestartday', 'int');
@@ -352,10 +355,10 @@ $arrayofmassactions = array(
 	'set_all_events_to_finished' => $langs->trans("SetAllEventsToFinished"),
 );
 if ($user->rights->agenda->allactions->delete) {
-	$arrayofmassactions['predelete'] = '<span class="fa fa-trash paddingrightonly"></span>'.$langs->trans("Delete");
+	$arrayofmassactions['predelete'] = img_picto('', 'delete', 'class="pictofixedwidth"').$langs->trans("Delete");
 }
 if ($user->rights->agenda->myactions->create) {
-	$arrayofmassactions['preaffecttag'] = '<span class="fa fa-tag paddingrightonly"></span>'.$langs->trans("AffectTag");
+	$arrayofmassactions['preaffecttag'] = img_picto('', 'category', 'class="pictofixedwidth"').$langs->trans("AffectTag");
 }
 if (GETPOST('nomassaction', 'int') || in_array($massaction, array('presend', 'predelete','preaffecttag'))) {
 	$arrayofmassactions = array();
@@ -429,31 +432,31 @@ if (!empty($actioncode)) {
 			$sql .= " AND c.type = 'systemauto'";
 		} else {
 			if (is_array($actioncode)) {
-				$sql .= " AND c.code IN ('".implode("','", $actioncode)."')";
+				$sql .= " AND c.code IN (".$db->sanitize("'".implode("','", $actioncode)."'", 1).")";
 			} else {
-				$sql .= " AND c.code IN ('".implode("','", explode(',', $actioncode))."')";
+				$sql .= " AND c.code IN (".$db->sanitize("'".implode("','", explode(',', $actioncode))."'", 1).")";
 			}
 		}
 	}
 }
 if ($resourceid > 0) {
-	$sql .= " AND r.element_type = 'action' AND r.element_id = a.id AND r.resource_id = ".$db->escape($resourceid);
+	$sql .= " AND r.element_type = 'action' AND r.element_id = a.id AND r.resource_id = ".((int) $resourceid);
 }
 if ($pid) {
-	$sql .= " AND a.fk_project=".$db->escape($pid);
+	$sql .= " AND a.fk_project=".((int) $pid);
 }
 if (!$user->rights->societe->client->voir && !$socid) {
 	$sql .= " AND (a.fk_soc IS NULL OR sc.fk_user = ".$user->id.")";
 }
 if ($socid > 0) {
-	$sql .= " AND s.rowid = ".$socid;
+	$sql .= " AND s.rowid = ".((int) $socid);
 }
 // We must filter on assignement table
 if ($filtert > 0 || $usergroup > 0) {
 	$sql .= " AND ar.fk_actioncomm = a.id AND ar.element_type='user'";
 }
 if ($type) {
-	$sql .= " AND c.id = ".(int) $type;
+	$sql .= " AND c.id = ".((int) $type);
 }
 if ($search_status == '0') {
 	$sql .= " AND a.percent = 0";
@@ -486,10 +489,10 @@ if ($search_note) {
 if ($filtert > 0 || $usergroup > 0) {
 	$sql .= " AND (";
 	if ($filtert > 0) {
-		$sql .= "(ar.fk_element = ".$filtert." OR (ar.fk_element IS NULL AND a.fk_user_action=".$filtert."))"; // The OR is for backward compatibility
+		$sql .= "(ar.fk_element = ".((int) $filtert)." OR (ar.fk_element IS NULL AND a.fk_user_action = ".((int) $filtert)."))"; // The OR is for backward compatibility
 	}
 	if ($usergroup > 0) {
-		$sql .= ($filtert > 0 ? " OR " : "")." ugu.fk_usergroup = ".$usergroup;
+		$sql .= ($filtert > 0 ? " OR " : "")." ugu.fk_usergroup = ".((int) $usergroup);
 	}
 	$sql .= ")";
 }
@@ -517,6 +520,7 @@ $sql .= $db->order($sortfield, $sortorder);
 
 $nbtotalofrecords = '';
 if (empty($conf->global->MAIN_DISABLE_FULL_SCANLIST)) {
+	// TODO Set and use an optimized request in $sqlforcount with no fields and no useless join to caluclate nb of records
 	$result = $db->query($sql);
 	$nbtotalofrecords = $db->num_rows($result);
 	if (($page * $limit) > $nbtotalofrecords) {	// if total resultset is smaller then paging size (filtering), goto and load page 0
@@ -603,13 +607,13 @@ if ($resql) {
 	$viewmode = '';
 	$viewmode .= '<a class="btnTitle btnTitleSelected reposition" href="'.DOL_URL_ROOT.'/comm/action/list.php?action=show_list&restore_lastsearch_values=1'.$paramnoactionodate.'">';
 	//$viewmode .= '<span class="fa paddingleft imgforviewmode valignmiddle btnTitle-icon">';
-	$viewmode .= img_picto($langs->trans("List"), 'object_list-alt', 'class="pictoactionview block"');
+	$viewmode .= img_picto($langs->trans("List"), 'object_list', 'class="pictoactionview block"');
 	//$viewmode .= '</span>';
 	$viewmode .= '<span class="valignmiddle text-plus-circle btnTitle-label hideonsmartphone">'.$langs->trans("ViewList").'</span></a>';
 
 	$viewmode .= '<a class="btnTitle reposition" href="'.DOL_URL_ROOT.'/comm/action/index.php?action=show_month&year='.dol_print_date($object->datep, '%Y').'&month='.dol_print_date($object->datep, '%m').'&day='.dol_print_date($object->datep, '%d').$paramnoactionodate.'">';
 	//$viewmode .= '<span class="fa paddingleft imgforviewmode valignmiddle btnTitle-icon">';
-	$viewmode .= img_picto($langs->trans("ViewCal"), 'object_calendar', 'class="pictoactionview block"');
+	$viewmode .= img_picto($langs->trans("ViewCal"), 'object_calendarmonth', 'class="pictoactionview block"');
 	//$viewmode .= '</span>';
 	$viewmode .= '<span class="valignmiddle text-plus-circle btnTitle-label hideonsmartphone">'.$langs->trans("ViewCal").'</span></a>';
 
@@ -826,7 +830,11 @@ if ($resql) {
 		$actionstatic->location = $obj->location;
 		$actionstatic->note_private = dol_htmlentitiesbr($obj->note);
 
-		$actionstatic->fetchResources();
+		// Initialize $this->userassigned && this->socpeopleassigned array && this->userownerid
+		// but only if we need it
+		if (!empty($arrayfields['a.fk_contact']['checked'])) {
+			$actionstatic->fetchResources();
+		}
 
 		print '<tr class="oddeven">';
 
@@ -1003,7 +1011,7 @@ if ($resql) {
 		}
 		if (!empty($arrayfields['a.percent']['checked'])) {
 			// Status/Percent
-			$datep = $db->jdate($obj->datep);
+			$datep = $db->jdate($obj->dp);
 			print '<td align="center" class="nowrap">'.$actionstatic->LibStatut($obj->percent, 5, 0, $datep).'</td>';
 		}
 		// Action column

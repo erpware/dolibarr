@@ -400,7 +400,7 @@ class pdf_beluga extends ModelePDFProjects
 						'class'=>'CommandeFournisseur',
 						'table'=>'commande_fournisseur',
 						'datefieldname'=>'date_commande',
-						'test'=>$conf->fournisseur->enabled && $user->rights->fournisseur->commande->lire,
+						'test'=>(!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD) && $user->rights->fournisseur->commande->lire) || (!empty($conf->supplier_order->enabled) && $user->rights->supplier_order->lire),
 						'lang'=>'orders'),
 					'invoice_supplier'=>array(
 						'name'=>"BillsSuppliers",
@@ -409,7 +409,7 @@ class pdf_beluga extends ModelePDFProjects
 						'margin'=>'minus',
 						'table'=>'facture_fourn',
 						'datefieldname'=>'datef',
-						'test'=>$conf->fournisseur->enabled && $user->rights->fournisseur->facture->lire,
+						'test'=>(!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD) && $user->rights->fournisseur->facture->lire) || (!empty($conf->supplier_invoice->enabled) && $user->rights->supplier_invoice->lire),
 						'lang'=>'bills'),
 					'contract'=>array(
 						'name'=>"Contracts",
@@ -640,7 +640,8 @@ class pdf_beluga extends ModelePDFProjects
 								// We suppose that a too long description is moved completely on next page
 								if ($pageposafter > $pageposbefore && empty($showpricebeforepagebreak)) {
 									//var_dump($pageposbefore.'-'.$pageposafter.'-'.$showpricebeforepagebreak);
-									$pdf->setPage($pageposafter); $curY = $tab_top_newpage + $heightoftitleline + 1;
+									$pdf->setPage($pageposafter);
+									$curY = $tab_top_newpage + $heightoftitleline + 1;
 								}
 
 								$pdf->SetFont('', '', $default_font_size - 1); // On repositionne la police par defaut

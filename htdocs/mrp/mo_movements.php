@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
 /**
@@ -114,23 +114,24 @@ $objectlist = new MouvementStock($db);
 
 // Definition of fields for list
 $arrayfields = array(
-	'm.rowid'=>array('label'=>$langs->trans("Ref"), 'checked'=>1, 'position'=>1),
-	'm.datem'=>array('label'=>$langs->trans("Date"), 'checked'=>1, 'position'=>2),
-	'p.ref'=>array('label'=>$langs->trans("ProductRef"), 'checked'=>1, 'css'=>'maxwidth100', 'position'=>10),
-	'p.label'=>array('label'=>$langs->trans("ProductLabel"), 'checked'=>1, 'position'=>15),
-	'm.batch'=>array('label'=>$langs->trans("BatchNumberShort"), 'checked'=>1, 'enabled'=>(!empty($conf->productbatch->enabled)), 'position'=>20),
-	'pl.eatby'=>array('label'=>$langs->trans("EatByDate"), 'checked'=>0, 'position'=>10, 'enabled'=>(!empty($conf->productbatch->enabled)), 'position'=>21),
-	'pl.sellby'=>array('label'=>$langs->trans("SellByDate"), 'checked'=>0, 'position'=>10, 'enabled'=>(!empty($conf->productbatch->enabled)), 'position'=>22),
-	'e.ref'=>array('label'=>$langs->trans("Warehouse"), 'checked'=>1, 'position'=>30),
-	'm.fk_user_author'=>array('label'=>$langs->trans("Author"), 'checked'=>0, 'position'=>40),
-	'm.inventorycode'=>array('label'=>$langs->trans("InventoryCodeShort"), 'checked'=>1, 'position'=>42),
-	'm.label'=>array('label'=>$langs->trans("MovementLabel"), 'checked'=>1, 'position'=>45),
-	'm.type_mouvement'=>array('label'=>$langs->trans("TypeMovement"), 'checked'=>1, 'position'=>48),
-	'origin'=>array('label'=>$langs->trans("Origin"), 'enabled'=>0, 'checked'=>0, 'position'=>50),
-	'm.value'=>array('label'=>$langs->trans("Qty"), 'checked'=>1, 'position'=>60),
-	'm.price'=>array('label'=>$langs->trans("UnitCost"), 'enabled'=>0, 'checked'=>0, 'position'=>62),
-	//'m.datec'=>array('label'=>$langs->trans("DateCreation"), 'checked'=>0, 'position'=>500),
-	//'m.tms'=>array('label'=>$langs->trans("DateModificationShort"), 'checked'=>0, 'position'=>500)
+	'm.rowid'=>array('label'=>"Ref", 'checked'=>1, 'position'=>1),
+	'm.datem'=>array('label'=>"Date", 'checked'=>1, 'position'=>2),
+	'p.ref'=>array('label'=>"ProductRef", 'checked'=>1, 'css'=>'maxwidth100', 'position'=>3),
+	'p.label'=>array('label'=>"ProductLabel", 'checked'=>0, 'position'=>5),
+	'm.batch'=>array('label'=>"BatchNumberShort", 'checked'=>1, 'position'=>8, 'enabled'=>(!empty($conf->productbatch->enabled))),
+	'pl.eatby'=>array('label'=>"EatByDate", 'checked'=>0, 'position'=>9, 'enabled'=>(!empty($conf->productbatch->enabled))),
+	'pl.sellby'=>array('label'=>"SellByDate", 'checked'=>0, 'position'=>10, 'enabled'=>(!empty($conf->productbatch->enabled))),
+	'e.ref'=>array('label'=>"Warehouse", 'checked'=>1, 'position'=>100, 'enabled'=>(!$id > 0)), // If we are on specific warehouse, we hide it
+	'm.fk_user_author'=>array('label'=>"Author", 'checked'=>0, 'position'=>120),
+	'm.inventorycode'=>array('label'=>"InventoryCodeShort", 'checked'=>1, 'position'=>130),
+	'm.label'=>array('label'=>"MovementLabel", 'checked'=>1, 'position'=>140),
+	'm.type_mouvement'=>array('label'=>"TypeMovement", 'checked'=>0, 'position'=>150),
+	'origin'=>array('label'=>"Origin", 'checked'=>1, 'position'=>155),
+	'm.fk_projet'=>array('label'=>'Project', 'checked'=>0, 'position'=>180),
+	'm.value'=>array('label'=>"Qty", 'checked'=>1, 'position'=>200),
+	'm.price'=>array('label'=>"UnitPurchaseValue", 'checked'=>0, 'position'=>210)
+	//'m.datec'=>array('label'=>"DateCreation", 'checked'=>0, 'position'=>500),
+	//'m.tms'=>array('label'=>"DateModificationShort", 'checked'=>0, 'position'=>500)
 );
 if (!empty($conf->global->PRODUCT_DISABLE_EATBY)) {
 	unset($arrayfields['pl.eatby']);
@@ -251,7 +252,9 @@ $productlot = new ProductLot($db);
 $warehousestatic = new Entrepot($db);
 $userstatic = new User($db);
 
-llxHeader('', $langs->trans('Mo'), '');
+$help_url = 'EN:Module_Manufacturing_Orders|FR:Module_Ordres_de_Fabrication';
+
+llxHeader('', $langs->trans('Mo'), $help_url);
 
 // Part to show record
 if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'create'))) {
@@ -438,7 +441,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	$sql .= " WHERE m.fk_product = p.rowid";
 	$sql .= " AND m.origintype = 'mo' AND m.fk_origin = ".(int) $object->id;
 	if ($msid > 0) {
-		$sql .= " AND m.rowid = ".$msid;
+		$sql .= " AND m.rowid = ".((int) $msid);
 	}
 	$sql .= " AND m.fk_entrepot = e.rowid";
 	$sql .= " AND e.entity IN (".getEntity('stock').")";
@@ -678,6 +681,12 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		print '&nbsp; ';
 		print '</td>';
 	}
+	if (!empty($arrayfields['m.fk_projet']['checked'])) {
+		// fk_project
+		print '<td class="liste_titre" align="left">';
+		print '&nbsp; ';
+		print '</td>';
+	}
 	if (!empty($arrayfields['m.value']['checked'])) {
 		// Qty
 		print '<td class="liste_titre right">';
@@ -756,6 +765,9 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 	}
 	if (!empty($arrayfields['origin']['checked'])) {
 		print_liste_field_titre($arrayfields['origin']['label'], $_SERVER["PHP_SELF"], "", "", $param, "", $sortfield, $sortorder);
+	}
+	if (!empty($arrayfields['m.fk_projet']['checked'])) {
+		print_liste_field_titre($arrayfields['m.fk_projet']['label'], $_SERVER["PHP_SELF"], "m.fk_projet", "", $param, '', $sortfield, $sortorder);
 	}
 	if (!empty($arrayfields['m.value']['checked'])) {
 		print_liste_field_titre($arrayfields['m.value']['label'], $_SERVER["PHP_SELF"], "m.value", "", $param, '', $sortfield, $sortorder, 'right ');
@@ -837,13 +849,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		}
 		if (!empty($arrayfields['p.label']['checked'])) {
 			// Product label
-			print '<td>';
-			/*
-			 * $productstatic->id=$objp->rowid;
-			 * $productstatic->ref=$objp->produit;
-			 * $productstatic->type=$objp->type;
-			 * print $productstatic->getNomUrl(1,'',16);
-			 */
+			print '<td class="tdoverflowmax150" title="'.dol_escape_htmltag($productstatic->label).'">';
 			print $productstatic->label;
 			print "</td>\n";
 		}
@@ -884,7 +890,7 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		}
 		if (!empty($arrayfields['m.label']['checked'])) {
 			// Label of movement
-			print '<td class="tdoverflowmax100aaa">'.$objp->label.'</td>';
+			print '<td class="tdoverflowmax300" title="'.dol_escape_htmltag($objp->label).'">'.$objp->label.'</td>';
 		}
 		if (!empty($arrayfields['m.type_mouvement']['checked'])) {
 			// Type of movement
@@ -906,6 +912,14 @@ if ($object->id > 0 && (empty($action) || ($action != 'edit' && $action != 'crea
 		if (!empty($arrayfields['origin']['checked'])) {
 			// Origin of movement
 			print '<td class="nowraponall">'.$origin.'</td>';
+		}
+		if (!empty($arrayfields['m.fk_projet']['checked'])) {
+			// fk_project
+			print '<td>';
+			if ($objp->fk_project != 0) {
+				print $movement->get_origin($objp->fk_project, 'project');
+			}
+			print '</td>';
 		}
 		if (!empty($arrayfields['m.value']['checked'])) {
 			// Qty

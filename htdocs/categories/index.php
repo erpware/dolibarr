@@ -5,6 +5,7 @@
  * Copyright (C) 2007       Patrick Raguin      <patrick.raguin@gmail.com>
  * Copyright (C) 2005-2012  Regis Houssin       <regis.houssin@inodbox.com>
  * Copyright (C) 2015       Raphaël Doursenaud  <rdoursenaud@gpcsolutions.fr>
+ * Copyright (C) 2021		Frédéric France		<frederic.france@netlogic.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,6 +49,8 @@ if (is_numeric($type)) {
 	$type = Categorie::$MAP_ID_TO_CODE[$type]; // For backward compatibility
 }
 
+// Initialize technical object to manage hooks. Note that conf->hooks_modules contains array array
+$hookmanager->initHooks(array('categoryindex'));
 
 /*
  * View
@@ -115,15 +118,15 @@ if (empty($nosearch)) {
 		print '<tr class="liste_titre"><td colspan="2">'.$langs->trans("FoundCats").'</td></tr>';
 
 		foreach ($cats as $cat) {
-			$color = $categstatic->color ? ' style="background: #'.sprintf("%06s", $categstatic->color).';"' : ' style="background: #bbb"';
-
-			print "\t".'<tr class="oddeven">'."\n";
-			print "\t\t<td>";
 			$categstatic->id = $cat->id;
 			$categstatic->ref = $cat->label;
 			$categstatic->label = $cat->label;
 			$categstatic->type = $cat->type;
 			$categstatic->color = $cat->color;
+			$color = $categstatic->color ? ' style="background: #'.sprintf("%06s", $categstatic->color).';"' : ' style="background: #bbb"';
+
+			print "\t".'<tr class="oddeven">'."\n";
+			print "\t\t<td>";
 			print '<span class="noborderoncategories"'.$color.'>';
 			print $categstatic->getNomUrl(1, '');
 			print '</span>';
@@ -151,7 +154,7 @@ $cate_arbo = $categstatic->get_full_arbo($typetext);
 $fulltree = $cate_arbo;
 
 // Load possible missing includes
-if ($conf->global->CATEGORY_SHOW_COUNTS) {
+if (!empty($conf->global->CATEGORY_SHOW_COUNTS)) {
 	if ($type == Categorie::TYPE_MEMBER) {
 		require_once DOL_DOCUMENT_ROOT.'/adherents/class/adherent.class.php';
 	}
@@ -177,7 +180,7 @@ foreach ($fulltree as $key => $val) {
 	$desc = dol_htmlcleanlastbr($val['description']);
 
 	$counter = '';
-	if ($conf->global->CATEGORY_SHOW_COUNTS) {
+	if (!empty($conf->global->CATEGORY_SHOW_COUNTS)) {
 		// we need only a count of the elements, so it is enough to consume only the id's from the database
 		$elements = $type == Categorie::TYPE_ACCOUNT
 			? $categstatic->getObjectsInCateg("account", 1)			// Categorie::TYPE_ACCOUNT is "bank_account" instead of "account"
@@ -215,16 +218,27 @@ foreach ($fulltree as $key => $val) {
 }
 
 
-//print_barre_liste('', 0, $_SERVER["PHP_SELF"], '', '', '', '', 0, 0, '', 0, $newcardbutton, '', 0, 1, 1);
+$nbofentries = (count($data) - 1);
 
-print '<table class="liste nohover" width="100%">';
+$morethan1level = 0;
+foreach ($data as $record) {
+	if (!empty($record['fk_menu']) && $record['fk_menu'] > 0) {
+		$morethan1level = 1;
+	}
+}
+
+
+print '<table class="liste nohover centpercent">';
 print '<tr class="liste_titre"><td>'.$langs->trans("Categories").'</td><td></td><td class="right">';
-if (!empty($conf->use_javascript_ajax)) {
-	print '<div id="iddivjstreecontrol"><a class="notasortlink" href="#">'.img_picto('', 'folder', 'class="paddingright"').$langs->trans("UndoExpandAll").'</a> | <a class="notasortlink" href="#">'.img_picto('', 'folder-open', 'class="paddingright"').$langs->trans("ExpandAll").'</a></div>';
+if ($morethan1level && !empty($conf->use_javascript_ajax)) {
+	print '<div id="iddivjstreecontrol">';
+	print '<a class="notasortlink" href="#">'.img_picto('', 'folder', 'class="paddingright"').'<span class="hideonsmartphone">'.$langs->trans("UndoExpandAll").'</span></a>';
+	print ' | ';
+	print '<a class="notasortlink" href="#">'.img_picto('', 'folder-open', 'class="paddingright"').'<span class="hideonsmartphone">'.$langs->trans("ExpandAll").'</span></a>';
+	print '</div>';
 }
 print '</td></tr>';
 
-$nbofentries = (count($data) - 1);
 if ($nbofentries > 0) {
 	print '<tr class="pair"><td colspan="3">';
 	tree_recur($data, $data[0], 0);

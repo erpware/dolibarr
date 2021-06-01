@@ -46,12 +46,19 @@ if (!empty($conf->global->THEME_DARKMODEENABLED)) {
 /* Buttons for actions                                                            */
 /* ============================================================================== */
 
-div.divButAction {
+/*div.divButAction {
 	margin-bottom: 1.4em;
-}
+}*/
 div.tabsAction > a.butAction, div.tabsAction > a.butActionRefused, div.tabsAction > a.butActionDelete,
-div.tabsAction > span.butAction, div.tabsAction > span.butActionRefused, div.tabsAction > span.butActionDelete {
+div.tabsAction > span.butAction, div.tabsAction > span.butActionRefused, div.tabsAction > span.butActionDelete,
+div.tabsAction > div.divButAction > span.butAction,
+div.tabsAction > div.divButAction > span.butActionDelete,
+div.tabsAction > div.divButAction > span.butActionRefused,
+div.tabsAction > div.divButAction > a.butAction,
+div.tabsAction > div.divButAction > a.butActionDelete,
+div.tabsAction > div.divButAction > a.butActionRefused {
 	margin-bottom: 1.4em !important;
+	margin-right: 0px !important;
 }
 div.tabsActionNoBottom > a.butAction, div.tabsActionNoBottom > a.butActionRefused {
 	margin-bottom: 0 !important;
@@ -66,22 +73,27 @@ span.butAction, span.butActionDelete {
 .butAction {
 	background: var(--butactionbg);
 	color: #FFF !important;
-	border-radius: 3px;
 	/* background: rgb(230, 232, 239); */
+}
+.butActionRefused, .butAction, .butActionDelete {
+	border-radius: 3px;
+}
+.butActionRefused:last-child, .butAction:last-child, .butActionDelete:last-child {
+	margin-<?php echo $right; ?>: 0px !important;
 }
 .butActionRefused, .butAction, .butAction:link, .butAction:visited, .butAction:hover, .butAction:active, .butActionDelete, .butActionDelete:link, .butActionDelete:visited, .butActionDelete:hover, .butActionDelete:active {
 	text-decoration: none;
 	text-transform: uppercase;
 	font-weight: bold;
 
-	margin: 0em <?php echo ($dol_optimize_smallscreen ? '0.6' : '0.9'); ?>em;
+	margin: 0em <?php echo ($dol_optimize_smallscreen ? '0.6' : '1'); ?>em;
 	padding: 0.6em <?php echo ($dol_optimize_smallscreen ? '0.6' : '0.7'); ?>em;
 	display: inline-block;
 	text-align: center;
 	cursor: pointer;
-	/* color: #fff; */
-	/* background: rgb(<?php echo $colorbackhmenu1 ?>); */
 	color: #444;
+	border: 1px solid transparent;	/* So for buttonRefused with a border, it will not have any flash effect */
+
 	/* border: 1px solid #aaa; */
 	/* border-color: rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.25); */
 
@@ -155,17 +167,16 @@ span.butActionNewRefused>span.fa, span.butActionNewRefused>span.fa:hover
 
 	white-space: nowrap !important;
 	cursor: not-allowed !important;
-	margin: 0em <?php echo ($dol_optimize_smallscreen ? '0.6' : '0.9'); ?>em;
-	padding: 0.6em <?php echo ($dol_optimize_smallscreen ? '0.6' : '0.7'); ?>em;
 	font-family: <?php print $fontlist ?> !important;
 	display: inline-block;
 	text-align: center;
 	cursor: pointer;
-	color: #999 !important;
-	border: 1px solid #ccc;
 	box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
+	color: #999 !important;
+
+	border: 1px solid #ccc;
 }
 .butActionNewRefused, .butActionNewRefused:link, .butActionNewRefused:visited, .butActionNewRefused:hover, .butActionNewRefused:active {
 	text-decoration: none !important;
@@ -274,6 +285,11 @@ div.pagination li:first-child a.btnTitle{
 	margin-left: 10px;
 }
 
+.button-title-separator{
+	display: inline-block;
+	clear: both;
+	width: 20px;
+}
 
 .imgforviewmode {
 	color: #aaa;
@@ -291,6 +307,23 @@ div.pagination li:first-child a.btnTitle{
 		min-width: unset;
 	}
 }
+
+/* rule to reduce top menu - 3rd reduction: The menu for user is on left */
+@media only screen and (max-width: <?php echo empty($conf->global->THEME_ELDY_WITDHOFFSET_FOR_REDUC3) ? round($nbtopmenuentries * 47, 0) + 130 : $conf->global->THEME_ELDY_WITDHOFFSET_FOR_REDUC3; ?>px)	/* reduction 3 */
+{
+	.butAction, .butActionRefused, .butActionDelete {
+		font-size: 0.9em;
+	}
+}
+
+/* smartphone */
+@media only screen and (max-width: 767px)
+{
+	.butAction, .butActionRefused, .butActionDelete {
+		font-size: 0.85em;
+	}
+}
+
 
 <?php if (!empty($conf->global->MAIN_BUTTON_HIDE_UNAUTHORIZED) && (!$user->admin)) { ?>
 .butActionRefused, .butActionNewRefused, .btnTitle.refused {

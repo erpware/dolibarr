@@ -81,7 +81,7 @@ class box_ficheinter extends ModeleBoxes
 		$this->info_box_head = array('text' => $langs->trans("BoxTitleLastFicheInter", $max));
 
 		if (!empty($user->rights->ficheinter->lire)) {
-			$sql = "SELECT f.rowid, f.ref, f.fk_soc, f.fk_statut";
+			$sql = "SELECT f.rowid, f.ref, f.fk_soc, f.fk_statut as status";
 			$sql .= ", f.datec";
 			$sql .= ", f.date_valid as datev";
 			$sql .= ", f.tms as datem";
@@ -116,7 +116,8 @@ class box_ficheinter extends ModeleBoxes
 					$objp = $this->db->fetch_object($resql);
 					$datec = $this->db->jdate($objp->datec);
 
-					$ficheinterstatic->statut = $objp->fk_statut;
+					$ficheinterstatic->statut = $objp->status;
+					$ficheinterstatic->status = $objp->status;
 					$ficheinterstatic->id = $objp->rowid;
 					$ficheinterstatic->ref = $objp->ref;
 
@@ -144,7 +145,7 @@ class box_ficheinter extends ModeleBoxes
 
 					$this->info_box_contents[$i][] = array(
 						'td' => 'class="right"',
-						'text' => dol_print_date($datec, 'day'),
+						'text' => dol_print_date($datec, 'day', 'tzuserrel'),
 					);
 
 					$this->info_box_contents[$i][] = array(

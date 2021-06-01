@@ -214,7 +214,7 @@ $styleuse = 'encoded'; // encoded/literal/literal wrapped
 $server->register(
 	'getThirdParty',
 	// Entry values
-	array('authentication'=>'tns:authentication', 'id'=>'xsd:string', 'ref'=>'xsd:string', 'ref_ext'=>'xsd:string'),
+	array('authentication'=>'tns:authentication', 'id'=>'xsd:string', 'ref'=>'xsd:string', 'ref_ext'=>'xsd:string', 'barcode'=>'xsd:string', 'profid1'=>'xsd:string', 'profid2'=>'xsd:string'),
 	// Exit values
 	array('result'=>'tns:result', 'thirdparty'=>'tns:thirdparty'),
 	$ns,
@@ -290,13 +290,16 @@ $server->register(
  * @param	string		$id		    		internal id
  * @param	string		$ref		    	internal reference
  * @param	string		$ref_ext	   		external reference
+ * @param	string		$barcode	   		barcode
+ * @param	string		$profid1	   		profid1
+ * @param	string		$profid2	   		profid2
  * @return	array							Array result
  */
-function getThirdParty($authentication, $id = '', $ref = '', $ref_ext = '')
+function getThirdParty($authentication, $id = '', $ref = '', $ref_ext = '', $barcode = '', $profid1 = '', $profid2 = '')
 {
 	global $db, $conf;
 
-	dol_syslog("Function: getThirdParty login=".$authentication['login']." id=".$id." ref=".$ref." ref_ext=".$ref_ext);
+	dol_syslog("Function: getThirdParty login=".$authentication['login']." id=".$id." ref=".$ref." ref_ext=".$ref_ext." barcode=".$barcode." profid1=".$profid1." profid2=".$profid2);
 
 	if ($authentication['entity']) {
 		$conf->entity = $authentication['entity'];
@@ -304,13 +307,15 @@ function getThirdParty($authentication, $id = '', $ref = '', $ref_ext = '')
 
 	// Init and check authentication
 	$objectresp = array();
-	$errorcode = ''; $errorlabel = '';
+	$errorcode = '';
+	$errorlabel = '';
 	$error = 0;
 	$fuser = check_authentication($authentication, $error, $errorcode, $errorlabel);
 	// Check parameters
 	if (!$error && (($id && $ref) || ($id && $ref_ext) || ($ref && $ref_ext))) {
 		$error++;
-		$errorcode = 'BAD_PARAMETERS'; $errorlabel = "Parameter id, ref and ref_ext can't be both provided. You must choose one or other but not both.";
+		$errorcode = 'BAD_PARAMETERS';
+		$errorlabel = "Parameter id, ref and ref_ext can't be both provided. You must choose one or other but not both.";
 	}
 
 	if (!$error) {
@@ -318,7 +323,7 @@ function getThirdParty($authentication, $id = '', $ref = '', $ref_ext = '')
 
 		if ($fuser->rights->societe->lire) {
 			$thirdparty = new Societe($db);
-			$result = $thirdparty->fetch($id, $ref, $ref_ext);
+			$result = $thirdparty->fetch($id, $ref, $ref_ext, $barcode, $profid1, $profid2);
 			if ($result > 0) {
 				$thirdparty_result_fields = array(
 						'id' => $thirdparty->id,
@@ -380,6 +385,9 @@ function getThirdParty($authentication, $id = '', $ref = '', $ref_ext = '')
 				$objectresp = array(
 					'result'=>array('result_code'=>'OK', 'result_label'=>''),
 					'thirdparty'=>$thirdparty_result_fields);
+			} elseif ($result == -2) {
+				$error++;
+				$errorcode = 'DUPLICATE_FOUND'; $errorlabel = 'Object found several times for id='.$id.' or ref='.$ref.' or ref_ext='.$ref_ext;
 			} else {
 				$error++;
 				$errorcode = 'NOT_FOUND'; $errorlabel = 'Object not found for id='.$id.' nor ref='.$ref.' nor ref_ext='.$ref_ext;

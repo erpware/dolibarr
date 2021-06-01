@@ -315,23 +315,17 @@ if ($object->id > 0) {
 
 	$facidavoir = $object->getListIdAvoirFromInvoice();
 	if (count($facidavoir) > 0) {
-		print ' ('.$langs->transnoentities("InvoiceHasAvoir");
-		$i = 0;
-		foreach ($facidavoir as $id) {
-			if ($i == 0) {
-				print ' ';
-			} else {
-				print ',';
-			}
+		$invoicecredits = array();
+		foreach ($facidavoir as $facid) {
 			if ($type == 'bank-transfer') {
 				$facavoir = new FactureFournisseur($db);
 			} else {
 				$facavoir = new Facture($db);
 			}
-			$facavoir->fetch($id);
-			print $facavoir->getNomUrl(1);
+			$facavoir->fetch($facid);
+			$invoicecredits[] = $facavoir->getNomUrl(1);
 		}
-		print ')';
+		print ' ('.$langs->transnoentities("InvoiceHasAvoir") . (count($invoicecredits) ? ' ' : '') . implode(',', $invoicecredits) . ')';
 	}
 	/*
 	if ($facidnext > 0)
@@ -576,7 +570,9 @@ if ($object->id > 0) {
 	print dol_get_fiche_end();
 
 
-	$numopen = 0; $pending = 0; $numclosed = 0;
+	$numopen = 0;
+	$pending = 0;
+	$numclosed = 0;
 
 
 	// How many Direct debit opened requests ?

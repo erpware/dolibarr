@@ -33,16 +33,6 @@ require_once DOL_DOCUMENT_ROOT.'/core/lib/ldap.lib.php';
 // Load translation files required by page
 $langs->loadLangs(array('companies', 'ldap', 'users', 'admin'));
 
-// Users/Groups management only in master entity if transverse mode
-if (!empty($conf->multicompany->enabled) && $conf->entity > 1 && $conf->global->MULTICOMPANY_TRANSVERSE_MODE) {
-	accessforbidden();
-}
-
-$canreadperms = true;
-if (!empty($conf->global->MAIN_USE_ADVANCED_PERMS)) {
-	$canreadperms = ($user->admin || $user->rights->user->group_advance->read);
-}
-
 $id = GETPOST('id', 'int');
 $action = GETPOST('action', 'aZ09');
 
@@ -54,6 +44,16 @@ if ($user->socid > 0) {
 $object = new Usergroup($db);
 $object->fetch($id);
 $object->getrights();
+
+// Users/Groups management only in master entity if transverse mode
+if (!empty($conf->multicompany->enabled) && $conf->entity > 1 && $conf->global->MULTICOMPANY_TRANSVERSE_MODE) {
+	accessforbidden();
+}
+
+$canreadperms = true;
+if (!empty($conf->global->MAIN_USE_ADVANCED_PERMS)) {
+	$canreadperms = ($user->admin || $user->rights->user->group_advance->read);
+}
 
 
 /*
@@ -67,8 +67,8 @@ if ($action == 'dolibarr2ldap') {
 	if ($result > 0) {
 		$info = $object->_load_ldap_info();
 
-		// Get a gid number for objectclass PosixGroup
-		if (in_array('posixGroup', $info['objectclass'])) {
+		// Get a gid number for objectclass PosixGroup if none was provided
+		if (empty($info[$conf->global->LDAP_GROUP_FIELD_GROUPID]) && in_array('posixGroup', $info['objectclass'])) {
 			$info['gidNumber'] = $ldap->getNextGroupGid('LDAP_KEY_GROUPS');
 		}
 
@@ -143,9 +143,8 @@ print dol_get_fiche_end();
 
 
 /*
- * Barre d'actions
+ * Action bar
  */
-
 print '<div class="tabsAction">';
 
 if ($conf->global->LDAP_SYNCHRO_ACTIVE == 'dolibarr2ldap') {

@@ -22,7 +22,7 @@
  *
  *  \file       htdocs/core/modules/modTakePos.class.php
  *  \ingroup    takepos
- *  \brief      Description and activation file for module TakePos
+ *  \brief      Description and activation file for the module TakePos
  */
 include_once DOL_DOCUMENT_ROOT.'/core/modules/DolibarrModules.class.php';
 
@@ -198,10 +198,24 @@ class modTakePos extends DolibarrModules
 
 		$r++;
 		$this->rights[$r][0] = 50151;
-		$this->rights[$r][1] = 'Use Point Of Sale';
+		$this->rights[$r][1] = 'Use Point Of Sale (record a sale, add products, record payment)';
 		$this->rights[$r][2] = 'a';
 		$this->rights[$r][3] = 0;
 		$this->rights[$r][4] = 'run';
+
+		$r++;
+		$this->rights[$r][0] = 50152;
+		$this->rights[$r][1] = 'Can modify added sales lines (prices, discount)';
+		$this->rights[$r][2] = 'a';
+		$this->rights[$r][3] = 0;
+		$this->rights[$r][4] = 'editlines';
+
+		$r++;
+		$this->rights[$r][0] = 50153;
+		$this->rights[$r][1] = 'Edit ordered sales lines (useful only when option "Order printers" has been enabled). Allow to edit sales lines even after the order has been printed';
+		$this->rights[$r][2] = 'a';
+		$this->rights[$r][3] = 0;
+		$this->rights[$r][4] = 'editorderedlines';
 
 
 		// Main menu entries
@@ -216,6 +230,7 @@ class modTakePos extends DolibarrModules
 								'titre'=>'PointOfSaleShort',
 								'mainmenu'=>'takepos',
 								'leftmenu'=>'',
+								'prefix' => img_picto('', $this->picto, 'class="paddingright pictofixedwidth"'),
 								'url'=>'/takepos/index.php',
 								'langs'=>'cashdesk', // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 								'position'=>1000 + $r,

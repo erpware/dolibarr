@@ -346,11 +346,11 @@ include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_search_param.tpl.php';
 
 // List of mass actions available
 $arrayofmassactions = array(
-	//'presend'=>$langs->trans("SendByMail"),
-	//'builddoc'=>$langs->trans("PDFMerge"),
+	//'presend'=>img_picto('', 'email', 'class="pictofixedwidth"').$langs->trans("SendByMail"),
+	//'builddoc'=>img_picto('', 'pdf', 'class="pictofixedwidth"').$langs->trans("PDFMerge"),
 );
 if ($permissiontodelete) {
-	$arrayofmassactions['predelete'] = '<span class="fa fa-trash paddingrightonly"></span>'.$langs->trans("Delete");
+	$arrayofmassactions['predelete'] = img_picto('', 'delete', 'class="pictofixedwidth"').$langs->trans("Delete");
 }
 if (GETPOST('nomassaction', 'int') || in_array($massaction, array('presend', 'predelete'))) {
 	$arrayofmassactions = array();
@@ -370,7 +370,7 @@ print '<input type="hidden" name="contextpage" value="'.$contextpage.'">';
 
 $newcardbutton = dolGetButtonTitle($langs->trans('NewAsset'), '', 'fa fa-plus-circle', dol_buildpath('/asset/card.php', 1).'?action=create&backtopage='.urlencode($_SERVER['PHP_SELF']), '', $permissiontoadd);
 
-print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, 'accountancy', 0, $newcardbutton, '', $limit, 0, 0, 1);
+print_barre_liste($title, $page, $_SERVER["PHP_SELF"], $param, $sortfield, $sortorder, $massactionbutton, $num, $nbtotalofrecords, $object->picto, 0, $newcardbutton, '', $limit, 0, 0, 1);
 
 // Add code for pre mass action (confirmation or email presend form)
 $topicmail = "SendAssetsRef";

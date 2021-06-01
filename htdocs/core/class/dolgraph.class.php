@@ -113,7 +113,7 @@ class DolGraph
 
 		$color_file = DOL_DOCUMENT_ROOT . '/theme/' . $conf->theme . '/theme_vars.inc.php';
 		if (is_readable($color_file)) {
-			include_once $color_file;
+			include $color_file;
 			if (isset($theme_bordercolor)) {
 				$this->bordercolor = $theme_bordercolor;
 			}
@@ -882,7 +882,7 @@ class DolGraph
 			$this->stringtoshow .= '\'+';
 			$this->stringtoshow .= ($showlegend ? '' : 'label+\' \'+'); // Hide label if already shown in legend
 			$this->stringtoshow .= ($showpointvalue ? 'number+' : '');
-			$this->stringtoshow .= ($showpercent ? '\'<br/>\'+percent+\'%\'+' : '');
+			$this->stringtoshow .= ($showpercent ? '\'<br>\'+percent+\'%\'+' : '');
 			$this->stringtoshow .= '\'';
 			if ($urltemp) {
 				$this->stringtoshow .= '</a>';
@@ -908,9 +908,8 @@ class DolGraph
 			$this->stringtoshow .= 'legend: {show: ' . ($showlegend ? 'true' : 'false') . ', position: \'ne\' }
 		});
 		}' . "\n";
-		}
-		// Other cases, graph of type 'bars', 'lines'
-		else {
+		} else {
+			// Other cases, graph of type 'bars', 'lines'
 			// Add code to support tooltips
 			// TODO: remove js css and use graph-tooltip-inner class instead by adding css in each themes
 			$this->stringtoshow .= '
@@ -1166,8 +1165,31 @@ class DolGraph
 				if (!empty($legendMaxLines)) {
 					$this->stringtoshow .= ', maxLines: ' . $legendMaxLines . '';
 				}
+				/* This has no effect on chartjs version with dol v14
+				$this->stringtoshow .= ', labels: {
+					color: \'rgb(255, 0, 0)\',
+					// This more specific font property overrides the global property
+					font: {
+						size: 24
+					}
+				}';
+				*/
 				$this->stringtoshow .= ' }, ' . "\n";
 			}
+
+			/* This has no effect on chartjs version with dol v14
+			$this->stringtoshow .= 'plugins: {
+				legend: {
+					display: true,
+					labels: {
+						color: \'rgb(255, 0, 0)\',
+						// This more specific font property overrides the global property
+						font: {
+							size: 24
+						}
+					}
+				}
+			},'."\n"; */
 
 			if ($this->type[$firstlot] == 'piesemicircle') {
 				$this->stringtoshow .= 'circumference: Math.PI,' . "\n";
@@ -1237,7 +1259,7 @@ class DolGraph
 				if ($i > 0) {
 					$this->stringtoshow .= ', ';
 				}
-				$this->stringtoshow .= "'" . dol_escape_js(dol_trunc($val, 32)) . "'";
+				$this->stringtoshow .= "'" . dol_escape_js(dol_trunc($val, 25)) . "'";	// Lower than 25 make some important label (that we can't shorten) to be truncated
 				$i++;
 			}
 
@@ -1262,9 +1284,8 @@ class DolGraph
 			$this->stringtoshow .= ']' . "\n";
 			$this->stringtoshow .= '}' . "\n";
 			$this->stringtoshow .= '});' . "\n";
-		}
-		// Other cases, graph of type 'bars', 'lines', 'linesnopoint'
-		else {
+		} else {
+			// Other cases, graph of type 'bars', 'lines', 'linesnopoint'
 			$type = 'bar';
 
 			if (!isset($this->type[$firstlot]) || $this->type[$firstlot] == 'bars') {

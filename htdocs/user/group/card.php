@@ -1,10 +1,10 @@
 <?php
 /* Copyright (C) 2005		Rodolphe Quiedeville	<rodolphe@quiedeville.org>
- * Copyright (C) 2005-2015	Laurent Destailleur	<eldy@users.sourceforge.net>
- * Copyright (C) 2005-2017	Regis Houssin		<regis.houssin@inodbox.com>
- * Copyright (C) 2011		Herve Prot			<herve.prot@symeos.com>
- * Copyright (C) 2012		Florian Henry		<florian.henry@open-concept.pro>
- * Copyright (C) 2018		Juanjo Menent		<jmenent@2byte.es>
+ * Copyright (C) 2005-2021	Laurent Destailleur		<eldy@users.sourceforge.net>
+ * Copyright (C) 2005-2017	Regis Houssin			<regis.houssin@inodbox.com>
+ * Copyright (C) 2011		Herve Prot				<herve.prot@symeos.com>
+ * Copyright (C) 2012		Florian Henry			<florian.henry@open-concept.pro>
+ * Copyright (C) 2018		Juanjo Menent			<jmenent@2byte.es>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
 
 /**
  *       \file       htdocs/user/group/card.php
- *       \brief      Onglet groupes utilisateurs
+ *       \brief      Tab of a user group
  */
 
 require '../../main.inc.php';
@@ -57,14 +57,6 @@ $backtopage = GETPOST('backtopage', 'alpha');
 
 $userid = GETPOST('user', 'int');
 
-// Security check
-$result = restrictedArea($user, 'user', $id, 'usergroup&usergroup', $feature2);
-
-// Users/Groups management only in master entity if transverse mode
-if (!empty($conf->multicompany->enabled) && $conf->entity > 1 && $conf->global->MULTICOMPANY_TRANSVERSE_MODE) {
-	accessforbidden();
-}
-
 $object = new Usergroup($db);
 $extrafields = new ExtraFields($db);
 // fetch optionals attributes and labels
@@ -77,6 +69,13 @@ $object->getrights();
 // Initialize technical object to manage hooks. Note that conf->hooks_modules contains array
 $hookmanager->initHooks(array('groupcard', 'globalcard'));
 
+// Security check
+$result = restrictedArea($user, 'user', $id, 'usergroup&usergroup', $feature2);
+
+// Users/Groups management only in master entity if transverse mode
+if (!empty($conf->multicompany->enabled) && $conf->entity > 1 && $conf->global->MULTICOMPANY_TRANSVERSE_MODE) {
+	accessforbidden();
+}
 
 
 /**
@@ -139,7 +138,11 @@ if (empty($reshook)) {
 				if (!empty($conf->multicompany->enabled) && !empty($conf->global->MULTICOMPANY_TRANSVERSE_MODE)) {
 					$object->entity = 0;
 				} else {
-					$object->entity = $_POST["entity"];
+					if ($conf->entity == 1 && $user->admin && !$user->entity) {		// Same permissions test than the one used to show the combo of entities into the form
+						$object->entity = GETPOSTISSET("entity") ? GETPOST("entity") : $conf->entity;
+					} else {
+						$object->entity = $conf->entity;
+					}
 				}
 
 				$db->begin();
@@ -215,7 +218,7 @@ if (empty($reshook)) {
 			if (!empty($conf->multicompany->enabled) && !empty($conf->global->MULTICOMPANY_TRANSVERSE_MODE)) {
 				$object->entity = 0;
 			} else {
-				$object->entity = $_POST["entity"];
+				$object->entity = GETPOST("entity");
 			}
 
 			$ret = $object->update();
@@ -366,9 +369,8 @@ if ($action == 'create') {
 
 
 			/*
-			 * Barre d'actions
+			 * Action bar
 			 */
-
 			print '<div class="tabsAction">';
 
 			$parameters = array();
@@ -470,7 +472,7 @@ if ($action == 'create') {
 			print '<div class="fichecenter"><div class="fichehalfleft">';
 
 			/*
-			 * Documents generes
+			 * Generated documents
 			 */
 
 			$filename = dol_sanitizeFileName($object->ref);

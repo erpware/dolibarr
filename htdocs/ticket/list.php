@@ -118,7 +118,7 @@ foreach ($object->fields as $key => $val) {
 // List of fields to search into when doing a "search in all"
 $fieldstosearchall = array();
 foreach ($object->fields as $key => $val) {
-	if ($val['searchall']) {
+	if (!empty($val['searchall'])) {
 		$fieldstosearchall['t.'.$key] = $val['label'];
 	}
 }
@@ -340,13 +340,13 @@ $reshook = $hookmanager->executeHooks('printFieldListSelect', $parameters, $obje
 $sql .= $hookmanager->resPrint;
 $sql = preg_replace('/, $/', '', $sql);
 $sql .= " FROM ".MAIN_DB_PREFIX.$object->table_element." as t";
-if (is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label'])) {
+if (isset($extrafields->attributes[$object->table_element]['label']) && is_array($extrafields->attributes[$object->table_element]['label']) && count($extrafields->attributes[$object->table_element]['label'])) {
 	$sql .= " LEFT JOIN ".MAIN_DB_PREFIX.$object->table_element."_extrafields as ef on (t.rowid = ef.fk_object)";
 }
 $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."societe as s ON (t.fk_soc = s.rowid)";
 $sql .= " WHERE t.entity IN (".getEntity($object->element).")";
 if ($socid > 0) {
-	$sql .= " AND t.fk_soc = ".$socid;
+	$sql .= " AND t.fk_soc = ".((int) $socid);
 }
 
 foreach ($search as $key => $val) {
@@ -392,7 +392,9 @@ if ($search_all) {
 if ($search_societe) {
 	$sql .= natural_search('s.nom', $search_societe);
 }
-//if ($search_fk_project) $sql .= natural_search('fk_project', $search_fk_project, 2);
+if ($search_fk_project > 0) {
+	$sql .= natural_search('fk_project', $search_fk_project, 2);
+}
 if ($search_date_start) {
 	$sql .= " AND t.datec >= '".$db->idate($search_date_start)."'";
 }
@@ -492,7 +494,7 @@ if ($socid && !$projectid && !$project_ref && $user->rights->societe->lire) {
 		if ($socstat->client && !empty($socstat->code_client)) {
 			print '<tr><td class="titlefield">';
 			print $langs->trans('CustomerCode').'</td><td>';
-			print $socstat->code_client;
+			print showValueWithClipboardCPButton(dol_escape_htmltag($socstat->code_client));
 			$tmpcheck = $socstat->check_codeclient();
 			if ($tmpcheck != 0 && $tmpcheck != -5) {
 				print ' <font class="error">('.$langs->trans("WrongCustomerCode").')</font>';
@@ -504,7 +506,7 @@ if ($socid && !$projectid && !$project_ref && $user->rights->societe->lire) {
 		if ($socstat->fournisseur && !empty($socstat->code_fournisseur)) {
 			print '<tr><td class="titlefield">';
 			print $langs->trans('SupplierCode').'</td><td>';
-			print $socstat->code_fournisseur;
+			print showValueWithClipboardCPButton(dol_escape_htmltag($socstat->code_fournisseur));
 			$tmpcheck = $socstat->check_codefournisseur();
 			if ($tmpcheck != 0 && $tmpcheck != -5) {
 				print ' <font class="error">('.$langs->trans("WrongSupplierCode").')</font>';
@@ -553,7 +555,7 @@ if ($projectid > 0 || $project_ref) {
 		// Define a complementary filter for search of next/prev ref.
 		if (!$user->rights->projet->all->lire) {
 			$objectsListId = $object->getProjectsAuthorizedForUser($user, 0, 0);
-			$object->next_prev_filter = " rowid in (".(count($objectsListId) ?join(',', array_keys($objectsListId)) : '0').")";
+			$object->next_prev_filter = " rowid IN (".$db->sanitize(count($objectsListId) ? join(',', array_keys($objectsListId)) : '0').")";
 		}
 
 		dol_banner_tab($object, 'project_ref', $linkback, 1, 'ref', 'ref', $morehtmlref);
@@ -606,45 +608,65 @@ if ($optioncss != '') {
 }
 // Add $param from extra fields
 include DOL_DOCUMENT_ROOT.'/core/tpl/extrafields_list_search_param.tpl.php';
-if ($socid) {
+if ($socid > 0) {
 	$param .= '&socid='.urlencode($socid);
 }
-if ($projectid) {
+if ($search_societe) {
+	$param .= '&search_societe='.urlencode($search_societe);
+}
+if ($projectid > 0) {
 	$param .= '&projectid='.urlencode($projectid);
 }
-
 if ($search_date_start) {
-	$param .= '&search_date_start='.urlencode($search_date_start);
+	$tmparray = dol_getdate($search_date_start);
+	$param .= '&search_date_startday='.urlencode($tmparray['mday']);
+	$param .= '&search_date_startmonth='.urlencode($tmparray['mon']);
+	$param .= '&search_date_startyear='.urlencode($tmparray['year']);
 }
 if ($search_date_end) {
-	$param .= '&search_date_end='.urlencode($search_date_end);
+	$tmparray = dol_getdate($search_date_end);
+	$param .= '&search_date_endday='.urlencode($tmparray['mday']);
+	$param .= '&search_date_endmonth='.urlencode($tmparray['mon']);
+	$param .= '&search_date_endyear='.urlencode($tmparray['year']);
 }
 if ($search_dateread_start) {
-	$param .= '&search_dateread_start='.urlencode($search_dateread_start);
+	$tmparray = dol_getdate($search_dateread_start);
+	$param .= '&search_dateread_startday='.urlencode($tmparray['mday']);
+	$param .= '&search_dateread_startmonth='.urlencode($tmparray['mon']);
+	$param .= '&search_dateread_startyear='.urlencode($tmparray['year']);
 }
 if ($search_dateread_end) {
-	$param .= '&search_dateread_end='.urlencode($search_dateread_end);
+	$tmparray = dol_getdate($search_dateread_end);
+	$param .= '&search_dateread_endday='.urlencode($tmparray['mday']);
+	$param .= '&search_dateread_endmonth='.urlencode($tmparray['mon']);
+	$param .= '&search_dateread_endyear='.urlencode($tmparray['year']);
 }
 if ($search_dateclose_start) {
-	$param .= '&search_dateclose_start='.urlencode($search_dateclose_start);
+	$tmparray = dol_getdate($search_dateclose_start);
+	$param .= '&search_dateclose_startday='.urlencode($tmparray['mday']);
+	$param .= '&search_dateclose_startmonth='.urlencode($tmparray['mon']);
+	$param .= '&search_dateclose_startyear='.urlencode($tmparray['year']);
 }
 if ($search_dateclose_end) {
-	$param .= '&search_dateclose_end='.urlencode($search_dateclose_end);
+	$tmparray = dol_getdate($search_dateclose_end);
+	$param .= '&search_date_endday='.urlencode($tmparray['mday']);
+	$param .= '&search_date_endmonth='.urlencode($tmparray['mon']);
+	$param .= '&search_date_endyear='.urlencode($tmparray['year']);
 }
 
 // List of mass actions available
 $arrayofmassactions = array(
-	//'presend'=>$langs->trans("SendByMail"),
-	//'builddoc'=>$langs->trans("PDFMerge"),
+	//'presend'=>img_picto('', 'email', 'class="pictofixedwidth"').$langs->trans("SendByMail"),
+	//'builddoc'=>img_picto('', 'pdf', 'class="pictofixedwidth"').$langs->trans("PDFMerge"),
 );
 if ($user->rights->ticket->write) {
-	$arrayofmassactions['close'] = $langs->trans("Close");
+	$arrayofmassactions['close'] = img_picto('', 'close_title', 'class="pictofixedwidth"').$langs->trans("Close");
 }
 if ($user->rights->ticket->write) {
-	$arrayofmassactions['reopen'] = $langs->trans("ReOpen");
+	$arrayofmassactions['reopen'] = img_picto('', 'folder-open', 'class="pictofixedwidth"').$langs->trans("ReOpen");
 }
 if ($user->rights->ticket->delete) {
-	$arrayofmassactions['predelete'] = '<span class="fa fa-trash paddingrightonly"></span>'.$langs->trans("Delete");
+	$arrayofmassactions['predelete'] = img_picto('', 'delete', 'class="pictofixedwidth"').$langs->trans("Delete");
 }
 if (GETPOST('nomassaction', 'int') || in_array($massaction, array('presend', 'predelete'))) {
 	$arrayofmassactions = array();
@@ -755,7 +777,7 @@ foreach ($object->fields as $key => $val) {
 			print '</td>';
 		} elseif ($key == 'fk_user_assign' || $key == 'fk_user_create') {
 			print '<td class="liste_titre'.($cssforfield ? ' '.$cssforfield : '').'">';
-			print $form->select_dolusers($search[$key], 'search_'.$key, 1, null, 0, '', '', '0', 0, 0, '', 0, '', ($val['css'] ? $val['css'] : 'maxwidth150'));
+			print $form->select_dolusers($search[$key], 'search_'.$key, 1, null, 0, '', '', '0', 0, 0, '', 0, '', ($val['css'] ? $val['css'] : 'maxwidth125'));
 			print '</td>';
 		} elseif ($key == 'fk_statut') {
 			$arrayofstatus = array();
@@ -772,7 +794,7 @@ foreach ($object->fields as $key => $val) {
 			if ($search[$key]) {
 				$selectedarray = array_values($search[$key]);
 			}
-			print Form::multiselectarray('search_fk_statut', $arrayofstatus, $selectedarray, 0, 0, 'minwidth150', 1, 0, '', '', '');
+			print Form::multiselectarray('search_fk_statut', $arrayofstatus, $selectedarray, 0, 0, 'minwidth100 maxwidth150', 1, 0, '', '', '');
 			print '</td>';
 		} elseif ($key == "fk_soc") {
 			print '<td class="liste_titre'.($cssforfield ? ' '.$cssforfield : '').'"><input type="text" class="flat maxwidth75" name="search_societe" value="'.dol_escape_htmltag($search_societe).'"></td>';

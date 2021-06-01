@@ -40,12 +40,6 @@ $socid = GETPOST('socid', 'int');
 $action = GETPOST('action', 'aZ09');
 $confirm = GETPOST('confirm', 'alpha');
 
-// Security check
-if ($user->socid) {
-	$socid = $user->socid;
-}
-$result=restrictedArea($user, 'asset', $id, '');
-
 // Get parameters
 $limit = GETPOST('limit', 'int') ? GETPOST('limit', 'int') : $conf->liste_limit;
 $sortfield = GETPOST("sortfield", 'alpha');
@@ -69,6 +63,14 @@ if ($object->fetch($id)) {
 	$upload_dir = $conf->asset->dir_output."/".dol_sanitizeFileName($object->ref);
 }
 
+$permissiontoadd = $user->rights->asset->write; // Used by the include of actions_addupdatedelete.inc.php and actions_linkedfiles.inc.php
+
+// Security check
+if ($user->socid) {
+	$socid = $user->socid;
+}
+$result=restrictedArea($user, 'asset', $id, '');
+
 
 /*
  * Actions
@@ -82,8 +84,10 @@ include DOL_DOCUMENT_ROOT.'/core/actions_linkedfiles.inc.php';
  */
 
 $title = $langs->trans('Assets')." - ".$langs->trans('Documents');
-$helpurl = '';
-llxHeader('', $title, $helpurl);
+
+$help_url = '';
+
+llxHeader('', $title, $help_url);
 
 $form = new Form($db);
 
@@ -127,7 +131,7 @@ if ($id > 0 || !empty($ref)) {
 		$permission = $user->rights->asset->write;
 		$permtoedit = $user->rights->asset->write;
 		$param = '&id='.$object->id;
-		include_once DOL_DOCUMENT_ROOT.'/core/tpl/document_actions_post_headers.tpl.php';
+		include DOL_DOCUMENT_ROOT.'/core/tpl/document_actions_post_headers.tpl.php';
 	} else {
 		dol_print_error($db);
 	}

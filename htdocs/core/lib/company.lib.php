@@ -187,7 +187,7 @@ function societe_prepare_head(Societe $object)
 	}
 
 	// Related items
-	if ((!empty($conf->commande->enabled) || !empty($conf->propal->enabled) || !empty($conf->facture->enabled) || !empty($conf->ficheinter->enabled) || !empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD) || !empty($conf->supplier_order->enabled) || !empty($conf->supplier_invoice->enabled))
+	if ((!empty($conf->commande->enabled) || !empty($conf->propal->enabled) || !empty($conf->facture->enabled) || !empty($conf->ficheinter->enabled) || (!empty($conf->fournisseur->enabled) && empty($conf->global->MAIN_USE_NEW_SUPPLIERMOD)) || !empty($conf->supplier_order->enabled) || !empty($conf->supplier_invoice->enabled))
 		&& empty($conf->global->THIRPARTIES_DISABLE_RELATED_OBJECT_TAB)) {
 		$head[$h][0] = DOL_URL_ROOT.'/societe/consumption.php?socid='.$object->id;
 		$head[$h][1] = $langs->trans("Referers");
@@ -504,11 +504,11 @@ function getCountry($searchkey, $withcode = '', $dbtouse = 0, $outputlangs = '',
 
 	$sql = "SELECT rowid, code, label FROM ".MAIN_DB_PREFIX."c_country";
 	if (is_numeric($searchkey)) {
-		$sql .= " WHERE rowid=".$searchkey;
+		$sql .= " WHERE rowid = ".((int) $searchkey);
 	} elseif (!empty($searchkey)) {
-		$sql .= " WHERE code='".$db->escape($searchkey)."'";
+		$sql .= " WHERE code = '".$db->escape($searchkey)."'";
 	} else {
-		$sql .= " WHERE label='".$db->escape($searchlabel)."'";
+		$sql .= " WHERE label = '".$db->escape($searchlabel)."'";
 	}
 
 	$resql = $dbtouse->query($sql);
@@ -571,7 +571,7 @@ function getState($id, $withcode = '', $dbtouse = 0, $withregion = 0, $outputlan
 
 	$sql = "SELECT d.rowid as id, d.code_departement as code, d.nom as name, d.active, c.label as country, c.code as country_code, r.code_region as region_code, r.nom as region_name FROM";
 	$sql .= " ".MAIN_DB_PREFIX."c_departements as d, ".MAIN_DB_PREFIX."c_regions as r,".MAIN_DB_PREFIX."c_country as c";
-	$sql .= " WHERE d.fk_region=r.code_region and r.fk_pays=c.rowid and d.rowid=".$id;
+	$sql .= " WHERE d.fk_region=r.code_region and r.fk_pays=c.rowid and d.rowid=".((int) $id);
 	$sql .= " AND d.active = 1 AND r.active = 1 AND c.active = 1";
 	$sql .= " ORDER BY c.code, d.code_departement";
 
@@ -710,51 +710,35 @@ function getFormeJuridiqueLabel($code)
  */
 function getCountriesInEEC()
 {
-	global $conf;
-
 	// List of all country codes that are in europe for european vat rules
 	// List found on http://ec.europa.eu/taxation_customs/common/faq/faq_1179_en.htm#9
-	$country_code_in_EEC = array(
-		'AT', // Austria
-		'BE', // Belgium
-		'BG', // Bulgaria
-		'CY', // Cyprus
-		'CZ', // Czech republic
-		'DE', // Germany
-		'DK', // Danemark
-		'EE', // Estonia
-		'ES', // Spain
-		'FI', // Finland
-		'FR', // France
-		'GB', // United Kingdom
-		'GR', // Greece
-		'HR', // Croatia
-		'NL', // Holland
-		'HU', // Hungary
-		'IE', // Ireland
-		'IM', // Isle of Man - Included in UK
-		'IT', // Italy
-		'LT', // Lithuania
-		'LU', // Luxembourg
-		'LV', // Latvia
-		'MC', // Monaco - Included in France
-		'MT', // Malta
-		//'NO',	// Norway
-		'PL', // Poland
-		'PT', // Portugal
-		'RO', // Romania
-		'SE', // Sweden
-		'SK', // Slovakia
-		'SI', // Slovenia
-		'UK', // United Kingdom
-		//'CH',	// Switzerland - No. Swizerland in not in EEC
-	);
+	global $conf, $db;
+	$country_code_in_EEC = array();
 
 	if (!empty($conf->global->MAIN_COUNTRIES_IN_EEC)) {
 		// For example MAIN_COUNTRIES_IN_EEC = 'AT,BE,BG,CY,CZ,DE,DK,EE,ES,FI,FR,GB,GR,HR,NL,HU,IE,IM,IT,LT,LU,LV,MC,MT,PL,PT,RO,SE,SK,SI,UK'
 		$country_code_in_EEC = explode(',', $conf->global->MAIN_COUNTRIES_IN_EEC);
-	}
+	} elseif (!empty($conf->cache['country_code_in_EEC'])) {
+		// Use of cache to reduce number of database requests
+		$country_code_in_EEC = $conf->cache['country_code_in_EEC'];
+	} else {
+		$sql = "SELECT cc.code FROM ".MAIN_DB_PREFIX."c_country as cc";
+		$sql .= " WHERE cc.eec = 1";
 
+		$resql = $db->query($sql);
+		if ($resql) {
+			$num = $db->num_rows($resql);
+			$i = 0;
+			while ($i < $num) {
+				$objp = $db->fetch_object($resql);
+				$country_code_in_EEC[] = $objp->code;
+				$i++;
+			}
+		} else {
+			dol_print_error($db);
+		}
+		$conf->cache['country_code_in_EEC'] = $country_code_in_EEC;
+	}
 	return $country_code_in_EEC;
 }
 
@@ -770,9 +754,9 @@ function isInEEC($object)
 		return false;
 	}
 
-	$country_code_in_EEC = getCountriesInEEC();
+	$country_code_in_EEC = getCountriesInEEC();		// This make a database call but there is a cache done into $conf->cache['country_code_in_EEC']
 
-	//print "dd".$this->country_code;
+	//print "dd".$object->country_code;
 	return in_array($object->country_code, $country_code_in_EEC);
 }
 
@@ -955,11 +939,11 @@ function show_contacts($conf, $langs, $db, $object, $backtopage = '')
 		't.email',
 	);
 	//Social media
-	foreach ($socialnetworks as $key => $value) {
-		if ($value['active']) {
-			$searchAddressPhoneDBFields['t.'.$key] = "t.socialnetworks->'$.".$key."'";
-		}
-	}
+	//    foreach ($socialnetworks as $key => $value) {
+	//        if ($value['active']) {
+	//            $searchAddressPhoneDBFields['t.'.$key] = "t.socialnetworks->'$.".$key."'";
+	//        }
+	//    }
 
 	if (!$sortorder) {
 		$sortorder = "ASC";
@@ -1103,7 +1087,7 @@ function show_contacts($conf, $langs, $db, $object, $backtopage = '')
 		$sql .= natural_search($searchAddressPhoneDBFields, $search_address);
 	}
 	if (count($search_roles) > 0) {
-		$sql .= " AND t.rowid IN (SELECT sc.fk_socpeople FROM ".MAIN_DB_PREFIX."societe_contacts as sc WHERE sc.fk_c_type_contact IN (".implode(',', $search_roles)."))";
+		$sql .= " AND t.rowid IN (SELECT sc.fk_socpeople FROM ".MAIN_DB_PREFIX."societe_contacts as sc WHERE sc.fk_c_type_contact IN (".$db->sanitize(implode(',', $search_roles))."))";
 	}
 	// Add where from extra fields
 	$extrafieldsobjectkey = $contactstatic->table_element;
@@ -1206,7 +1190,7 @@ function show_contacts($conf, $langs, $db, $object, $backtopage = '')
 			$obj = $db->fetch_object($result);
 
 			$contactstatic->id = $obj->rowid;
-			$contactstatic->ref = $obj->ref;
+			$contactstatic->ref = $obj->rowid;
 			$contactstatic->statut = $obj->statut;
 			$contactstatic->lastname = $obj->lastname;
 			$contactstatic->firstname = $obj->firstname;
@@ -1220,7 +1204,6 @@ function show_contacts($conf, $langs, $db, $object, $backtopage = '')
 			$contactstatic->phone_mobile = $obj->phone_mobile;
 			$contactstatic->phone_perso = $obj->phone_perso;
 			$contactstatic->email = $obj->email;
-			$contactstatic->web = $obj->web;
 			$contactstatic->socialnetworks = $obj->socialnetworks;
 			$contactstatic->photo = $obj->photo;
 
@@ -1799,31 +1782,6 @@ function show_actions_done($conf, $langs, $db, $filterobj, $objcon = '', $noprin
 			$out .= '</td>';
 
 			// Type
-			$out .= '<td>';
-			// TODO Code common with code into showactions
-			$imgpicto = '';
-			if (!empty($conf->global->AGENDA_USE_EVENT_TYPE)) {
-				if ($actionstatic->type_picto) {
-					$imgpicto .= img_picto('', $actionstatic->type_picto);
-				} else {
-					if ($actionstatic->type_code == 'AC_RDV') {
-						$imgpicto .= img_picto('', 'object_group', '', false, 0, 0, '', 'paddingright').' ';
-					} elseif ($actionstatic->type_code == 'AC_TEL') {
-						$imgpicto .= img_picto('', 'object_phoning', '', false, 0, 0, '', 'paddingright').' ';
-					} elseif ($actionstatic->type_code == 'AC_FAX') {
-						$imgpicto .= img_picto('', 'object_phoning_fax', '', false, 0, 0, '', 'paddingright').' ';
-					} elseif ($actionstatic->type_code == 'AC_EMAIL' || $actionstatic->type_code == 'AC_EMAIL_IN') {
-						$imgpicto .= img_picto('', 'object_email', '', false, 0, 0, '', 'paddingright').' ';
-					} elseif ($actionstatic->type_code == 'AC_INT') {
-						$imgpicto .= img_picto('', 'object_intervention', '', false, 0, 0, '', 'paddingright').' ';
-					} elseif ($actionstatic->type_code == 'AC_OTH' && $actionstatic->code == 'TICKET_MSG') {
-						$imgpicto = img_picto('', 'object_conversation', '', false, 0, 0, '', 'paddingright').' ';
-					} elseif (!preg_match('/_AUTO/', $actionstatic->type_code)) {
-						$imgpicto .= img_picto('', 'object_action', '', false, 0, 0, '', 'paddingright').' ';
-					}
-				}
-			}
-			$out .= $imgpicto;
 			$labeltype = $actionstatic->type_code;
 			if (empty($conf->global->AGENDA_USE_EVENT_TYPE) && empty($arraylist[$labeltype])) {
 				$labeltype = 'AC_OTH';
@@ -1838,7 +1796,9 @@ function show_actions_done($conf, $langs, $db, $filterobj, $objcon = '', $noprin
 					$labeltype .= ' - '.$arraylist[$actionstatic->code]; // Use code in priority on type_code
 				}
 			}
-			$out .= dol_trunc($labeltype, 28);
+			$out .= '<td class="tdoverflowmax200" title="'.$labeltype.'">';
+			$out .= $actionstatic->getTypePicto();
+			$out .= $labeltype;
 			$out .= '</td>';
 
 			// Title

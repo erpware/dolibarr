@@ -26,7 +26,7 @@
  *	\brief      Module pour gerer la tenue de propositions commerciales
  *	\file       htdocs/core/modules/modPropale.class.php
  *	\ingroup    propale
- *	\brief      Fichier de description et activation du module Propale
+ *	\brief      Description and activation file for the module customer proposal
  */
 include_once DOL_DOCUMENT_ROOT.'/core/modules/DolibarrModules.class.php';
 
@@ -138,7 +138,7 @@ class modPropale extends DolibarrModules
 
 		$r++;
 		$this->rights[$r][0] = 24; // id de la permission
-		$this->rights[$r][1] = 'Validate commercial proposals'; // libelle de la permission
+		$this->rights[$r][1] = 'Validate commercial proposals'; // Validate proposal
 		$this->rights[$r][2] = 'd'; // type de la permission (deprecie a ce jour)
 		$this->rights[$r][3] = 0; // La permission est-elle une permission par defaut
 		$this->rights[$r][4] = 'propal_advance';
@@ -154,10 +154,11 @@ class modPropale extends DolibarrModules
 
 		$r++;
 		$this->rights[$r][0] = 26; // id de la permission
-		$this->rights[$r][1] = 'Close commercial proposals'; // libelle de la permission
+		$this->rights[$r][1] = 'Close commercial proposals'; // Set proposal to signed or refused
 		$this->rights[$r][2] = 'd'; // type de la permission (deprecie a ce jour)
 		$this->rights[$r][3] = 0; // La permission est-elle une permission par defaut
-		$this->rights[$r][4] = 'cloturer';
+		$this->rights[$r][4] = 'propal_advance';
+		$this->rights[$r][5] = 'close';
 
 		$r++;
 		$this->rights[$r][0] = 27; // id de la permission
@@ -227,13 +228,21 @@ class modPropale extends DolibarrModules
 			'cd.total_ht'=>"propal_line", 'cd.total_tva'=>"propal_line", 'cd.total_ttc'=>"propal_line", 'p.rowid'=>'product', 'p.ref'=>'product', 'p.label'=>'product'
 		);
 		$this->export_dependencies_array[$r] = array('propal_line'=>'cd.rowid', 'product'=>'cd.rowid'); // To add unique key if we ask a field of a child to avoid the DISTINCT to discard them
-		$keyforselect = 'propal'; $keyforelement = 'propal'; $keyforaliasextra = 'extra';
+		$keyforselect = 'propal';
+		$keyforelement = 'propal';
+		$keyforaliasextra = 'extra';
 		include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
-		$keyforselect = 'propaldet'; $keyforelement = 'propal_line'; $keyforaliasextra = 'extra2';
+		$keyforselect = 'propaldet';
+		$keyforelement = 'propal_line';
+		$keyforaliasextra = 'extra2';
 		include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
-		$keyforselect = 'product'; $keyforelement = 'product'; $keyforaliasextra = 'extra3';
+		$keyforselect = 'product';
+		$keyforelement = 'product';
+		$keyforaliasextra = 'extra3';
 		include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
-		$keyforselect = 'societe'; $keyforelement = 'societe'; $keyforaliasextra = 'extra4';
+		$keyforselect = 'societe';
+		$keyforelement = 'societe';
+		$keyforaliasextra = 'extra4';
 		include DOL_DOCUMENT_ROOT.'/core/extrafieldsinexport.inc.php';
 
 		$this->export_sql_start[$r] = 'SELECT DISTINCT ';
@@ -342,7 +351,7 @@ class modPropale extends DolibarrModules
 		//Import Proposal Lines
 		$r++;
 		$this->import_code[$r] = $this->rights_class.'line_'.$r;
-		$this->import_label[$r] = "ProposalLine"; // Translation key
+		$this->import_label[$r] = "ProposalLines"; // Translation key
 		$this->import_icon[$r] = $this->picto;
 		$this->import_entities_array[$r] = []; // We define here only fields that use another icon that the one defined into import_icon
 		$this->import_tables_array[$r] = [

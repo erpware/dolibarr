@@ -25,7 +25,7 @@
 
 
 /**
- * Generic function that return javascript to add to a page to transform a common input field into an autocomplete field by calling an Ajax page (ex: /societe/ajaxcompanies.php).
+ * Generic function that return javascript to add to a page to transform a common input field into an autocomplete field by calling an Ajax page (ex: /societe/ajax/ajaxcompanies.php).
  * The HTML field must be an input text with id=search_$htmlname.
  * This use the jQuery "autocomplete" function. If we want to use the select2, we must also convert the input into select on funcntions that call this method.
  *
@@ -411,10 +411,11 @@ function ajax_dialog($title, $message, $w = 350, $h = 150)
  * @param  	int		$minLengthToAutocomplete	Minimum length of input string to start autocomplete
  * @param	int		$forcefocus					Force focus on field
  * @param	string	$widthTypeOfAutocomplete	'resolve' or 'off'
+ * @param	string	$idforemptyvalue			'-1'
  * @return	string								Return html string to convert a select field into a combo, or '' if feature has been disabled for some reason.
  * @see selectArrayAjax() of html.form.class
  */
-function ajax_combobox($htmlname, $events = array(), $minLengthToAutocomplete = 0, $forcefocus = 0, $widthTypeOfAutocomplete = 'resolve')
+function ajax_combobox($htmlname, $events = array(), $minLengthToAutocomplete = 0, $forcefocus = 0, $widthTypeOfAutocomplete = 'resolve', $idforemptyvalue = '-1')
 {
 	global $conf;
 
@@ -454,13 +455,15 @@ function ajax_combobox($htmlname, $events = array(), $minLengthToAutocomplete = 
 					templateResult: function (data, container) {	/* Format visible output into combo list */
 	 					/* Code to add class of origin OPTION propagated to the new select2 <li> tag */
 						if (data.element) { $(container).addClass($(data.element).attr("class")); }
-					    //console.log(data.html);
-					    if (data.id == -1) return \'&nbsp;\';
+					    //console.log($(data.element).attr("data-html"));
+					    if (data.id == '.((int) $idforemptyvalue).' && $(data.element).attr("data-html") == undefined) {
+							return \'&nbsp;\';
+						}
 						if ($(data.element).attr("data-html") != undefined) return htmlEntityDecodeJs($(data.element).attr("data-html"));		// If property html set, we decode html entities and use this
 						return data.text;
 					},
 					templateSelection: function (selection) {		/* Format visible output of selected value */
-						if (selection.id == -1) return \'<span class="placeholder">\'+selection.text+\'</span>\';
+						if (selection.id == '.((int) $idforemptyvalue).') return \'<span class="placeholder">\'+selection.text+\'</span>\';
 						return selection.text;
 					},
 					escapeMarkup: function(markup) {

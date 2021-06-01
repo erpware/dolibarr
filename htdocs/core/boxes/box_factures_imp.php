@@ -94,10 +94,10 @@ class box_factures_imp extends ModeleBoxes
 			$sql .= ", f.ref, f.date_lim_reglement as datelimite";
 			$sql .= ", f.type";
 			$sql .= ", f.datef as df";
-			$sql .= ", f.total as total_ht";
-			$sql .= ", f.tva as total_tva";
+			$sql .= ", f.total_ht";
+			$sql .= ", f.total_tva";
 			$sql .= ", f.total_ttc";
-			$sql .= ", f.paye, f.fk_statut, f.rowid as facid";
+			$sql .= ", f.paye, f.fk_statut as status, f.rowid as facid";
 			$sql .= ", sum(pf.amount) as am";
 			$sql .= " FROM ".MAIN_DB_PREFIX."societe as s";
 			if (!$user->rights->societe->client->voir && !$user->socid) {
@@ -117,7 +117,7 @@ class box_factures_imp extends ModeleBoxes
 			}
 			$sql .= " GROUP BY s.rowid, s.nom, s.name_alias, s.code_client, s.code_compta, s.client, s.logo, s.email, s.entity, s.tva_intra, s.siren, s.siret, s.ape, s.idprof4, s.idprof5, s.idprof6,";
 			$sql .= " f.ref, f.date_lim_reglement,";
-			$sql .= " f.type, f.datef, f.total, f.tva, f.total_ttc, f.paye, f.fk_statut, f.rowid";
+			$sql .= " f.type, f.datef, f.total_ht, f.total_tva, f.total_ttc, f.paye, f.fk_statut, f.rowid";
 			//$sql.= " ORDER BY f.datef DESC, f.ref DESC ";
 			$sql .= " ORDER BY datelimite ASC, f.ref ASC ";
 			$sql .= $this->db->plimit($max, 0);
@@ -132,15 +132,19 @@ class box_factures_imp extends ModeleBoxes
 
 				while ($line < $num) {
 					$objp = $this->db->fetch_object($result);
+
 					$datelimite = $this->db->jdate($objp->datelimite);
+
 					$facturestatic->id = $objp->facid;
 					$facturestatic->ref = $objp->ref;
 					$facturestatic->type = $objp->type;
 					$facturestatic->total_ht = $objp->total_ht;
 					$facturestatic->total_tva = $objp->total_tva;
 					$facturestatic->total_ttc = $objp->total_ttc;
-					$facturestatic->statut = $objp->fk_statut;
+					$facturestatic->statut = $objp->status;
+					$facturestatic->status = $objp->status;
 					$facturestatic->date_lim_reglement = $this->db->jdate($objp->datelimite);
+					$facturestatic->alreadypaid = $objp->paye;
 
 					$societestatic->id = $objp->socid;
 					$societestatic->name = $objp->name;
@@ -161,7 +165,7 @@ class box_factures_imp extends ModeleBoxes
 
 					$late = '';
 					if ($facturestatic->hasDelay()) {
-						$late = img_warning(sprintf($l_due_date, dol_print_date($datelimite, 'day')));
+						$late = img_warning(sprintf($l_due_date, dol_print_date($datelimite, 'day', 'tzuserrel')));
 					}
 
 					$this->info_box_contents[$line][] = array(
@@ -184,12 +188,12 @@ class box_factures_imp extends ModeleBoxes
 
 					$this->info_box_contents[$line][] = array(
 						'td' => 'class="right"',
-						'text' => dol_print_date($datelimite, 'day'),
+						'text' => dol_print_date($datelimite, 'day', 'tzuserrel'),
 					);
 
 					$this->info_box_contents[$line][] = array(
 						'td' => 'class="right" width="18"',
-						'text' => $facturestatic->LibStatut($objp->paye, $objp->fk_statut, 3, $objp->am),
+						'text' => $facturestatic->LibStatut($objp->paye, $objp->status, 3, $objp->am),
 					);
 
 					$line++;

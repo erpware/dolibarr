@@ -90,6 +90,9 @@ if (!$error && $massaction == 'confirm_presend') {
 		if ($objecttmp->element == 'expensereport') {
 			$thirdparty = new User($db);
 		}
+		if ($objecttmp->element == 'partnership' && $conf->global->PARTNERSHIP_IS_MANAGED_FOR == 'member') {
+			$thirdparty = new Adherent($db);
+		}
 		if ($objecttmp->element == 'holiday') {
 			$thirdparty = new User($db);
 		}
@@ -106,6 +109,9 @@ if (!$error && $massaction == 'confirm_presend') {
 				}
 				if ($objecttmp->element == 'expensereport') {
 					$thirdpartyid = $objecttmp->fk_user_author;
+				}
+				if ($objecttmp->element == 'partnership' && $conf->global->PARTNERSHIP_IS_MANAGED_FOR == 'member') {
+					$thirdpartyid = $objecttmp->fk_member;
 				}
 				if ($objecttmp->element == 'holiday') {
 					$thirdpartyid = $objecttmp->fk_user;
@@ -250,6 +256,10 @@ if (!$error && $massaction == 'confirm_presend') {
 						$fuser = new User($db);
 						$fuser->fetch($objectobj->fk_user_author);
 						$sendto = $fuser->email;
+					} elseif ($objectobj->element == 'partnership' && $conf->global->PARTNERSHIP_IS_MANAGED_FOR == 'member') {
+						$fadherent = new Adherent($db);
+						$fadherent->fetch($objectobj->fk_member);
+						$sendto = $fadherent->email;
 					} elseif ($objectobj->element == 'holiday') {
 						$fuser = new User($db);
 						$fuser->fetch($objectobj->fk_user);
@@ -409,7 +419,7 @@ if (!$error && $massaction == 'confirm_presend') {
 					$substitutionarray['__ID__']    = ($oneemailperrecipient ? join(', ', array_keys($listofqualifiedobj)) : $objecttmp->id);
 					$substitutionarray['__REF__']   = ($oneemailperrecipient ? join(', ', $listofqualifiedref) : $objecttmp->ref);
 					$substitutionarray['__EMAIL__'] = $thirdparty->email;
-					$substitutionarray['__CHECK_READ__'] = '<img src="'.DOL_MAIN_URL_ROOT.'/public/emailing/mailing-read.php?tag='.$thirdparty->tag.'&securitykey='.urlencode($conf->global->MAILING_EMAIL_UNSUBSCRIBE_KEY).'" width="1" height="1" style="width:1px;height:1px" border="0"/>';
+					$substitutionarray['__CHECK_READ__'] = '<img src="'.DOL_MAIN_URL_ROOT.'/public/emailing/mailing-read.php?tag='.urlencode($thirdparty->tag).'&securitykey='.urlencode($conf->global->MAILING_EMAIL_UNSUBSCRIBE_KEY).'" width="1" height="1" style="width:1px;height:1px" border="0"/>';
 
 					$parameters = array('mode'=>'formemail');
 
@@ -583,8 +593,10 @@ if (!$error && $massaction == 'confirm_presend') {
 							if ($mailfile->error) {
 								$resaction .= $langs->trans('ErrorFailedToSendMail', $from, $sendto);
 								$resaction .= '<br><div class="error">'.$mailfile->error.'</div>';
-							} else {
+							} elseif (!empty($conf->global->MAIN_DISABLE_ALL_MAILS)) {
 								$resaction .= '<div class="warning">No mail sent. Feature is disabled by option MAIN_DISABLE_ALL_MAILS</div>';
+							} else {
+								$resaction .= $langs->trans('ErrorFailedToSendMail', $from, $sendto) . '<br><div class="error">(unhandled error)</div>';
 							}
 						}
 					}
@@ -1265,42 +1277,6 @@ if (!$error && $massaction == 'validate' && $permissiontoadd) {
 	}
 }
 
-// Closed records
-if (!$error && $massaction == 'closed' && $objectclass == "Propal" && $permissiontoclose) {
-	$db->begin();
-
-	$objecttmp = new $objectclass($db);
-	$nbok = 0;
-	foreach ($toselect as $toselectid) {
-		$result = $objecttmp->fetch($toselectid);
-		if ($result > 0) {
-			$result = $objecttmp->cloture($user, 3);
-			if ($result <= 0) {
-				setEventMessages($objecttmp->error, $objecttmp->errors, 'errors');
-				$error++;
-				break;
-			} else {
-				$nbok++;
-			}
-		} else {
-			setEventMessages($objecttmp->error, $objecttmp->errors, 'errors');
-			$error++;
-			break;
-		}
-	}
-
-	if (!$error) {
-		if ($nbok > 1) {
-			setEventMessages($langs->trans("RecordsModified", $nbok), null, 'mesgs');
-		} else {
-			setEventMessages($langs->trans("RecordsModified", $nbok), null, 'mesgs');
-		}
-		$db->commit();
-	} else {
-		$db->rollback();
-	}
-}
-
 //var_dump($_POST);var_dump($massaction);exit;
 
 // Delete record from mass action (massaction = 'delete' for direct delete, action/confirm='delete'/'yes' with a confirmation step before)
@@ -1321,7 +1297,7 @@ if (!$error && ($massaction == 'delete' || ($action == 'delete' && $confirm == '
 			}
 
 			if ($objectclass == "Task" && $objecttmp->hasChildren() > 0) {
-				$sql = "UPDATE ".MAIN_DB_PREFIX."projet_task SET fk_task_parent = 0 WHERE fk_task_parent = ".$objecttmp->id;
+				$sql = "UPDATE ".MAIN_DB_PREFIX."projet_task SET fk_task_parent = 0 WHERE fk_task_parent = ".((int) $objecttmp->id);
 				$res = $db->query($sql);
 
 				if (!$res) {

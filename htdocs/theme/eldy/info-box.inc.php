@@ -9,8 +9,12 @@ if (!defined('ISLOADEDBYSTEELSHEET')) {
  * -------------------
  */
 
-.info-box-module-external span.info-box-icon-version {
+.info-box-module.--external span.info-box-icon-version {
 	background: #bbb;
+}
+
+.info-box-module.--external.--need-update span.info-box-icon-version{
+	background: #bc9525;
 }
 
 .info-box {
@@ -153,7 +157,7 @@ a.info-box-text-a i.fa.fa-exclamation-triangle {
 	-webkit-transition: opacity 0.5s, visibility 0s 0.5s;
 	transition: opacity 0.5s, visibility 0s 0.5s;
 }
-.box-flex-item.info-box-module.info-box-module-disabled {
+.box-flex-item.info-box-module.--disabled {
 	/* opacity: 0.6; */
 }
 
@@ -186,7 +190,7 @@ a.info-box-text-a i.fa.fa-exclamation-triangle {
 }
 .info-box-sm .info-box-module-enabled {
 	/* background: linear-gradient(0.35turn, #fff, #fff, #f6faf8, #e4efe8) */
-	background: linear-gradient(0.4turn, #fff, #fff, #fff, #e4efe8);
+	background: var(--infoboxmoduleenabledbgcolor);
 }
 .info-box-content-warning span.font-status4 {
 	color: #bc9526 !important;
@@ -295,7 +299,7 @@ if (GETPOSTISSET('THEME_SATURATE_RATIO')) {
 	<?php echo $prefix; ?>color: #b06080 !important;
 }
 .bg-infobox-propal, .bg-infobox-facture, .bg-infobox-commande {
-	<?php echo $prefix; ?>color: #55955d !important;
+	<?php echo $prefix; ?>color: #65953d !important;
 }
 .bg-infobox-supplier_proposal, .bg-infobox-invoice_supplier, .bg-infobox-order_supplier {
 	<?php echo $prefix; ?>color: #599caf !important;
@@ -325,11 +329,13 @@ if (GETPOSTISSET('THEME_SATURATE_RATIO')) {
 .infobox-action{
 	color: #b06080 !important;
 }
+/* Color for customer object */
 .infobox-propal:not(.pictotitle),
 .infobox-facture:not(.pictotitle),
 .infobox-commande:not(.pictotitle) {
-	color: #65955d !important;
+	color: #65953d !important;
 }
+/* Color for vendor object */
 .infobox-supplier_proposal:not(.pictotitle),
 .infobox-invoice_supplier:not(.pictotitle),
 .infobox-order_supplier:not(.pictotitle){
@@ -364,14 +370,14 @@ if (GETPOSTISSET('THEME_SATURATE_RATIO')) {
 	content: "\f571";
 }
 .fa-dol-project:before {
-	content: "\f0e8";
+	content: "\f542";
 }
 .fa-dol-commande:before,
 .fa-dol-order_supplier:before {
 	content: "\f570";
 }
 .fa-dol-contrat:before {
-	content: "\f1e6";
+	content: "\f0f2";
 }
 .fa-dol-ticket:before {
 	content: "\f3ff";
@@ -380,7 +386,7 @@ if (GETPOSTISSET('THEME_SATURATE_RATIO')) {
 	content: "\f19c";
 }
 .fa-dol-member:before {
-	content: "\f0c0";
+	content: "\f007";
 }
 .fa-dol-expensereport:before {
 	content: "\f555";

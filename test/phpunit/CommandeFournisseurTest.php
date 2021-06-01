@@ -145,9 +145,9 @@ class CommandeFournisseurTest extends PHPUnit\Framework\TestCase
 		$societe=new Societe($db);
 		$societe->fetch($socid);
 		$product=new ProductFournisseur($db);
-		$product->fetch(0, 'PIDRESS');
+		$product->fetch(0, 'PINKDRESS');
 		if ($product->id <= 0) {
-			print "\n".__METHOD__." A product with ref PIDRESS must exists into database"; die();
+			print "\n".__METHOD__." A product with ref PINKDRESS must exists into database"; die(1);
 		}
 
 		$quantity=10;
@@ -183,7 +183,7 @@ class CommandeFournisseurTest extends PHPUnit\Framework\TestCase
 		print __METHOD__." result=".$result."\n";
 		$this->assertEquals(-1, $result, 'Creation of too low quantity');   // must be -1 because quantity is lower than minimum of supplier price
 
-		$sql="DELETE FROM ".MAIN_DB_PREFIX."commande_fournisseur where ref=''";
+		$sql="DELETE FROM ".MAIN_DB_PREFIX."commande_fournisseur where ref IN ('', '(PROV)')";
 		$db->query($sql);
 
 		// Create purchase order

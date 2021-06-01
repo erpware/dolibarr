@@ -55,6 +55,7 @@ $action = GETPOST('action', 'aZ09');
 $cancel = GETPOST('cancel', 'alpha');
 $confirm = GETPOST('confirm', 'alpha');
 
+$id = GETPOST('id', 'int');
 $date_start = dol_mktime(0, 0, 0, GETPOST('date_debutmonth', 'int'), GETPOST('date_debutday', 'int'), GETPOST('date_debutyear', 'int'));
 $date_end = dol_mktime(0, 0, 0, GETPOST('date_finmonth', 'int'), GETPOST('date_finday', 'int'), GETPOST('date_finyear', 'int'));
 $date = dol_mktime(0, 0, 0, GETPOST('datemonth', 'int'), GETPOST('dateday', 'int'), GETPOST('dateyear', 'int'));
@@ -66,14 +67,6 @@ $fk_c_type_fees = GETPOST('fk_c_type_fees', 'int');
 $socid = GETPOST('socid', 'int') ?GETPOST('socid', 'int') : GETPOST('socid_id', 'int');
 
 $childids = $user->getAllChildIds(1);
-
-// Security check
-$id = GETPOST("id", 'int');
-if ($user->socid) {
-	$socid = $user->socid;
-}
-$result = restrictedArea($user, 'expensereport', $id, 'expensereport');
-
 
 // Hack to use expensereport dir
 $rootfordata = DOL_DATA_ROOT;
@@ -111,9 +104,7 @@ $permissionnote = $user->rights->expensereport->creer; // Used by the include of
 $permissiondellink = $user->rights->expensereport->creer; // Used by the include of actions_dellink.inc.php
 $permissiontoadd = $user->rights->expensereport->creer; // Used by the include of actions_addupdatedelete.inc.php and actions_lineupdown.inc.php
 
-
 $upload_dir = $conf->expensereport->dir_output.'/'.dol_sanitizeFileName($object->ref);
-
 
 if ($object->id > 0) {
 	// Check current user can read this expense report
@@ -128,6 +119,12 @@ if ($object->id > 0) {
 		accessforbidden();
 	}
 }
+
+// Security check
+if ($user->socid) {
+	$socid = $user->socid;
+}
+$result = restrictedArea($user, 'expensereport', $object->id, 'expensereport');
 
 
 /*
@@ -1194,7 +1191,7 @@ if (empty($reshook)) {
 			}
 
 			$object->update_totaux_del($object_ligne->total_ht, $object_ligne->total_tva);
-			header("Location: ".$_SERVER["PHP_SELF"]."?id=".$_GET['id']);
+			header("Location: ".$_SERVER["PHP_SELF"]."?id=".GETPOST('id', 'int'));
 			exit;
 		} else {
 			setEventMessages($object->error, $object->errors, 'errors');
@@ -1311,9 +1308,9 @@ if (empty($reshook)) {
  */
 
 $title = $langs->trans("ExpenseReport")." - ".$langs->trans("Card");
-$helpurl = "EN:Module_Expense_Reports";
+$help_url = "EN:Module_Expense_Reports|FR:Module_Notes_de_frais";
 
-llxHeader("", $title, $helpurl);
+llxHeader("", $title, $help_url);
 
 $form = new Form($db);
 $formfile = new FormFile($db);
@@ -2257,7 +2254,7 @@ if ($action == 'create') {
 
 							// VAT
 							print '<td class="right">';
-							print $form->load_tva('vatrate', (isset($_POST["vatrate"]) ? $_POST["vatrate"] : $line->vatrate), $mysoc, '', 0, 0, '', false, 1);
+							print $form->load_tva('vatrate', (GETPOSTISSET("vatrate") ? GETPOST("vatrate") : $line->vatrate), $mysoc, '', 0, 0, '', false, 1);
 							print '</td>';
 
 							// Unit price
@@ -2485,9 +2482,8 @@ if ($action == 'create') {
 }
 
 /*
- * Barre d'actions
+ * Action bar
  */
-
 print '<div class="tabsAction">';
 
 if ($action != 'create' && $action != 'edit') {

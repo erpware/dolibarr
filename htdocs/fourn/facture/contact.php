@@ -1,8 +1,9 @@
 <?php
-/* Copyright (C) 2005		Patrick Rouillon	<patrick@rouillon.net>
- * Copyright (C) 2005-2015	Laurent Destailleur	<eldy@users.sourceforge.net>
- * Copyright (C) 2005-2012	Regis Houssin		<regis.houssin@inodbox.com>
- * Copyright (C) 2017      Ferran Marcet       	 <fmarcet@2byte.es>
+/* Copyright (C) 2005		Patrick Rouillon		<patrick@rouillon.net>
+ * Copyright (C) 2005-2015	Laurent Destailleur		<eldy@users.sourceforge.net>
+ * Copyright (C) 2005-2012	Regis Houssin			<regis.houssin@inodbox.com>
+ * Copyright (C) 2017		Ferran Marcet       	<fmarcet@2byte.es>
+ * Copyright (C) 2021		Frédéric France			<frederic.france@netlogic.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,7 +54,7 @@ $object = new FactureFournisseur($db);
  * Ajout d'un nouveau contact
  */
 
-if ($action == 'addcontact' && $user->rights->fournisseur->facture->creer) {
+if ($action == 'addcontact' && ($user->rights->fournisseur->facture->creer || $user->rights->supplier_invoice->creer)) {
 	$result = $object->fetch($id, $ref);
 
 	if ($result > 0 && $id > 0) {
@@ -73,17 +74,17 @@ if ($action == 'addcontact' && $user->rights->fournisseur->facture->creer) {
 			setEventMessages($object->error, $object->errors, 'errors');
 		}
 	}
-} elseif ($action == 'swapstatut' && $user->rights->fournisseur->facture->creer) {
+} elseif ($action == 'swapstatut' && ($user->rights->fournisseur->facture->creer || $user->rights->supplier_invoice->creer)) {
 	// bascule du statut d'un contact
 	if ($object->fetch($id)) {
-		$result = $object->swapContactStatus(GETPOST('ligne'));
+		$result = $object->swapContactStatus(GETPOST('ligne', 'int'));
 	} else {
 		dol_print_error($db);
 	}
-} elseif ($action == 'deletecontact' && $user->rights->fournisseur->facture->creer) {
+} elseif ($action == 'deletecontact' && ($user->rights->fournisseur->facture->creer || $user->rights->supplier_invoice->creer)) {
 	// Efface un contact
 	$object->fetch($id);
-	$result = $object->delete_contact($_GET["lineid"]);
+	$result = $object->delete_contact(GETPOST("lineid", 'int'));
 
 	if ($result >= 0) {
 		header("Location: ".$_SERVER['PHP_SELF']."?id=".$object->id);
@@ -180,7 +181,9 @@ if ($id > 0 || !empty($ref)) {
 
 		// Type
 		print '<tr><td class="titlefield">'.$langs->trans('Type').'</td><td colspan="4">';
+		print '<span class="badgeneutral">';
 		print $object->getLibType();
+		print '</span>';
 		if ($object->type == FactureFournisseur::TYPE_REPLACEMENT) {
 			$facreplaced = new FactureFournisseur($db);
 			$facreplaced->fetch($object->fk_facture_source);
@@ -194,19 +197,13 @@ if ($id > 0 || !empty($ref)) {
 
 		$facidavoir = $object->getListIdAvoirFromInvoice();
 		if (count($facidavoir) > 0) {
-			print ' ('.$langs->transnoentities("InvoiceHasAvoir");
-			$i = 0;
-			foreach ($facidavoir as $fid) {
-				if ($i == 0) {
-					print ' ';
-				} else {
-					print ',';
-				}
+			$invoicecredits = array();
+			foreach ($facidavoir as $facid) {
 				$facavoir = new FactureFournisseur($db);
-				$facavoir->fetch($fid);
-				print $facavoir->getNomUrl(1);
+				$facavoir->fetch($facid);
+				$invoicecredits[] = $facavoir->getNomUrl(1);
 			}
-			print ')';
+			print ' ('.$langs->transnoentities("InvoiceHasAvoir") . (count($invoicecredits) ? ' ' : '') . implode(',', $invoicecredits) . ')';
 		}
 		if ($facidnext > 0) {
 			$facthatreplace = new FactureFournisseur($db);

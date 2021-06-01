@@ -39,18 +39,18 @@ $id = GETPOST('id', 'int');
 $ref = GETPOST('ref', 'alpha');
 $socid = GETPOST('socid', 'int');
 
-// Security check
-if (!empty($user->socid)) {
-	$socid = $user->socid;
-}
-$result = restrictedArea($user, 'propal', $id);
-
 $object = new Propal($db);
 if (!$object->fetch($id, $ref) > 0) {
 	dol_print_error($db);
 	exit;
 }
 
+// Security check
+if (!empty($user->socid)) {
+	$socid = $user->socid;
+	$object->id = $user->socid;
+}
+restrictedArea($user, 'propal', $object->id);
 
 
 /*
@@ -59,7 +59,9 @@ if (!$object->fetch($id, $ref) > 0) {
 
 $form = new Form($db);
 
-llxHeader('', $langs->trans('Proposal'), 'EN:Commercial_Proposals|FR:Proposition_commerciale|ES:Presupuestos');
+$title = $langs->trans('Proposal')." - ".$langs->trans('Info');
+$help_url = 'EN:Commercial_Proposals|FR:Proposition_commerciale|ES:Presupuestos';
+llxHeader('', $title, $help_url);
 
 $object->fetch_thirdparty();
 

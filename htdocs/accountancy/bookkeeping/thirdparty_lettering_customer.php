@@ -94,6 +94,16 @@ if ($result < 0) {
 	setEventMessages($object->error, $object->errors, 'errors');
 }
 
+if (empty($conf->accounting->enabled)) {
+	accessforbidden();
+}
+if ($user->socid > 0) {
+	accessforbidden();
+}
+if (empty($user->rights->accounting->mouvements->lire)) {
+	accessforbidden();
+}
+
 
 /*
  * Action
@@ -128,7 +138,7 @@ $form = new Form($db);
 $formaccounting = new FormAccounting($db);
 
 $title = $object->name." - ".$langs->trans('TabLetteringCustomer');
-$help_url = 'EN:Module_Third_Parties|FR:Module_Tiers|ES:Empresas';
+$help_url = 'EN:Module_Third_Parties|FR:Module_Tiers|ES:Empresas|DE:Modul_Geschäftspartner';
 llxHeader('', $title, $help_url);
 
 $head = societe_prepare_head($object);
@@ -271,7 +281,7 @@ if ($resql) {
 		$journaltoshow = (($result > 0) ? $accountingjournal->getNomUrl(0, 0, 0, '', 0) : $obj->code_journal);
 		print '<td class="center">'.$journaltoshow.'</td>';
 
-		if (empty($obj->lettering_code)) {
+		if (empty($obj->lettering_code) && empty($obj->date_validated)) {
 			print '<td class="nowrap center"><input type="checkbox" class="flat checkforselect" name="toselect[]" id="toselect[]" value="'.$obj->rowid.'" /></td>';
 			print '<td><a href="'.DOL_URL_ROOT.'/accountancy/bookkeeping/card.php?piece_num='.$obj->piece_num.'">';
 			print img_edit();

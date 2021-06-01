@@ -4,11 +4,11 @@
  * Copyright (C) 2011       Juanjo Menent           <jmenent@2byte.es>
  * Copyright (C) 2012       Regis Houssin           <regis.houssin@inodbox.com>
  * Copyright (C) 2013       Christophe Battarel     <christophe.battarel@altairis.fr>
- * Copyright (C) 2013-2018  Alexandre Spangaro      <aspangaro@open-dsi.fr>
+ * Copyright (C) 2013-2021  Alexandre Spangaro      <aspangaro@open-dsi.fr>
  * Copyright (C) 2013-2016  Florian Henry           <florian.henry@open-concept.pro>
  * Copyright (C) 2013-2016  Olivier Geffroy         <jeff@jeffinfo.com>
  * Copyright (C) 2014       Raphaël Doursenaud      <rdoursenaud@gpcsolutions.fr>
- * Copyright (C) 2018       Frédéric France         <frederic.france@netlogic.fr>
+ * Copyright (C) 2018-2021  Frédéric France         <frederic.france@netlogic.fr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,13 +59,20 @@ if ($in_bookkeeping == '') {
 
 $now = dol_now();
 
+$hookmanager->initHooks(array('sellsjournal'));
+$parameters = array();
+
 // Security check
+if (empty($conf->accounting->enabled)) {
+	accessforbidden();
+}
 if ($user->socid > 0) {
 	accessforbidden();
 }
+if (empty($user->rights->accounting->mouvements->lire)) {
+	accessforbidden();
+}
 
-$hookmanager->initHooks(array('sellsjournal'));
-$parameters = array();
 
 /*
  * Actions
@@ -101,9 +108,17 @@ if (!GETPOSTISSET('date_startmonth') && (empty($date_start) || empty($date_end))
 $sql = "SELECT f.rowid, f.ref, f.type, f.datef as df, f.ref_client, f.date_lim_reglement as dlr, f.close_code,";
 $sql .= " fd.rowid as fdid, fd.description, fd.product_type, fd.total_ht, fd.total_tva, fd.total_localtax1, fd.total_localtax2, fd.tva_tx, fd.total_ttc, fd.situation_percent, fd.vat_src_code,";
 $sql .= " s.rowid as socid, s.nom as name, s.code_client, s.code_fournisseur, s.code_compta, s.code_compta_fournisseur,";
-$sql .= " p.rowid as pid, p.ref as pref, p.accountancy_code_sell, aa.rowid as fk_compte, aa.account_number as compte, aa.label as label_compte";
+$sql .= " p.rowid as pid, p.ref as pref, aa.rowid as fk_compte, aa.account_number as compte, aa.label as label_compte,";
+if (!empty($conf->global->MAIN_PRODUCT_PERENTITY_SHARED)) {
+	$sql .= " ppe.accountancy_code_sell";
+} else {
+	$sql .= " p.accountancy_code_sell";
+}
 $sql .= " FROM ".MAIN_DB_PREFIX."facturedet as fd";
 $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."product as p ON p.rowid = fd.fk_product";
+if (!empty($conf->global->MAIN_PRODUCT_PERENTITY_SHARED)) {
+	$sql .= " LEFT JOIN " . MAIN_DB_PREFIX . "product_perentity as ppe ON ppe.fk_product = p.rowid AND ppe.entity = " . ((int) $conf->entity);
+}
 $sql .= " LEFT JOIN ".MAIN_DB_PREFIX."accounting_account as aa ON aa.rowid = fd.fk_code_ventilation";
 $sql .= " JOIN ".MAIN_DB_PREFIX."facture as f ON f.rowid = fd.fk_facture";
 $sql .= " JOIN ".MAIN_DB_PREFIX."societe as s ON s.rowid = f.fk_soc";
@@ -133,7 +148,7 @@ if ($in_bookkeeping == 'notyet') {
 	// $sql .= " AND fd.rowid NOT IN (SELECT fk_docdet FROM " . MAIN_DB_PREFIX . "accounting_bookkeeping as ab WHERE ab.doc_type='customer_invoice')";		// Useless, we save one line for all products with same account
 }
 $sql .= " ORDER BY f.datef";
-//print $sql;
+//print $sql; exit;
 
 dol_syslog('accountancy/journal/sellsjournal.php', LOG_DEBUG);
 $result = $db->query($sql);
@@ -249,7 +264,7 @@ foreach ($tabfac as $key => $val) {		// Loop on each invoice
 	$sql = "SELECT COUNT(fd.rowid) as nb";
 	$sql .= " FROM ".MAIN_DB_PREFIX."facturedet as fd";
 	$sql .= " WHERE fd.product_type <= 2 AND fd.fk_code_ventilation <= 0";
-	$sql .= " AND fd.total_ttc <> 0 AND fk_facture = ".$key;
+	$sql .= " AND fd.total_ttc <> 0 AND fk_facture = ".((int) $key);
 	$resql = $db->query($sql);
 	if ($resql) {
 		$obj = $db->fetch_object($resql);
@@ -270,6 +285,9 @@ if ($action == 'writebookkeeping') {
 
 	$companystatic = new Societe($db);
 	$invoicestatic = new Facture($db);
+	$accountingaccountcustomer = new AccountingAccount($db);
+
+	$accountingaccountcustomer->fetch(null, $conf->global->ACCOUNTING_ACCOUNT_CUSTOMER, true);
 
 	foreach ($tabfac as $key => $val) {		// Loop on each invoice
 		$errorforline = 0;
@@ -329,12 +347,12 @@ if ($action == 'writebookkeeping') {
 				$bookkeeping->fk_doc = $key;
 				$bookkeeping->fk_docdet = 0; // Useless, can be several lines that are source of this record to add
 				$bookkeeping->thirdparty_code = $companystatic->code_client;
+
 				$bookkeeping->subledger_account = $tabcompany[$key]['code_compta'];
 				$bookkeeping->subledger_label = $tabcompany[$key]['name'];
-				$bookkeeping->numero_compte = $conf->global->ACCOUNTING_ACCOUNT_CUSTOMER;
 
-				$accountingaccount->fetch(null, $conf->global->ACCOUNTING_ACCOUNT_CUSTOMER, true);
-				$bookkeeping->label_compte = $accountingaccount->label;
+				$bookkeeping->numero_compte = $conf->global->ACCOUNTING_ACCOUNT_CUSTOMER;
+				$bookkeeping->label_compte = $accountingaccountcustomer->label;
 
 				$bookkeeping->label_operation = dol_trunc($companystatic->name, 16).' - '.$invoicestatic->ref.' - '.$langs->trans("SubledgerAccount");
 				$bookkeeping->montant = $mt;
@@ -369,8 +387,11 @@ if ($action == 'writebookkeeping') {
 		// Product / Service
 		if (!$errorforline) {
 			foreach ($tabht[$key] as $k => $mt) {
+				$resultfetch = $accountingaccount->fetch(null, $k, true);	// TODO Use a cache
+				$label_account = $accountingaccount->label;
+
 				// get compte id and label
-				if ($accountingaccount->fetch(null, $k, true)) {
+				if ($resultfetch > 0) {
 					$bookkeeping = new BookKeeping($db);
 					$bookkeeping->doc_date = $val["date"];
 					$bookkeeping->date_lim_reglement = $val["datereg"];
@@ -380,11 +401,14 @@ if ($action == 'writebookkeeping') {
 					$bookkeeping->fk_doc = $key;
 					$bookkeeping->fk_docdet = 0; // Useless, can be several lines that are source of this record to add
 					$bookkeeping->thirdparty_code = $companystatic->code_client;
+
 					$bookkeeping->subledger_account = '';
 					$bookkeeping->subledger_label = '';
+
 					$bookkeeping->numero_compte = $k;
-					$bookkeeping->label_compte = $accountingaccount->label;
-					$bookkeeping->label_operation = dol_trunc($companystatic->name, 16).' - '.$invoicestatic->ref.' - '.$accountingaccount->label;
+					$bookkeeping->label_compte = $label_account;
+
+					$bookkeeping->label_operation = dol_trunc($companystatic->name, 16).' - '.$invoicestatic->ref.' - '.$label_account;
 					$bookkeeping->montant = $mt;
 					$bookkeeping->sens = ($mt < 0) ? 'D' : 'C';
 					$bookkeeping->debit = ($mt < 0) ? -$mt : 0;
@@ -429,6 +453,9 @@ if ($action == 'writebookkeeping') {
 
 				foreach ($arrayofvat[$key] as $k => $mt) {
 					if ($mt) {
+						$accountingaccount->fetch($k, null, true);	// TODO Use a cache for label
+						$label_account = $accountingaccount->label;
+
 						$bookkeeping = new BookKeeping($db);
 						$bookkeeping->doc_date = $val["date"];
 						$bookkeeping->date_lim_reglement = $val["datereg"];
@@ -438,12 +465,12 @@ if ($action == 'writebookkeeping') {
 						$bookkeeping->fk_doc = $key;
 						$bookkeeping->fk_docdet = 0; // Useless, can be several lines that are source of this record to add
 						$bookkeeping->thirdparty_code = $companystatic->code_client;
+
 						$bookkeeping->subledger_account = '';
 						$bookkeeping->subledger_label = '';
-						$bookkeeping->numero_compte = $k;
 
-						$accountingaccount->fetch($k, null, true);
-						$bookkeeping->label_compte = $accountingaccount->label;
+						$bookkeeping->numero_compte = $k;
+						$bookkeeping->label_compte = $label_account;
 
 						$bookkeeping->label_operation = dol_trunc($companystatic->name, 16).' - '.$invoicestatic->ref.' - '.$langs->trans("VAT").' '.join(', ', $def_tva[$key][$k]).' %'.($numtax ? ' - Localtax '.$numtax : '');
 						$bookkeeping->montant = $mt;
@@ -656,7 +683,7 @@ if (empty($action) || $action == 'view') {
 	$periodlink = '';
 	$exportlink = '';
 	$builddate = dol_now();
-	$description .= $langs->trans("DescJournalOnlyBindedVisible").'<br>';
+	$description = $langs->trans("DescJournalOnlyBindedVisible").'<br>';
 	if (!empty($conf->global->FACTURE_DEPOSITS_ARE_JUST_PAYMENTS)) {
 		$description .= $langs->trans("DepositsAreNotIncluded");
 	} else {
@@ -673,9 +700,11 @@ if (empty($action) || $action == 'view') {
 
 	// Button to write into Ledger
 	if (($conf->global->ACCOUNTING_ACCOUNT_CUSTOMER == "") || $conf->global->ACCOUNTING_ACCOUNT_CUSTOMER == '-1') {
-		print '<br>';
-		print img_warning().' '.$langs->trans("SomeMandatoryStepsOfSetupWereNotDone");
-		print ' : '.$langs->trans("AccountancyAreaDescMisc", 4, '<strong>'.$langs->transnoentitiesnoconv("MenuAccountancy").'-'.$langs->transnoentitiesnoconv("Setup")."-".$langs->transnoentitiesnoconv("MenuDefaultAccounts").'</strong>');
+		print '<br><div class="warning">'.img_warning().' '.$langs->trans("SomeMandatoryStepsOfSetupWereNotDone");
+		$desc = ' : '.$langs->trans("AccountancyAreaDescMisc", 4, '{link}');
+		$desc = str_replace('{link}', '<strong>'.$langs->transnoentitiesnoconv("MenuAccountancy").'-'.$langs->transnoentitiesnoconv("Setup")."-".$langs->transnoentitiesnoconv("MenuDefaultAccounts").'</strong>', $desc);
+		print $desc;
+		print '</div>';
 	}
 	print '<div class="tabsAction tabsActionNoBottom">';
 	if (!empty($conf->global->ACCOUNTING_ENABLE_EXPORT_DRAFT_JOURNAL) && $in_bookkeeping == 'notyet') {

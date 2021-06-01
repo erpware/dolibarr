@@ -369,7 +369,7 @@ select.vmenusearchselectcombo {
 	background-color: unset;
 }
 
-textarea:focus, button:focus {
+textarea:focus {
 	/* v6 box-shadow: 0 0 4px #8091BF; */
 	border: 1px solid #aaa !important;
 }
@@ -555,6 +555,9 @@ td.rightborder {
 	border-right: 1px solid #ccc;
 }
 
+td.amount, span.amount, div.amount {
+	color: #006666;
+}
 td.actionbuttons a {
 	padding-left: 6px;
 }
@@ -585,7 +588,7 @@ input.pageplusone {
 	opacity: 0.6;
 }
 .opacityhigh {
-	opacity: 0.2;
+	opacity: 0.24;
 }
 .opacitytransp {
 	opacity: 0;
@@ -735,6 +738,9 @@ div.floatright
 .largenumber {
 	font-size: 1.4em;
 }
+button:focus {
+	outline: none;
+}
 
 th .button {
 	-webkit-box-shadow: none !important;
@@ -774,6 +780,9 @@ th .button {
 textarea.centpercent {
 	width: 96%;
 }
+.quatrevingtpercentminusx {
+	width: calc(80% - 52px);
+}
 .small, small {
 	font-size: 85%;
 }
@@ -787,9 +796,18 @@ textarea.centpercent {
 	color: #777;
 }
 
+.flip {
+	transform: scaleX(-1) translate(2px, 0);
+}
+.rotate90 {
+	transform: rotate(90deg) translate(0, 2px);
+}
 .center {
 	text-align: center;
 	margin: 0px auto;
+}
+.alignstart {
+	text-align: start;
 }
 .left {
 	text-align: <?php print $left; ?>;
@@ -893,6 +911,41 @@ textarea.centpercent {
 	max-width: 100%;
 	overflow-y: auto;
 }
+div.urllink {
+	padding: 5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	/* border: 1px solid #ccc; */
+	border-radius: 5px;
+	/* width: fit-content; */
+	background-color: #e0e0e8;
+	opacity: 0.8;
+}
+div.urllink, div.urllink a {
+	color: #339 !important;
+}
+
+.fa-info-circle {
+	padding-<?php echo $left; ?>: 3px;
+}
+i.fa-mars::before, i.fa-venus::before, i.fa-genderless::before  {
+	color: #888 !important;
+	opacity: 0.4;
+	padding-<?php echo $left; ?>: 3px;
+}
+.stockmovemententry {
+	color: #080;
+	transform: rotate(0.25turn);
+	font-size: 1.2em;
+}
+.stockmovementexit {
+	color: #968822;
+	transform: rotate(0.3turn);
+	font-size: 1.2em;
+}
+.stockmovement {
+	font-size: 1.4em;
+}
 
 .text-warning{
 	color : <?php print $textWarning; ?>
@@ -952,8 +1005,8 @@ body[class*="colorblind-"] .text-success{
 	height: 28px;
 	vertical-align: middle;
 }
-.divsocialnetwork:not(:first-child) {
-	padding-left: 20px;
+.divsocialnetwork:not(:last-child) {
+	padding-<?php print $right; ?>: 20px;
 }
 div.divsearchfield {
 	float: <?php print $left; ?>;
@@ -1016,6 +1069,33 @@ if ($conf->browser->layout == 'phone') {
 	background: var(--colorbacktitle1);
 	padding: 8px;
 	opacity: 0.6;
+}
+
+
+div.div-for-modal {
+	/* display: none; */
+	position:absolute;
+	top:calc(50% - 200px);
+	left:calc(50% - 250px);
+	width:500px;  /* adjust as per your needs */
+	height:400px;   /* adjust as per your needs */
+	background: #fff;
+	border: 1px solid #bbb;
+	box-shadow: 2px 2px 20px #ddd;
+	z-index: 100;
+}
+
+div.div-for-modal-topright {
+	/* display: none; */
+	position: fixed;
+	top: 0;
+	right: 0;
+	width:50%;  /* adjust as per your needs */
+	height:250px;   /* adjust as per your needs */
+	background: #fff;
+	border: 1px solid #bbb;
+	box-shadow: 2px 2px 20px #ddd;
+	z-index: 1100;
 }
 
 
@@ -1133,6 +1213,18 @@ select.flat.selectlimit {
 }
 .tdoverflowmax300 {			/* For tdoverflow, the max-midth become a minimum ! */
 	max-width: 300px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.tdoverflowmax400 {			/* For tdoverflow, the max-midth become a minimum ! */
+	max-width: 400px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.tdoverflowmax500 {			/* For tdoverflow, the max-midth become a minimum ! */
+	max-width: 500px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -1313,6 +1405,9 @@ table[summary="list_of_modules"] .fa-cog {
 .width125 { width: 125px; }
 .width150 { width: 150px; }
 .width200 { width: 200px; }
+.width300 { width: 300px; }
+.width400 { width: 400px; }
+.width500 { width: 500px; }
 .maxwidth25  { max-width: 25px; }
 .maxwidth50  { max-width: 50px; }
 .maxwidth75  { max-width: 75px; }
@@ -1403,6 +1498,29 @@ table[summary="list_of_modules"] .fa-cog {
 	div.divphotoref {
 		padding-right: 10px !important;
 	}
+	
+	.hideonsmartphone { display: none; }
+	.hideonsmartphoneimp { display: none !important; }
+	
+	select.minwidth100imp, select.minwidth100, select.minwidth200, select.minwidth200imp, select.minwidth300 {
+		width: calc(100% - 40px) !important;
+		display: inline-block;
+	}
+	select.widthcentpercentminusxx, span.widthcentpercentminusxx:not(.select2-selection), input.widthcentpercentminusxx {
+		width: calc(100% - 70px) !important;
+		display: inline-block;
+	}
+	
+	.poweredbyimg {
+		width: 48px;
+	}
+	input.buttonpayment, button.buttonpayment, div.buttonpayment {
+		min-width: 270px;
+	}
+
+	.smallonsmartphone {
+		font-size: 0.8em;
+	}
 }
 
 /* Force values for small screen 570 */
@@ -1477,8 +1595,6 @@ table[summary="list_of_modules"] .fa-cog {
 		line-height: 1.4em;
 	 }
 
-	.hideonsmartphone { display: none; }
-	.hideonsmartphoneimp { display: none !important; }
 	.noenlargeonsmartphone { width : 50px !important; display: inline !important; }
 	.maxwidthonsmartphone, #search_newcompany.ui-autocomplete-input { max-width: 100px; }
 	.maxwidth50onsmartphone { max-width: 40px; }
@@ -1591,13 +1707,14 @@ td.showDragHandle {
 	min-height: 100%;
 	position: relative;
 	width: 213px;
+	padding-top: 20px;
 }
 #id-right {	/* This must stay id-right and not be replaced with echo $right */
 	width: 100%;
 	padding-bottom: 10px;
 <?php if (GETPOST('optioncss', 'aZ09') != 'print') { ?>
 	padding-left: 229px;
-	padding-top: 12px;
+	padding-top: 16px;
 <?php } ?>
 }
 
@@ -1703,6 +1820,7 @@ body.sidebar-collapse .side-nav, body.sidebar-collapse .login_block
 }
 <?php } ?>
 
+
 /* For smartphone (testmenuhider is on) */
 <?php if (in_array($conf->browser->layout, array('phone', 'tablet')) && empty($conf->global->MAIN_OPTIMIZEFORTEXTBROWSER)) { ?>
 #id-container {
@@ -1766,6 +1884,7 @@ div.login_block {
 	z-index: 91;
 	background: rgb(<?php echo $colorbackvmenu1; ?>);
 	border-right: 1px solid rgba(0,0,0,0.3);
+	padding-top: 20px;
 	<?php
 	if (in_array($conf->browser->layout, array('phone', 'tablet')) && empty($conf->global->MAIN_OPTIMIZEFORTEXTBROWSER)) { ?>
 	top: 50px ! important;
@@ -1780,8 +1899,8 @@ div.fiche {
 <?php } ?>
 
 div.fiche {
-	margin-<?php print $left; ?>: <?php print (GETPOST('optioncss', 'aZ09') == 'print' ? 6 : (empty($conf->dol_optimize_smallscreen) ? '24' : '6')); ?>px;
-	margin-<?php print $right; ?>: <?php print (GETPOST('optioncss', 'aZ09') == 'print' ? 6 : (empty($conf->dol_optimize_smallscreen) ? '22' : '6')); ?>px;
+	margin-<?php print $left; ?>: <?php print (GETPOST('optioncss', 'aZ09') == 'print' ? 6 : (empty($conf->dol_optimize_smallscreen) ? '30' : '6')); ?>px;
+	margin-<?php print $right; ?>: <?php print (GETPOST('optioncss', 'aZ09') == 'print' ? 6 : (empty($conf->dol_optimize_smallscreen) ? '28' : '6')); ?>px;
 	<?php if (!empty($dol_hide_leftmenu) && !empty($dol_hide_topmenu)) {
 		print 'margin-top: 12px;';
 	} ?>
@@ -1846,12 +1965,14 @@ div.fichehalfright {
 		print "margin-top: 10px;\n";
 	} ?>
 }
-div.firstcolumn div.box {
+
+/*div.firstcolumn div.box {
 	padding-right: 10px;
 }
 div.secondcolumn div.box {
 	padding-left: 10px;
-}
+}*/
+
 /* Force values on one colum for small screen */
 @media only screen and (max-width: 900px)
 {
@@ -1915,6 +2036,9 @@ div.nopadding {
 	margin : 0px auto;
 }
 
+td.nobordernopadding.widthpictotitle.col-picto {
+	opacity: 0.9;
+}
 .pictotitle {
 	margin-<?php echo $right; ?>: 8px;
 	margin-bottom: 4px;
@@ -1961,9 +2085,11 @@ div.nopadding {
 img.hideonsmartphone.pictoactionview {
 	vertical-align: bottom;
 }
+
 .pictofixedwidth {
 	text-align: left;
-	width: 16px;
+	width: 20px;
+	padding-right: 0;
 }
 
 .colorthumb {
@@ -1971,7 +2097,7 @@ img.hideonsmartphone.pictoactionview {
 	padding-right: 1px;
 	padding-top: 1px;
 	padding-bottom: 1px;
-	width: 44px;
+	width: 50px;
 	text-align:center;
 }
 div.attacharea {
@@ -2200,8 +2326,8 @@ li.tmenu, li.tmenusel {
 li.tmenu:hover {
 	opacity: .50; /* show only a slight shadow */
 }
-li.tmenusel {
-	text-decoration: underline;
+li.tmenusel a.tmenusel {
+	text-decoration: underline !important;
 }
 .tmenuend .tmenuleft { width: 0px; }
 .tmenuend { display: none; }
@@ -2411,6 +2537,7 @@ div.mainmenu.website {
 	// End of part to add more div class css
 }	// End test if $dol_hide_topmenu ?>
 
+
 .tmenuimage {
 	padding:0 0 0 0 !important;
 	margin:0 0px 0 0 !important;
@@ -2422,6 +2549,9 @@ div.mainmenu.website {
 	<?php if ($disableimages) { ?>
 		display: none;
 	<?php } ?>
+}
+a.tmenuimage:hover {
+	text-decoration: none;
 }
 a.tmenuimage {
 	display: block;
@@ -2559,7 +2689,7 @@ table.login_table_securitycode tr td {
 }
 
 div.login_block {
-	border-right: 1px solid rgba(0,0,0,0.3);
+	/* border-right: 1px solid rgba(0,0,0,0.3); */
 	padding-top: 3px;
 	padding-bottom: 3px;
 	<?php print $left; ?>: 0;
@@ -2574,7 +2704,7 @@ div.login_block {
 	vertical-align: middle;
 	background: rgb(<?php echo $colorbackvmenu1; ?>);
 	width: 228px;
-	height: 45px;
+	height: 70px;
 	<?php if (GETPOST('optioncss', 'aZ09') == 'print') { ?>
 	display: none;
 	<?php } ?>
@@ -2595,13 +2725,13 @@ div.login a:hover {
 	text-decoration:underline;
 }
 div.login_block_user, div.login_block_other { clear: both; }
-div.login_block_other { padding-top: 3px; }
+div.login_block_other { padding-top: 15px; }
 
 .topnav div.login_block_user {
 	display: inline-block;
 	vertical-align: middle;
-	line-height: <?php echo $disableimages ? '25' : '50'; ?>px;
-	height: <?php echo $disableimages ? '25' : '50'; ?>px;
+	line-height: <?php echo $disableimages ? '25' : '70'; ?>px;
+	height: <?php echo $disableimages ? '25' : '70'; ?>px;
 }
 .topnav div.login_block_other {
 	display: inline-block;
@@ -2723,6 +2853,7 @@ div.vmenu, td.vmenu {
 #menu_contenu_logo { padding-right: 4px; }
 .companylogo { padding-top: 4px; }
 .searchform { padding-top: 10px; }
+.searchform .bordertransp { border: 0; }
 
 a.vmenu:link, a.vmenu:visited, a.vmenu:hover, a.vmenu:active, span.vmenu, span.vsmenu { white-space: nowrap; font-size:<?php print $fontsize ?>px; font-family: <?php print $fontlist ?>; text-align: <?php print $left; ?>; font-weight: bold; }
 font.vmenudisabled  { font-size:<?php print $fontsize ?>px; font-family: <?php print $fontlist ?>; text-align: <?php print $left; ?>; font-weight: bold; color: #aaa; margin-left: 4px; white-space: nowrap; }
@@ -3049,12 +3180,6 @@ a.tab:link, a.tab:visited, a.tab:hover, a.tab#active {
 	background-image: none !important;
 }
 
-
-.tabunactive {	/* We add some border on tabunactive to avoid change of position of title when switching tabs (border of tabunactive = border of tabactive) */
-	border-right: 1px solid rgb(<?php echo $colorbackbody; ?>);
-	border-left: 1px solid rgb(<?php echo $colorbackbody; ?>);
-}
-
 .tabactive, a.tab#active {
 	color: #<?php echo $colortextbacktab; ?> !important;
 	background: rgb(<?php echo $colorbacktabcard1; ?>) !important;
@@ -3063,6 +3188,13 @@ a.tab:link, a.tab:visited, a.tab:hover, a.tab#active {
 	border-left: 1px solid #AAA !important;
 	border-top: 2px solid #111 !important;
 }
+.tabunactive, a.tab#unactive {
+	border-right: 1px solid transparent;
+	border-left: 1px solid transparent;
+	border-top: 1px solid transparent;
+	border-bottom: 0px !important;*/
+}
+
 a.tab:hover
 {
 	/*
@@ -3737,7 +3869,7 @@ tr.liste_titre_sel th, th.liste_titre_sel, tr.liste_titre_sel td, td.liste_titre
 	font-family: <?php print $fontlist ?>;
 	font-weight: normal;
 	border-bottom: 1px solid #FDFFFF;
-	text-decoration: underline;
+	/* text-decoration: underline; */
 }
 input.liste_titre {
 	background: transparent;
@@ -4182,10 +4314,10 @@ div.divphotoref > a > .photowithmargin {		/* Margin right for photo not inside a
 .photowithborder {
 	border: 1px solid #f0f0f0;
 }
-.photointoolitp {
+.photointooltip {
 	margin-top: 8px;
 	margin-bottom: 6px;
-	text-align: center;
+	text-align: center !important;
 }
 .photodelete {
 	margin-top: 6px !important;
@@ -4487,7 +4619,7 @@ table.dp {
 
 
 /* ============================================================================== */
-/*  Afficher/cacher                                                               */
+/*  Show/Hide                                                                     */
 /* ============================================================================== */
 
 div.visible {
@@ -4640,7 +4772,7 @@ table.cal_month td:last-child   { border-right: 0px; }
 div.event { margin: 8px; border-radius: 4px; box-shadow: 2px 2px 5px rgba(100, 100, 100, 0.2); }
 table.cal_event    { border: none; border-collapse: collapse; margin-bottom: 1px; -webkit-border-radius: 3px; border-radius: 3px; min-height: 20px;	}
 table.cal_event td { border: none; padding-<?php print $left; ?>: 2px; padding-<?php print $right; ?>: 2px; padding-top: 0px; padding-bottom: 0px; }
-table.cal_event td.cal_event { padding: 4px 4px !important; }
+table.cal_event td.cal_event { padding: 4px 4px !important; padding-bottom: 2px !important; padding-top: 2px !important; }
 table.cal_event td.cal_event_right { padding: 4px 4px !important; }
 .cal_event              { font-size: 1em; }
 .cal_event a:link       { color: #111111; font-weight: normal !important; }
@@ -4741,9 +4873,10 @@ td.gtaskname {
 /* ============================================================================== */
 
 /* CSS for treeview */
-.treeview ul { background-color: transparent !important; margin-top: 0; }
-.treeview li { background-color: transparent !important; padding: 0 0 0 16px !important; min-height: 20px; }
-.treeview .hover { color: rgb(<?php print $colortextlink; ?>) !important; text-decoration: underline !important; }
+.treeview ul { background-color: transparent !important; margin-bottom: 4px !important; margin-top: 0 !important; padding-top: 8px !important; }
+.treeview li { background-color: transparent !important; padding: 0 0 0 16px !important; min-height: 30px; }
+.treeview .hover { color: var(--colortextlink) !important; text-decoration: underline !important; }
+.treeview .hitarea { margin-top: 3px; }
 
 
 
@@ -6490,6 +6623,14 @@ div.phpdebugbar-widgets-templates a.phpdebugbar-widgets-editor-link:before
 	font-family: "Font Awesome 5 Free" !important;
 }
 
+
+/* ============================================================================== */
+/* CSS style used for jCrop                                                       */
+/* ============================================================================== */
+
+.jcrop-holder { background: unset !important; }
+
+
 /* ============================================================================== */
 /* CSS style used for jFlot                                                       */
 /* ============================================================================== */
@@ -6499,6 +6640,25 @@ div.phpdebugbar-widgets-templates a.phpdebugbar-widgets-editor-link:before
 	font-weight: 400;
 	writing-mode: vertical-rl;
 	white-space: nowrap;
+}
+
+
+/* ============================================================================== */
+/* For copy-paste feature                                                         */
+/* ============================================================================== */
+
+span.clipboardCPValueToPrint {
+	display: inline-block;
+}
+span.clipboardCPValue.hidewithsize {
+	width: 0 !important;
+	display: inline-block;
+	color: transparent;
+	white-space: nowrap;
+}
+
+.clipboardCPShowOnHover .clipboardCPButton {
+	display: none;
 }
 
 

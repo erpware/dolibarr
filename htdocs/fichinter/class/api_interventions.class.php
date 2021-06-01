@@ -110,6 +110,10 @@ class Interventions extends DolibarrApi
 	{
 		global $db, $conf;
 
+		if (!DolibarrApiAccess::$user->rights->ficheinter->lire) {
+			throw new RestException(401);
+		}
+
 		$obj_ret = array();
 
 		// case of external user, $thirdparty_ids param is ignored and replaced by user's socid
@@ -136,21 +140,21 @@ class Interventions extends DolibarrApi
 			$sql .= " AND t.fk_soc = sc.fk_soc";
 		}
 		if ($socids) {
-			$sql .= " AND t.fk_soc IN (".$socids.")";
+			$sql .= " AND t.fk_soc IN (".$this->db->sanitize($socids).")";
 		}
 		if ($search_sale > 0) {
 			$sql .= " AND t.rowid = sc.fk_soc"; // Join for the needed table to filter by sale
 		}
 		// Insert sale filter
 		if ($search_sale > 0) {
-			$sql .= " AND sc.fk_user = ".$search_sale;
+			$sql .= " AND sc.fk_user = ".((int) $search_sale);
 		}
 		// Add sql filters
 		if ($sqlfilters) {
 			if (!DolibarrApi::_checkFilters($sqlfilters)) {
 				throw new RestException(503, 'Error when validating parameter sqlfilters '.$sqlfilters);
 			}
-			$regexstring = '\(([^:\'\(\)]+:[^:\'\(\)]+:[^:\(\)]+)\)';
+			$regexstring = '\(([^:\'\(\)]+:[^:\'\(\)]+:[^\(\)]+)\)';
 			$sql .= " AND (".preg_replace_callback('/'.$regexstring.'/', 'DolibarrApi::_forge_criteria_callback', $sqlfilters).")";
 		}
 

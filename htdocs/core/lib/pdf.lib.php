@@ -12,6 +12,7 @@
  * Copyright (C) 2015-2016  Marcos García           <marcosgdf@gmail.com>
  * Copyright (C) 2019       Lenin Rivas           	<lenin.rivas@servcom-it.com>
  * Copyright (C) 2020       Nicolas ZABOURI         <info@inovea-conseil.com>
+ * Copyright (C) 2021		Anthony Berton       	<bertonanthony@gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,6 +37,42 @@
 
 
 /**
+ *  Return array head with list of tabs to view object informations.
+ *
+ *  @return	array   	        head array with tabs
+ */
+function pdf_admin_prepare_head()
+{
+	global $langs, $conf, $user;
+
+	$h = 0;
+	$head = array();
+
+	$head[$h][0] = DOL_URL_ROOT.'/admin/pdf.php';
+	$head[$h][1] = $langs->trans("Common");
+	$head[$h][2] = 'general';
+	$h++;
+
+	// Show more tabs from modules
+	// Entries must be declared in modules descriptor with line
+	// $this->tabs = array('entity:+tabname:Title:@mymodule:/mymodule/mypage.php?id=__ID__');   to add new tab
+	// $this->tabs = array('entity:-tabname:Title:@mymodule:/mymodule/mypage.php?id=__ID__');   to remove a tab
+	complete_head_from_modules($conf, $langs, null, $head, $h, 'pdf_admin');
+
+	if (!empty($conf->propal->enabled)) {
+		$head[$h][0] = DOL_URL_ROOT.'/admin/pdf_other.php';
+		$head[$h][1] = $langs->trans("Other");
+		$head[$h][2] = 'other';
+		$h++;
+	}
+
+	complete_head_from_modules($conf, $langs, null, $head, $h, 'pdf_admin', 'remove');
+
+	return $head;
+}
+
+
+/**
  *	Return array with format properties of default PDF format
  *
  *	@param		Translate	$outputlangs		Output lang to use to autodetect output format if we need 'auto' detection
@@ -49,7 +86,9 @@ function pdf_getFormat(Translate $outputlangs = null, $mode = 'setup')
 	dol_syslog("pdf_getFormat Get paper format with mode=".$mode." MAIN_PDF_FORMAT=".(empty($conf->global->MAIN_PDF_FORMAT) ? 'null' : $conf->global->MAIN_PDF_FORMAT)." outputlangs->defaultlang=".(is_object($outputlangs) ? $outputlangs->defaultlang : 'null')." and langs->defaultlang=".(is_object($langs) ? $langs->defaultlang : 'null'));
 
 	// Default value if setup was not done and/or entry into c_paper_format not defined
-	$width = 210; $height = 297; $unit = 'mm';
+	$width = 210;
+	$height = 297;
+	$unit = 'mm';
 
 	if ($mode == 'auto' || empty($conf->global->MAIN_PDF_FORMAT) || $conf->global->MAIN_PDF_FORMAT == 'auto') {
 		include_once DOL_DOCUMENT_ROOT.'/core/lib/functions2.lib.php';
@@ -725,7 +764,8 @@ function pdf_watermark(&$pdf, $outputlangs, $h, $w, $unit, $text)
 	$text = make_substitutions($text, $substitutionarray, $outputlangs);
 	$text = $outputlangs->convToOutputCharset($text);
 
-	$savx = $pdf->getX(); $savy = $pdf->getY();
+	$savx = $pdf->getX();
+	$savy = $pdf->getY();
 
 	$watermark_angle = atan($h / $w) / 2;
 	$watermark_x_pos = 0;
@@ -961,7 +1001,10 @@ function pdf_pagefoot(&$pdf, $outputlangs, $paramfreetext, $fromcompany, $marge_
 	}
 
 	// First line of company infos
-	$line1 = ""; $line2 = ""; $line3 = ""; $line4 = "";
+	$line1 = "";
+	$line2 = "";
+	$line3 = "";
+	$line4 = "";
 
 	if ($showdetails == 1 || $showdetails == 3) {
 		// Company name
@@ -1086,9 +1129,11 @@ function pdf_pagefoot(&$pdf, $outputlangs, $paramfreetext, $fromcompany, $marge_
 	if ($line) {	// Free text
 		//$line="sample text<br>\nfd<strong>sf</strong>sdf<br>\nghfghg<br>";
 		if (empty($conf->global->PDF_ALLOW_HTML_FOR_FREE_TEXT)) {
-			$width = 20000; $align = 'L'; // By default, ask a manual break: We use a large value 20000, to not have automatic wrap. This make user understand, he need to add CR on its text.
+			$width = 20000;
+			$align = 'L'; // By default, ask a manual break: We use a large value 20000, to not have automatic wrap. This make user understand, he need to add CR on its text.
 			if (!empty($conf->global->MAIN_USE_AUTOWRAP_ON_FREETEXT)) {
-				$width = 200; $align = 'C';
+				$width = 200;
+				$align = 'C';
 			}
 			$freetextheight = $pdf->getStringHeight($width, $line);
 		} else {
@@ -1188,7 +1233,7 @@ function pdf_writeLinkedObjects(&$pdf, $object, $outputlangs, $posx, $posy, $w, 
 /**
  *	Output line description into PDF
  *
- *  @param  TCPDF				$pdf               PDF object
+ *  @param  TCPDF			$pdf               	PDF object
  *	@param	Object			$object				Object
  *	@param	int				$i					Current line number
  *  @param  Translate		$outputlangs		Object lang for output
@@ -2047,9 +2092,9 @@ function pdf_getlineprogress($object, $i, $outputlangs, $hidedetails = 0, $hookm
 				if (method_exists($object, 'get_prev_progress')) {
 					$prev_progress = $object->lines[$i]->get_prev_progress($object->id);
 				}
-				$result = ($object->lines[$i]->situation_percent - $prev_progress).'%';
+				$result = round($object->lines[$i]->situation_percent - $prev_progress, 1).'%';
 			} else {
-				$result = $object->lines[$i]->situation_percent.'%';
+				$result = round($object->lines[$i]->situation_percent, 1).'%';
 			}
 		}
 	}

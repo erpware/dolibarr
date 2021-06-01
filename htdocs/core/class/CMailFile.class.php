@@ -578,7 +578,8 @@ class CMailFile
 			$hookmanager = new HookManager($db);
 			$hookmanager->initHooks(array('mail'));
 
-			$parameters = array(); $action = '';
+			$parameters = array();
+			$action = '';
 			$reshook = $hookmanager->executeHooks('sendMail', $parameters, $this, $action); // Note that $action and $object may have been modified by some hooks
 			if ($reshook < 0) {
 				$this->error = "Error in hook maildao sendMail ".$reshook;
@@ -815,7 +816,8 @@ class CMailFile
 				$this->smtps->setHost($server);
 				$this->smtps->setPort($port); // 25, 465...;
 
-				$loginid = ''; $loginpass = '';
+				$loginid = '';
+				$loginpass = '';
 				if (!empty($conf->global->$keyforsmtpid)) {
 					$loginid = $conf->global->$keyforsmtpid;
 					$this->smtps->setID($loginid);
@@ -924,7 +926,7 @@ class CMailFile
 				}
 				// send mail
 				try {
-					$result = $this->mailer->send($this->message);
+					$result = $this->mailer->send($this->message, $failedRecipients);
 				} catch (Exception $e) {
 					$this->error = $e->getMessage();
 				}
@@ -934,6 +936,9 @@ class CMailFile
 
 				$res = true;
 				if (!empty($this->error) || !$result) {
+					if (!empty($failedRecipients)) {
+						$this->error = 'Transport failed for the following addresses: "' . join('", "', $failedRecipients) . '".';
+					}
 					dol_syslog("CMailFile::sendfile: mail end error=".$this->error, LOG_ERR);
 					$res = false;
 				} else {
@@ -946,7 +951,8 @@ class CMailFile
 				return 'Bad value for sendmode';
 			}
 
-			$parameters = array(); $action = '';
+			$parameters = array();
+			$action = '';
 			$reshook = $hookmanager->executeHooks('sendMailAfter', $parameters, $this, $action); // Note that $action and $object may have been modified by some hooks
 			if ($reshook < 0) {
 				$this->error = "Error in hook maildao sendMailAfter ".$reshook;

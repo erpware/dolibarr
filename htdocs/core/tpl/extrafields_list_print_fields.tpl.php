@@ -12,7 +12,7 @@ if (empty($extrafieldsobjectkey) && is_object($object)) {
 
 // Loop to show all columns of extrafields from $obj, $extrafields and $db
 if (!empty($extrafieldsobjectkey)) {	// $extrafieldsobject is the $object->table_element like 'societe', 'socpeople', ...
-	if (is_array($extrafields->attributes[$extrafieldsobjectkey]['label']) && count($extrafields->attributes[$extrafieldsobjectkey]['label'])) {
+	if (key_exists('label', $extrafields->attributes[$extrafieldsobjectkey]) && is_array($extrafields->attributes[$extrafieldsobjectkey]['label']) && count($extrafields->attributes[$extrafieldsobjectkey]['label'])) {
 		if (empty($extrafieldsobjectprefix)) {
 			$extrafieldsobjectprefix = 'ef.';
 		}
@@ -35,7 +35,7 @@ if (!empty($extrafieldsobjectkey)) {	// $extrafieldsobject is the $object->table
 					}
 					$value = $datenotinstring;
 				} else {
-					$value = $obj->$tmpkey;
+					$value = (!empty($obj->$tmpkey) ? $obj->$tmpkey : '');
 				}
 				// If field is a computed field, we make computation to get value
 				if ($extrafields->attributes[$extrafieldsobjectkey]['computed'][$key]) {
