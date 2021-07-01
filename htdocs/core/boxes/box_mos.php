@@ -142,7 +142,7 @@ class box_mos extends ModeleBoxes
 							'asis' => 1,
 						);
 					}
-					
+
 					$this->info_box_contents[$line][] = array(
 						'td' => 'class="center nowraponall"',
 						'text' => dol_print_date($datem, 'day', 'tzuserrel'),

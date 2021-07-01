@@ -145,7 +145,7 @@ class box_boms extends ModeleBoxes
 							'asis' => 1,
 						);
 					}
-					
+
 					$this->info_box_contents[$line][] = array(
 						'td' => 'class="right"',
 						'text' => dol_print_date($datem, 'day', 'tzuserrel'),
